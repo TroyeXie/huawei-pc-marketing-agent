@@ -1,0 +1,23 @@
+项目名称
+知华·有据——华为 PC 门店增长智能体
+
+GitHub 仓库链接
+https://github.com/TroyeXie/huawei-pc-marketing-agent
+
+魔搭部署链接
+https://www.modelscope.cn/studios/TroyeXie/huawei-pc-marketing-agent
+
+作品说明书 在线预览
+https://github.com/TroyeXie/huawei-pc-marketing-agent/blob/main/static/zhihua-work-description.pdf
+
+作品说明书 直接下载
+https://github.com/TroyeXie/huawei-pc-marketing-agent/raw/refs/heads/main/static/zhihua-work-description.pdf
+
+作品简介
+“知华·有据”面向华为 PC 门店销售顾问，将读懂客户、写出内容、给出方案与成交跟进串成一次任务。系统保留五维客户洞察的输入依据，覆盖十款机型、八类场景与四类发布平台，生成图文、原文引用、配图位置与核验结果，并提供四档报价示算、180秒演示脚本及第1、3、7天跟进草稿。报价按来源、资格与叠加规则计算，资料缺失时提示补齐。系统采用ima当日已核验资料缓存，新任务现场调用模型生成和核验；已保存三组历史案例，并新增D 16家庭换新与MateBook 14门店到访两次公开部署完整实测。
+
+参赛成员
+谢家兴、包一林、许启睿
+
+现场初赛评分
+全链路跑通25分；写出内容30分；读懂客户15分；给出方案15分；演示与体验10分；规范与可维护5分。满分100分，60分及以上晋级。10月18日17:00截止提交。
