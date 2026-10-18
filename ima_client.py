@@ -116,6 +116,7 @@ class IMAClient:
         self._directory_cache: tuple[float, list[dict]] | None = None
         self.max_download_bytes = 50 * 1024 * 1024
         self.max_images_per_doc = 3
+        self.max_image_candidates = 8
 
     @property
     def configured(self) -> bool:
@@ -241,6 +242,7 @@ class IMAClient:
             "highlight_content": unescape(re.sub(r"<[^>]+>", "", str(item.get("highlight_content", "")))),
             "model_context": (self._folder_context.get(str(item.get("parent_folder_id", "")), "")
                               or self._folder_titles.get(str(item.get("parent_folder_id", "")), "")),
+            "folder_name": self._folder_titles.get(str(item.get("parent_folder_id", "")), ""),
             "source": {"provider": "ima", "knowledge_base": self.KB_NAME},
         }
 
@@ -331,6 +333,8 @@ class IMAClient:
         cached = self._media_cache.get(media_id)
         if cached is None or time.monotonic() - cached[0] > 60:
             data = self._post("wiki/v1/get_media_info", {"media_id": media_id})
+            if not isinstance(data, dict):
+                raise IMAError("ima 返回的媒体信息结构无法读取。")
             self._media_cache[media_id] = (time.monotonic(), data)
         return self._media_cache[media_id][1]
 
@@ -366,6 +370,8 @@ class IMAClient:
         # Never send a request, with or without signed headers, over HTTP.
         if urlsplit(url).scheme == "http":
             url = "https:" + url[len("http:"):]
+        if headers is not None and not isinstance(headers, dict):
+            raise IMAError("ima 返回的资料下载请求头格式无法读取。")
         safe_headers = {}
         for key, value in (headers or {}).items():
             key, value = str(key), str(value)
@@ -448,10 +454,50 @@ class IMAClient:
         if not suffix or len(content) > 30 * 1024 * 1024:
             return None
         result = {"local_path": self._save_private(content, suffix), "source": dict(source),
-                  "caption": caption[:240], "sha256": sha256(content).hexdigest()}
+                  "title": source["title"], "caption": caption[:240],
+                  "sha256": sha256(content).hexdigest()}
+        try:
+            from PIL import Image
+        except ImportError:
+            Image = None
+        if Image is not None:
+            try:
+                with Image.open(BytesIO(content)) as picture:
+                    picture.load()
+                    result["width"], result["height"] = picture.size
+                    pixels = list(picture.convert("RGBA").convert("L").resize((9, 8)).getdata())
+                    difference = 0
+                    for row in range(8):
+                        for col in range(8):
+                            difference = (difference << 1) | int(pixels[row * 9 + col] > pixels[row * 9 + col + 1])
+                    result["visual_hash"] = f"{difference:016x}"
+            except Exception:
+                return None
         if page is not None:
             result["source"]["page"] = page
         return result
+
+    @staticmethod
+    def _same_image(first: dict, second: dict) -> bool:
+        if first.get("sha256") == second.get("sha256"):
+            return True
+        if not first.get("visual_hash") or not second.get("visual_hash"):
+            return False
+        ratio_a = first.get("width", 0) / max(1, first.get("height", 0))
+        ratio_b = second.get("width", 0) / max(1, second.get("height", 0))
+        if not ratio_a or abs(ratio_a - ratio_b) / ratio_a > 0.10:
+            return False
+        return (int(first["visual_hash"], 16) ^ int(second["visual_hash"], 16)).bit_count() <= 5
+
+    @staticmethod
+    def _image_priority(item: dict) -> tuple:
+        name = item.get("title", "")
+        priorities = (("高质感主视觉", "主视觉", "整机", "外观", "正面"),
+                      ("接口", "协同", "超级终端", "触控", "手写", "互联"),
+                      ("屏幕_07", "屏幕_08", "轻薄", "便携"),
+                      ("键盘", "屏幕"))
+        rank = next((i for i, words in enumerate(priorities) if any(w in name for w in words)), len(priorities))
+        return rank, name
 
     @staticmethod
     def _model_key(product: str) -> str:
@@ -486,7 +532,8 @@ class IMAClient:
             except Exception:
                 raise IMAError("该 PDF 无法打开，请在 ima 中检查原文件。") from None
             pages, images = [], []
-            title_matches = bool(target and self._matches_model(source["title"], target))
+            title_matches = bool(target and (self._matches_model(source["title"], target)
+                                 or self._matches_model(source.get("model_context", ""), target)))
             try:
                 for index in range(min(len(doc), 160)):
                     page = doc[index]
@@ -539,7 +586,9 @@ class IMAClient:
                     text = "\n".join(x.text or "" for x in root.findall(".//a:t", ns))
                     pages.append({"page": index, "text": text})
                     if len(images) >= self.max_images_per_doc or (target and not (
-                            self._matches_model(source["title"], target) or self._matches_model(text, target))):
+                            self._matches_model(source["title"], target)
+                            or self._matches_model(source.get("model_context", ""), target)
+                            or self._matches_model(text, target))):
                         continue
                     rel_name = "ppt/slides/_rels/" + Path(name).name + ".rels"
                     if rel_name not in names:
@@ -563,7 +612,7 @@ class IMAClient:
                 pages = [{"page": None, "text": "\n".join(paragraphs)}]
                 # DOCX cannot establish page numbers. Only extract when the file
                 # itself is specifically about the requested complete model.
-                if not target or self._matches_model(source["title"], target):
+                if not target or self._matches_model(source["title"], target) or self._matches_model(source.get("model_context", ""), target):
                     for name in names:
                         if name.startswith("word/media/"):
                             image = self._image_record(archive.read(name), source, caption=source["title"])
@@ -587,6 +636,8 @@ class IMAClient:
                   "retrieved_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
         if item.get("model_context"):
             source["model_context"] = str(item["model_context"])
+        if item.get("folder_name"):
+            source["folder_name"] = str(item["folder_name"])
         pages, images, local_path = [], [], ""
         if str(media_type) == "11":
             note = info.get("notebook_ext_info") or {}
@@ -595,9 +646,13 @@ class IMAClient:
                 raise IMAError("该笔记未返回可读取的原文入口，请使用 ima 客户端查看。")
             self._known_ids.add(note_id)
             data = self._post("note/v1/get_doc_content", {"note_id": note_id, "target_content_format": 0})
+            if not isinstance(data, dict):
+                raise IMAError("ima 返回的笔记原文结构无法读取。")
             pages = [{"page": None, "text": str(data.get("content", ""))}]
         else:
             url_info = info.get("url_info") or {}
+            if not isinstance(url_info, dict):
+                raise IMAError("ima 返回的资料入口格式无法读取。")
             url = str(url_info.get("url", ""))
             if not url:
                 raise IMAError("ima 未提供该资料的可读取原文地址，请使用 ima 客户端查看原文。")
@@ -609,9 +664,19 @@ class IMAClient:
                     raise IMAError("素材未通过 PNG、JPEG 或 WebP 原图校验，未作为产品配图。")
                 images, local_path = [image], image["local_path"]
             elif content.startswith(b"%PDF-"):
-                pages, images = self._pdf(content, source, target)
+                try:
+                    pages, images = self._pdf(content, source, target)
+                except IMAError:
+                    raise
+                except Exception:
+                    raise IMAError("该 PDF 包含暂时无法读取的页面，请在 ima 中检查原文件。") from None
             elif content.startswith(b"PK\x03\x04"):
-                pages, images = self._office(content, source, target)
+                try:
+                    pages, images = self._office(content, source, target)
+                except IMAError:
+                    raise
+                except Exception:
+                    raise IMAError("该 Office 文档内容暂时无法解析，请在 ima 中检查原文件。") from None
             elif str(media_type) in {"1", "3", "4"}:
                 raise IMAError("该资料的原文类型与文件说明不一致，未提取事实或配图。")
             else:
@@ -737,9 +802,11 @@ class IMAClient:
             "价格" in x["title"], x["title"]))
         document_candidates = [x for x in candidates if str(x.get("media_type")) != "9"]
         image_candidates = [x for x in candidates if str(x.get("media_type")) == "9"]
-        selected_candidates = document_candidates[:4] + image_candidates[:3]
+        image_candidates.sort(key=self._image_priority)
+        selected_candidates = document_candidates[:4] + image_candidates[:16]
         facts, documents, images, warnings = [], [], [], []
         seen_documents, seen_images = set(), set()
+        excluded_duplicates = 0
         for item in selected_candidates:
             if item["media_id"] in seen_documents:
                 continue
@@ -767,15 +834,21 @@ class IMAClient:
             for image in record["images"]:
                 if not title_scoped and not self._matches_model(image.get("caption", ""), product):
                     continue
-                if image["sha256"] not in seen_images:
-                    seen_images.add(image["sha256"])
-                    images.append(dict(image, product_name=product, status="candidate_needs_selection"))
-                if len(images) >= 6:
+                duplicate = next((i for i, previous in enumerate(images) if self._same_image(previous, image)), None)
+                if duplicate is not None:
+                    excluded_duplicates += 1
+                    previous = images[duplicate]
+                    if image.get("width", 0) * image.get("height", 0) > previous.get("width", 0) * previous.get("height", 0):
+                        images[duplicate] = dict(image, product_name=product, status="candidate_needs_selection")
+                    continue
+                seen_images.add(image["sha256"])
+                images.append(dict(image, product_name=product, status="candidate_needs_selection"))
+                if len(images) >= self.max_image_candidates:
                     break
             if fact_count or record["images"]:
                 documents.append({"title": record["title"], "source": record["source"],
                                   "fact_excerpt_count": fact_count})
-            if len(documents) >= 4 and len(images) >= 3:
+            if facts and len(images) >= self.max_image_candidates:
                 break
         if not facts and not images:
             detail = warnings[0]["message"] if warnings else "原文中未确认与该完整型号对应的内容。"
@@ -783,7 +856,8 @@ class IMAClient:
         return {"product_name": product, "kb_name": self.KB_NAME,
                 "status": "retrieved" if facts else "images_only",
                 "retrieval_mode": page["retrieval_mode"], "facts": facts,
-                "documents": documents, "images": images, "warnings": warnings}
+                "documents": documents, "images": images, "warnings": warnings,
+                "excluded_duplicate_images": excluded_duplicates}
 
 
 __all__ = ["IMAClient", "IMAError"]

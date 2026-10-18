@@ -85,7 +85,7 @@
   }
 
   function modeLabel(mode) {
-    const names = { live: "实时检索与生成", live_llm: "ima 实时资料 · 模型生成与核验", online: "实时检索与生成", llm: "模型生成", ima_live: "ima 实时检索", live_ima: "ima 实时检索", local: "本地资料模式", local_fallback: "本地资料备用模式", offline: "离线资料模式", demo: "演示模式", fallback: "备用模式", hybrid: "混合检索模式", rules: "规则生成模式", rule_based: "规则生成模式", verified: "已核验资料模式", clarification: "等待信息确认", unconfigured: "生成服务待配置" };
+    const names = { live: "实时检索与生成", live_llm: "真实模型生成 · ima 资料", online: "实时检索与生成", llm: "模型生成", ima_live: "ima 实时检索", live_ima: "ima 实时检索", local: "本地资料模式", local_fallback: "本地资料备用模式", offline: "离线资料模式", demo: "演示模式", fallback: "备用模式", hybrid: "混合检索模式", rules: "规则生成模式", rule_based: "规则生成模式", verified: "已核验资料模式", clarification: "等待信息确认", unconfigured: "生成服务待配置" };
     return names[mode] || textOf(mode);
   }
 
@@ -129,7 +129,12 @@
         catalog.products.forEach((product) => {
           const name = typeof product === "string" ? product : product.name;
           const id = typeof product === "string" ? product : product.id || name;
-          if (name && id !== "auto") $("product").add(new Option(name, id));
+          if (name && id !== "auto") {
+            const unavailable = typeof product === "object" && product.available === false;
+            const option = new Option(name + (unavailable ? "（来源待核对）" : ""), id);
+            option.disabled = unavailable;
+            $("product").add(option);
+          }
         });
         if ([...$("product").options].some((option) => option.value === selection)) $("product").value = selection;
       }
@@ -431,7 +436,7 @@
     $("result").hidden = false;
     $("result-heading").textContent = result.status === "blocked" ? "本次内容需要修订" : result.status === "needs_clarification" ? "补充信息后继续任务" : result.status === "error" ? "本次运行未成功完成" : "为这次任务准备的内容";
     $("article-heading").textContent = result.status === "blocked" ? "待修订内容" : "图文成稿";
-    const metadata = [result.run_id ? `运行 ${textOf(result.run_id)}` : "", formatDate(result.generated_at), modeLabel(result.mode)].filter(Boolean);
+    const metadata = [result.run_id ? `运行 ${textOf(result.run_id)}` : "", formatDate(result.generated_at), modeLabel(result.mode), result.material_provenance?.note].filter(Boolean);
     $("result-meta").textContent = metadata.join(" · ");
     const banner = $("result-status");
     const fallbackMessages = { blocked: "本次内容未通过核验，请根据逐项核验结果修订后再使用。", needs_clarification: "当前信息不足，请补充任务要求后重新生成。", error: "本次任务未成功完成，请查看实际运行记录。" };
@@ -559,7 +564,7 @@
         const input = example.input || {};
         body.append(element("h2", "", example.label || example.result?.article?.title || `运行案例 ${index + 1}`));
         body.append(element("p", "example-description", [input.audience, input.scene].filter(Boolean).join(" · ")));
-        const details = [input.platform, modeLabel(example.result?.mode), example.result?.generated_at ? formatDate(example.result.generated_at) : ""].filter(Boolean);
+        const details = [input.platform, modeLabel(example.result?.mode), example.result?.generated_at ? formatDate(example.result.generated_at) : "", example.result?.material_provenance?.note].filter(Boolean);
         body.append(element("p", "example-detail", details.join(" / ")));
         const actions = element("div", "example-actions");
         const view = element("button", "secondary-button", "查看实际结果 ↗");

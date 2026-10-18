@@ -112,12 +112,14 @@ def _sentence_at(text: str, start: int, end: int) -> tuple[str, int, int]:
 def _is_denial(text: str, start: int, end: int) -> bool:
     sentence, a, b = _sentence_at(text, start, end)
     prefix = sentence[max(0, a - 45):a]
+    # A prior disclaimer must not neutralise a later affirmative promise.
+    prefix = re.split(r"[，,](?:但|然而|不过|实际上)|(?:但是|然而|不过)", prefix)[-1]
     suffix = sentence[b:b + 35]
     if re.search(r"(?:并非|不是|并不是)\s*$", prefix):
         return True
     if re.search(r"(?:不|未|无法|不能|不会|尚未|不得|不应|请勿|不要)\s*$", prefix) and re.match(r"(?:保证|确保|承诺|宣称|表示|兼容|支持|编造|虚构|伪造)", sentence[a:]):
         return True
-    denial = r"(?:不能|不得|不可|不应|请勿|不要)\s*(?:把|将|写|宣传|宣称|承诺|使用|表示|称为|标注|声称|理解|认为|保证|说)|(?:不|无法)(?:承诺|保证|代表|意味着|支持|证明|声称)|(?:禁止|拒绝|避免)(?:使用|宣称|承诺|表述|写|声称|虚构)|(?:没有|缺少|尚无)(?:可靠)?(?:依据|证据)"
+    denial = r"(?:不能|不得|不可|不应|请勿|不要)\s*(?:把|将|写|宣传|宣称|承诺|使用|表示|称为|标注|声称|理解|认为|保证|说|编造|虚构|伪造)|(?:不|无法)(?:承诺|保证|代表|等于|意味着|支持|证明|声称)|不(?:能|直接)(?:证明|推断)|(?:禁止|拒绝|避免)(?:使用|宣称|承诺|表述|写|声称|虚构)|(?:没有|缺少|尚无)(?:可靠)?(?:依据|证据)"
     return bool(re.search(denial, prefix) or re.search(r"(?:尚未|未获|未经).{0,10}(?:确认|证实|验证)|(?:未|不)(?:得到|能得到).{0,5}(?:确认|证实)", suffix))
 
 
@@ -146,7 +148,13 @@ def check_text(text: str, facts: list[dict[str, Any]] | None = None) -> list[dic
             if key not in seen:
                 findings.append({"type": kind, "status": "blocked", "claim": match.group(), "evidence": "本轮资料不足以支持该宣传表述", "action": action})
                 seen.add(key)
-    corpus = "\n".join(str(f.get("text", "")) + "\n" + str(f.get("quote", "")) for f in facts)
+    corpus = "\n".join(str(f.get("quote") or f.get("text") or "") for f in facts)
+    for match in re.finditer(r"USB\s*[-－]?\s*A|Thunderbolt\s*[345]?|雷电\s*[345]?", text, re.I):
+        if _is_denial(text, match.start(), match.end()):
+            continue
+        term = _norm(match.group()).replace("-", "")
+        if term not in _norm(corpus).replace("-", ""):
+            findings.append({"type": "事实·接口形态", "status": "blocked", "claim": match.group(), "evidence": "原文未明确该接口形态或协议；不能从USB3.2等规范名称推断USB-A或雷电", "action": "保留已证实的接口原名，删除无依据形态或协议"})
     source_quantities = _quantities(corpus)
     for match in list(_QUANTITY.finditer(text)) + list(_RESOLUTION.finditer(text)) + list(_CPU.finditer(text)) + list(_CURRENCY.finditer(text)):
         if _is_denial(text, match.start(), match.end()):
@@ -268,6 +276,24 @@ class MarketingEngine:
             if not self.url.startswith("https://") and not self.url.startswith(("http://127.0.0.1", "http://localhost")):
                 raise EngineError("MODEL_API_URL应使用HTTPS完整chat/completions接口")
 
+            current_step = "公开来源核对"
+            started = time.monotonic()
+            try:
+                from public_evidence import build_public_evidence, PublicEvidenceError
+            except ImportError as exc:
+                raise EngineError("公开来源核对模块尚未就绪，已停止模型调用；不能将未确认公开的知识库资料发送给模型") from exc
+            try:
+                materials = build_public_evidence(product, materials)
+            except PublicEvidenceError as exc:
+                result.update(status="blocked", mode="evidence_gate", message=str(exc), markdown="")
+                result["checks"].append({"type": "公开来源核对", "status": "blocked", "claim": "本次ima材料", "evidence": "公开事实映射或图片字节匹配未满足模型输入要求", "action": "已停止模型调用，请补充对应型号的公开证据"})
+                record(current_step, started, "材料未通过公开来源匹配，未向模型发送知识库原文", "blocked")
+                return result
+            proof = materials.get("public_evidence") or {}
+            result["public_evidence"] = proof
+            result["checks"].append({"type": "公开来源核对", "status": "pass", "claim": "模型输入资料", "evidence": "仅使用本次ima原文中与已核对华为公开资料对应的必要摘录和通过字节匹配的图片元数据", "action": "库内整理稿和未确认公开的内容不进入模型上下文"})
+            record(current_step, started, "已匹配公开证据并缩减模型输入；保留ima实际来源与获取时间")
+
             current_step = "接收ima资料"
             started = time.monotonic()
             documents = []
@@ -291,7 +317,7 @@ class MarketingEngine:
                 title = str(raw.get("title") or source_dict.get("title") or "ima资料")
                 locator = str(raw.get("locator") or source_dict.get("locator") or title)
                 if source_dict.get("page") is not None: locator += " · 第" + str(source_dict["page"]) + "页"
-                documents.append({"id": "D" + str(len(documents) + 1), "title": title, "text": text, "source_url": _source_url(raw.get("source_url") or source_dict.get("url") or source), "locator": locator, "retrieved_at": str(source_dict.get("retrieved_at") or raw.get("retrieved_at") or "")})
+                documents.append({"id": "D" + str(len(documents) + 1), "title": title, "text": text, "source_url": _source_url(raw.get("source_url") or source_dict.get("public_source_url") or source_dict.get("url") or source), "locator": locator, "retrieved_at": str(source_dict.get("retrieved_at") or raw.get("retrieved_at") or "")})
             if not documents:
                 raise EngineError("本次ima资料没有可读取的产品原文，无法生成有依据的内容")
             image_candidates = []
@@ -312,7 +338,7 @@ class MarketingEngine:
                 if identity in seen_images: continue
                 seen_images.add(identity)
                 visual_review = str(raw.get("visual_review") or "")
-                image_candidates.append({"id": "I" + str(len(image_candidates) + 1), "url": url, "title": str(raw.get("title") or raw.get("name") or source_dict.get("title") or raw.get("caption") or "产品资料图片"), "source_title": str(raw.get("source_title") or source_dict.get("title") or materials.get("kb_name") or "ima共享知识库"), "source_url": source_url, "position": "", "caption": "", "model": material_product, "status": "matched", "description": str(raw.get("description") or raw.get("caption") or ""), "visual_review": visual_review, "verification_basis": "ima产品目录、文件元数据及人工视觉核查" if visual_review else "ima产品目录与文件元数据；尚未执行视觉核查"})
+                image_candidates.append({"id": "I" + str(len(image_candidates) + 1), "url": url, "title": str(raw.get("title") or raw.get("name") or source_dict.get("title") or raw.get("caption") or "产品资料图片"), "source_title": str(raw.get("source_title") or source_dict.get("title") or materials.get("kb_name") or "ima共享知识库"), "source_url": source_url, "position": "", "caption": "", "model": material_product, "status": "matched", "description": str(raw.get("description") or raw.get("caption") or ""), "visual_review": visual_review, "verification_basis": "ima产品目录、文件元数据及制作阶段图像预览核查" if visual_review else "ima产品目录与文件元数据；尚未执行视觉核查"})
             if len(image_candidates) < rule["min"]:
                 result.update(status="needs_clarification", mode="clarification", questions=[f"{platform}需要{rule['min']}—{rule['max']}张同型号ima图片，本次只有{len(image_candidates)}张。请补充该型号资料，或选择适合当前图片数量的渠道。"], message="图片素材不足，尚未生成待发布文稿。")
                 record(current_step, started, f"接收{len(documents)}份原文、{len(image_candidates)}张同型号图片；配图不足", "warning")
@@ -373,9 +399,10 @@ class MarketingEngine:
             current_step = "场景图文生成"
             started = time.monotonic()
             generation = self._chat(
-                "你负责第二阶段：基于已经核对的facts原创生成当前任务图文，落实strategy并避免rejected_requests。只使用facts中的事实，不自行发掘文档，不把用户要求当产品依据。返回JSON {strategy:{angle,cta},article:{title,lead,sections:[{heading,text,fact_ids:[]}],cta,tags:[]},images:[{id,position,caption}]}。每个正文段落列其事实id，标题/导语也只能用这些事实。公众号3—5段，小红书3—5短段，朋友圈1段一个核心卖点，海报1—3段每段一个卖点。图片选image_count张不同id，position说明具体位置，caption仅根据图元数据，不推断看不见的功能。内容不要含未证实价格、个人亲测或历史体验。", {"task": payload, "strategy": strategy, "length_guidance": rule["length"], "facts": facts, "images": image_candidates[:16], "image_count": image_count, "rejected_requests": input_issues}, 5000)
+                "你负责第二阶段：基于已经核对的facts原创生成当前任务图文，落实strategy并避免rejected_requests。只使用facts中的事实，不自行发掘文档，不把用户要求当产品依据。返回JSON {strategy:{angle,cta},article:{title,lead,sections:[{heading,text,fact_ids:[]}],cta,tags:[]},images:[{id,position,caption}]}。每个正文段落列其事实id，标题/导语也只能用这些事实。公众号3—5段，小红书3—5短段，朋友圈1段一个核心卖点，海报1—3段每段一个卖点。总字数优先服从task.brief；每段只用1—2项贴合任务的事实，不罗列所有CPU/无线/特色应用参数，整篇只突出2—4个关键卖点。除小红书外默认tags为空数组。图片选image_count张不同id，position说明具体位置，caption用15—35字简洁描述已知画面，不复述文件名，不推断看不见的功能。USB3.2 Gen1名称不能证明USB-A形态，不写原文没有的接口形态或雷电协议。触控硬件不直接证明每个应用支持缩放或批注，相关动作必须带应用支持条件或改为带常用文件到店核对的建议。内容不要含未证实价格、个人亲测或历史体验。", {"task": payload, "strategy": strategy, "length_guidance": rule["length"], "facts": facts, "images": image_candidates[:16], "image_count": image_count, "rejected_requests": input_issues}, 5000)
             article = generation.get("article") or {}
             article = {"title": str(article.get("title") or "").strip(), "lead": str(article.get("lead") or "").strip(), "sections": article.get("sections") or [], "cta": str(article.get("cta") or "").strip(), "tags": [str(t).lstrip("#") for t in article.get("tags", []) if str(t).strip()]}
+            if platform != "小红书": article["tags"] = []
             valid_ids = {f["id"] for f in facts}
             sections = []
             for section in article["sections"]:
@@ -461,7 +488,7 @@ class MarketingEngine:
                 return result
             result["checks"].append({"type": "合规规则", "status": "pass", "claim": "最终发布稿", "evidence": "检查绝对化、全面兼容、虚构体验、动态权益、医疗功效及无依据数字", "action": "独立规则未发现残留问题；已完成前述语义核验"})
             visual_count = sum(bool(i.get("visual_review")) for i in used_images)
-            result["checks"].append({"type": "图片与平台", "status": "pass", "claim": f"{len(used_images)}张{material_product}图片", "evidence": f"ima产品目录与文件元数据；{platform}要求{rule['min']}—{rule['max']}张；{visual_count}张另有人工视觉核查说明", "action": "按已确认来源与图意编排；未核查画面的图片请预览后发布"})
+            result["checks"].append({"type": "图片与平台", "status": "pass", "claim": f"{len(used_images)}张{material_product}图片", "evidence": f"ima产品目录与文件元数据；{platform}要求{rule['min']}—{rule['max']}张；{visual_count}张另有图像预览核查说明", "action": "按已确认来源与图意编排；未核查画面的图片请预览后发布"})
             missing_preview = sum(not i["url"] for i in used_images)
             if missing_preview:
                 result["checks"].append({"type": "图片预览", "status": "warning", "claim": f"{missing_preview}张图片暂无浏览器预览URL", "evidence": "资料引用可追溯，但适配器未提供可展示地址", "action": "请打开来源确认画面后发布"})

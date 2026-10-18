@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "policy": "公开参考仅用于逐节完整匹配当前 ima 检索结果，不作为独立资料回退。图片必须重算当前 ima 下载文件的 SHA-256，匹配公开来源后方可选用。",
+  "products": [
+    {
+      "product_name": "MateBook 14 酷睿 Ultra",
+      "aliases": [
+        "HUAWEI MateBook 14 酷睿 Ultra",
+        "华为 MateBook 14 酷睿 Ultra",
+        "MateBook 14 酷睿Ultra"
+      ],
+      "verified_at": "2026-10-18T06:07:53+00:00",
+      "public_spec_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+      "public_page_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/",
+      "public_http_status": 200,
+      "required_sections": [
+        "操作系统",
+        "尺寸与重量",
+        "屏幕",
+        "处理器"
+      ],
+      "minimum_sections": 6,
+      "ignored_public_footers": [
+        "即将离开consumer.huawei.com\n您即将跳转至第三方页面，华为无法控制，也无法对该页面内容负责。\n继续访问\n取消"
+      ],
+      "sections": [
+        {
+          "heading": "操作系统",
+          "text": "Windows 11 家庭版\nLinux V20 版"
+        },
+        {
+          "heading": "尺寸与重量",
+          "text": "宽度\n312.6 mm\n深度\n226.8 mm\n高度\n14.5 mm\n重量\n1.31 kg\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。"
+        },
+        {
+          "heading": "屏幕",
+          "text": "尺寸\n14.2 英寸\n类型\nOLED\n屏占比\n91%\n屏幕比例\n3:2\n分辨率\n2880 × 1920，243 ppi\n亮度\n450 尼特\n色域\nWindows 版：Adobe RGB / P3 / sRGB\nLinux V20 版：P3\n对比度\n1000000:1\n触摸屏\n多点触控触摸屏，最多支持 10 点触控\n*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。\n*屏幕亮度、色域、对比度等数据为典型值。"
+        },
+        {
+          "heading": "处理器",
+          "text": "英特尔® 酷睿™ Ultra 7 155H 处理器\n*仅限 Windows 版本产品搭载。\n英特尔® 酷睿™ Ultra 5 125H 处理器"
+        },
+        {
+          "heading": "存储",
+          "text": "1 TB NVMe PCIe SSD\n*硬盘格式化之后的实际容量可能较小。"
+        },
+        {
+          "heading": "显卡",
+          "text": "英特尔锐炫™显卡"
+        },
+        {
+          "heading": "内存",
+          "text": "16 GB / 24 GB / 32 GB"
+        },
+        {
+          "heading": "无线连接",
+          "text": "WLAN\nIEEE 802.11a/b/g/n/ac/ax，160 MHz\n2.4 GHz 和 5 GHz\n2 × 2 MIMO\n支持 WPA/WPA2/WPA3\n蓝牙\nWindows 版：蓝牙 5.1\nLinux V20 版：蓝牙 4.2"
+        },
+        {
+          "heading": "电池",
+          "text": "材料\n锂聚合物\n容量\n70 Wh（额定容量）"
+        },
+        {
+          "heading": "接口",
+          "text": "USB-C 接口 × 1（全功能）\nUSB3.2 Gen1 × 2\nHDMI × 1\n3.5 mm 耳机 & 麦克风二合一接口 × 1"
+        },
+        {
+          "heading": "键盘和触控板",
+          "text": "全尺寸背光键盘\n*快捷键功能仅限 Windows 版本产品支持。\n大尺寸触控板，支持多点触控\n电源键\n指纹电源键\n*Linux V20 版：仅支持电源键功能，不支持指纹识别。"
+        },
+        {
+          "heading": "摄像头",
+          "text": "1080P 高清摄像头"
+        },
+        {
+          "heading": "音频",
+          "text": "麦克风 × 2\n扬声器 × 2"
+        },
+        {
+          "heading": "特色应用",
+          "text": "超级终端*\nAI 概要\nAI 空间\nSuper Turbo\n华为电脑管家\n华为应用市场\n华为浏览器\n高能模式/省电模式：热键 Fn + P 开启\n华为 F10 一键还原\n显示管理（护眼模式）\n*以上功能仅限 Windows 版本产品支持。"
+        },
+        {
+          "heading": "包装清单",
+          "text": "PC × 1\nUSB-C 电源适配器(适配器和充电线一体式连接) × 1\n快速指南 × 1"
+        }
+      ],
+      "images": [
+        {
+          "sha256": "1287e5a6d1d6fd75e79f2dc4ca19c83e0436253e53b9c11f178be023c2d38981",
+          "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+          "title": "MateBook 14 酷睿 Ultra 产品主视觉",
+          "description": "笔记本电脑的官方主视觉，用于展示产品外观。",
+          "visual_review": "已核对为该型号产品主视觉；不从画面推断性能、材质或使用效果。",
+          "width": 1104,
+          "height": 870
+        },
+        {
+          "sha256": "42fe5f2856ddddf71d2099e9d2a43a53e100c08ead52d63b7a616a31276bba29",
+          "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+          "title": "MateBook 14 酷睿 Ultra 屏幕与键盘近景",
+          "description": "笔靠近屏幕和键盘的产品近景。",
+          "visual_review": "已核对笔、屏幕与键盘构图；画面不能证明笔的购买配套、协议兼容或所有应用均支持书写。",
+          "width": 2175,
+          "height": 1623
+        },
+        {
+          "sha256": "3c1145f841caab0c3b13aef08a825cffb8c36d8d59b8935bc4269639c06485da",
+          "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+          "title": "MateBook 14 酷睿 Ultra 彩色屏幕画面",
+          "description": "产品屏幕展示彩色羽毛画面。",
+          "visual_review": "已核对为产品屏幕的彩色羽毛画面；不从示意色彩推断实测色准或护眼效果。",
+          "width": 1040,
+          "height": 584
+        }
+      ]
+    }
+  ]
+}
