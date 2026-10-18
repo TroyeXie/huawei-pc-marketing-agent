@@ -143,22 +143,24 @@ def _is_denial(text: str, start: int, end: int) -> bool:
     return bool(re.search(denial, prefix) or re.search(r"(?:尚未|未获|未经).{0,10}(?:确认|证实|验证)|(?:未|不)(?:得到|能得到).{0,5}(?:确认|证实)", suffix))
 
 
-_SCREEN_RULE = "事实·屏幕比例效果"
-_SCREEN_CONTEXT = re.compile(r"3\s*[:：∶比]\s*2|三比二|屏幕比例|纵向空间|竖向空间|一屏|屏幕|文档|表格", re.I)
+_SCREEN_RULE = "事实·规格使用效果"
+_SCREEN_CONTEXT = re.compile(r"3\s*[:：∶比]\s*2|三比二|屏幕比例|纵向空间|竖向空间|一屏|屏幕|文档|表格|键盘|数字键区|数字输入|数字录入|键位", re.I)
 _SCREEN_EFFECT = re.compile(
     r"(?:多显示|显示更多|显示.{0,4}更多|多看).{0,10}(?:内容|几行|行数|[一二三四五六七八九十\d]+行)"
     r"|影响.{0,12}(?:多少行|几行|行数)"
     r"|(?:(?:更|更加|更为|相对更)(?:贴合|适合)|贴合|适合).{0,16}(?:纵向|竖向|文档|表格|网页|阅读)"
     r"|(?:纵向|竖向)(?:显示)?空间.{0,8}(?:更大|更多|增加|提升)"
-    r"|(?:更大|更多).{0,4}(?:纵向|竖向)(?:显示)?空间", re.I)
+    r"|(?:更大|更多).{0,4}(?:纵向|竖向)(?:显示)?空间"
+    r"|(?:更|更加)(?:顺手|直接|快|高效|省力|流畅)"
+    r"|(?:提升|提高|改善).{0,5}(?:效率|速度|输入体验|录入体验)", re.I)
 _SENTENCE = re.compile(r"[^。！？!?；;\n]+[。！？!?；;]?")
 
 
 def _screen_inference_spans(text: str, facts: list[dict[str, Any]]) -> list[tuple[int, int, str]]:
-    """Locate only the demonstrated aspect-ratio effect gap, using source quotes.
+    """Locate unsupported display or keyboard effects using source quotes.
 
-    An aspect ratio alone is not evidence for extra rows/content or a better
-    reading fit. Complete matching source sentences are accepted; negations and
+    Hardware specifications alone do not prove extra rows, better reading fit
+    or easier/faster keyboard input. Matching source sentences, negations and
     explicit requests to check whether an effect exists are not assertions.
     """
     if not _SCREEN_CONTEXT.search(text):
@@ -177,7 +179,7 @@ def _screen_inference_spans(text: str, facts: list[dict[str, Any]]) -> list[tupl
                 continue
             if re.search(r"(?:不能|不得|不可|不应|不要|请勿|禁止).{0,18}(?:推导|推断|认定|宣称|保证|承诺|认为)|(?:未|没有|尚未|无法)(?:证明|证实|确认)", prefix):
                 continue
-            if re.search(r"(?:核对|确认|比较|检验|看看).{0,25}(?:是否|能否|能不能|会不会)", prefix):
+            if re.search(r"(?:核对|确认|比较|检验|看看|体验|试|感受).{0,25}(?:是否|能否|能不能|会不会)", prefix):
                 continue
             # The question may precede its on-site verification instruction.
             suffix = sentence[effect.end():]
@@ -192,7 +194,7 @@ def _screen_inference_spans(text: str, facts: list[dict[str, Any]]) -> list[tupl
 
 def _screen_findings(text: str, facts: list[dict[str, Any]]) -> list[dict[str, str]]:
     return [{"type": _SCREEN_RULE, "status": "blocked", "claim": sentence,
-             "evidence": "本轮原文短引未明确支持这一显示内容、行数或阅读适配效果；屏幕比例参数不能替代比较结论与条件",
+             "evidence": "本轮原文短引未明确支持这一显示、阅读或键盘输入效果；硬件规格不能替代比较结论与条件",
              "action": "删除无依据效果句，保留同段有据规格和现场核对建议"}
             for _, _, sentence in _screen_inference_spans(text, facts)]
 
@@ -519,7 +521,7 @@ class MarketingEngine:
             started = time.monotonic()
             paths = _content_paths(article, used_images)
             verification = self._chat(
-                "你是独立核验模块，不负责润色。审查所有content_paths的产品声明是否被facts的原文quote充分支持，检查型号/数字/单位/功能/适用版本/限制/图片描述/营销合规。措辞建议与CTA无需产品证据；明确否定的限制不是违规。不要仅凭同数字判支持。返回JSON {reviewed_paths:[所有传入路径],checks:[{path,claim,fact_ids:[],status:'pass'或'unsupported',evidence}],issues:[{path,claim,reason}]}。每条无依据事实/遗漏关键限定/违规或图注推断都必须列issues，path必须是传入路径。已核对事实本身的text也必须与quote关系一致；如发现事实text误读quote，列issues到使用该事实的全部内容路径。不要返回改写后的稿件。", {"product": material_product, "task": payload, "facts": facts, "image_metadata": image_candidates, "article": article, "content_paths": paths}, 5000)
+                "你是独立核验模块，不负责润色。审查所有content_paths的产品声明是否被facts的原文quote充分支持，检查型号/数字/单位/功能/适用版本/限制/图片描述/营销合规。纯操作邀请与CTA无需产品证据；但“更顺手、更直接、更快、提升效率”等主观体验或比较同样属于产品使用效果声明，必须有原文quote直接支持，不能以主观措辞、场景建议或CTA为由豁免。仅独立数字键盘等硬件规格不能证明输入更顺手或更直接；明确询问“请现场试是否顺手”属于待验证建议。明确否定的限制不是违规。不要仅凭同数字判支持。返回JSON {reviewed_paths:[所有传入路径],checks:[{path,claim,fact_ids:[],status:'pass'或'unsupported',evidence}],issues:[{path,claim,reason}]}。每条无依据事实/遗漏关键限定/违规或图注推断都必须列issues，path必须是传入路径。已核对事实本身的text也必须与quote关系一致；如发现事实text误读quote，列issues到使用该事实的全部内容路径。不要返回改写后的稿件。", {"product": material_product, "task": payload, "facts": facts, "image_metadata": image_candidates, "article": article, "content_paths": paths}, 5000)
             reviewed = {str(p) for p in verification.get("reviewed_paths", [])}
             if set(paths) - reviewed:
                 raise EngineError("语义核验未覆盖全部文稿与图注，未交付未经完整核验的结果")
@@ -552,8 +554,8 @@ class MarketingEngine:
                 if check["type"] == "语义核验" and check["status"] == "pass" and any(_norm(check["claim"]) in _norm(item["claim"]) for item in screen_checks):
                     check["action"] = "模型本轮判为通过；随后交付前规则已移除这一无据句"
             residual_screen = [finding for text in _content_paths(article, used_images).values() for finding in _screen_findings(text, facts)]
-            result["rule_revision"] = {"screen_inference": "v2", "executed": True, "removed_items": len(screen_checks)}
-            record("屏幕比例效果规则", started, f"按原文短引检查全部标题、导语、段落、标签与图注；处理{len(screen_checks)}处无据效果句")
+            result["rule_revision"] = {"screen_inference": "v3-keyboard", "executed": True, "removed_items": len(screen_checks)}
+            record("规格使用效果规则", started, f"按原文短引检查全部标题、导语、段落、标签与图注；处理{len(screen_checks)}处无据效果句")
             if residual_screen:
                 result["checks"].extend(residual_screen)
                 result.update(status="blocked", article=article, images=used_images, message="屏幕比例效果推断清理后仍有残留，已阻止交付。", markdown="")
@@ -637,7 +639,7 @@ def _clean_screen_claims(article: dict[str, Any], images: list[dict[str, Any]], 
         spans = _screen_inference_spans(text, facts)
         for _, _, sentence in spans:
             checks.append({"type": _SCREEN_RULE, "status": "warning", "claim": sentence,
-                           "evidence": "本轮原文短引未明确给出相应显示或阅读比较结论与条件",
+                           "evidence": "本轮原文短引未明确给出相应显示、阅读或键盘输入效果结论与条件",
                            "action": "已删除命中句；保留同段其余规格与现场核对建议，空标题或图注改为中性文字"})
         for start, end, _ in reversed(spans):
             text = text[:start] + text[end:]
@@ -660,7 +662,7 @@ def _clean_screen_claims(article: dict[str, Any], images: list[dict[str, Any]], 
             continue
         original_heading_bad = bool(_screen_inference_spans(heading, facts))
         if original_heading_bad:
-            section["heading"] = "屏幕规格与现场核对"
+            section["heading"] = "产品规格与现场核对"
             section["text"] = cleaned
         else:
             section["heading"] = heading
