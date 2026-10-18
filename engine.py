@@ -531,7 +531,7 @@ class MarketingEngine:
             # A verifier may record an unsupported check but omit issues: do not ignore it.
             for entry in verification.get("checks", []):
                 if isinstance(entry, dict) and str(entry.get("status", "")).lower() not in {"pass", "supported", "ok"}:
-                    if not any(str(i.get("path")) == str(entry.get("path")) for i in issues):
+                    if not any((str(i.get("path")), str(i.get("claim"))) == (str(entry.get("path")), str(entry.get("claim"))) for i in issues):
                         issues.append({"path": entry.get("path"), "claim": entry.get("claim"), "reason": entry.get("evidence") or "独立核验未确认该声明"})
             bad_paths = set()
             for issue in issues:
@@ -539,8 +539,8 @@ class MarketingEngine:
                 if path not in paths:
                     raise EngineError("语义核验发现无法定位的问题，已停止交付")
                 bad_paths.add(path)
-                result["checks"].append({"type": "语义核验", "status": "warning", "claim": str(issue.get("claim") or paths[path]), "evidence": str(issue.get("reason") or "本轮原文未支持该声明"), "action": "已移除对应段落或改为中性信息"})
-            article, used_images = _remove_paths(article, used_images, bad_paths, material_product, payload["scene"], rule["cta"])
+                result["checks"].append({"type": "语义核验", "status": "warning", "claim": str(issue.get("claim") or paths[path]), "evidence": str(issue.get("reason") or "本轮原文未支持该声明"), "action": "精确定位时删除完整问题句；否则移除对应段落或改为中性信息"})
+            article, used_images = _remove_paths(article, used_images, bad_paths, material_product, payload["scene"], rule["cta"], issues)
             for entry in verification.get("checks", []):
                 if isinstance(entry, dict) and str(entry.get("status", "")).lower() in {"pass", "supported", "ok"} and str(entry.get("path")) not in bad_paths:
                     result["checks"].append({"type": "语义核验", "status": "pass", "claim": str(entry.get("claim") or "已审查内容"), "evidence": str(entry.get("evidence") or "与本轮引用事实一致"), "action": "保留"})
@@ -688,13 +688,43 @@ def _strip_section_numbers(article: dict[str, Any]) -> int:
     return count
 
 
-def _remove_paths(article: dict[str, Any], images: list[dict[str, Any]], paths: set[str], product: str, scene: str, default_cta: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+def _remove_paths(article: dict[str, Any], images: list[dict[str, Any]], paths: set[str], product: str, scene: str, default_cta: str, issues: list[dict[str, Any]] | None = None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     article = dict(article)
     if "title" in paths: article["title"] = product + "｜" + scene + "选购参考"
     if "lead" in paths: article["lead"] = ""
     if "cta" in paths: article["cta"] = default_cta
     if "tags" in paths: article["tags"] = []
-    article["sections"] = [s for i, s in enumerate(article.get("sections", [])) if f"sections.{i}" not in paths]
+    sections = []
+    for i, original in enumerate(article.get("sections", [])):
+        path = f"sections.{i}"
+        if path not in paths:
+            sections.append(original)
+            continue
+        text, heading = str(original.get("text") or ""), str(original.get("heading") or "")
+        path_issues = [issue for issue in (issues or []) if str(issue.get("path") or "") == path]
+        spans = set()
+        precise = bool(path_issues)
+        for issue in path_issues:
+            claim = str(issue.get("claim") or "").strip()
+            if len(claim) < 4 or claim in heading or text.count(claim) != 1:
+                precise = False
+                break
+            start = text.index(claim)
+            # Require an actual terminal mark: an unfinished tail is not a
+            # confidently bounded sentence. Locate every span before editing.
+            sentence = next((m for m in re.finditer(r"[^。！？!?；;\n]+[。！？!?；;]", text)
+                             if m.start() <= start and start + len(claim) <= m.end()), None)
+            if sentence is None:
+                precise = False
+                break
+            spans.add((sentence.start(), sentence.end()))
+        if precise:
+            cleaned = text
+            for start, end in sorted(spans, reverse=True):
+                cleaned = cleaned[:start] + cleaned[end:]
+            if cleaned.strip() and not any(str(issue.get("claim") or "").strip() in cleaned for issue in path_issues):
+                sections.append({**original, "text": cleaned.strip()})
+    article["sections"] = sections
     for i, image in enumerate(images):
         if f"images.{i}.caption" in paths: image["caption"] = product + "资料配图；具体画面与版本请参见来源"
     return article, images

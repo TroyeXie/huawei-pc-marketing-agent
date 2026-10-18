@@ -151,7 +151,7 @@ def catalog():
 @app.get('/api/status')
 def status():
  now=time.monotonic()
- if now-_status_cache['at']<30:return _status_cache['data']
+ if _status_cache['data'] and now-_status_cache['at']<30:return _status_cache['data']
  output={'ima_connected':False,'knowledge_base':'任德耀新建华为PC知识库','account_label':'参赛团队 ima 账号','llm_configured':bool(os.getenv('MODEL_API_KEY') and os.getenv('MODEL_API_URL') and os.getenv('MODEL_NAME')),'mode':'live','github_url':GITHUB_URL,'message':''}
  if use_verified_cache():
   snapshots=cache_index()
