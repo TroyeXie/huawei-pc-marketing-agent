@@ -706,9 +706,18 @@ def _render_markdown(result: dict[str, Any]) -> str:
         lines.extend([f"**{image['id']} · {image['title']}**", "", f"插入位置：{image['position']}", "", f"图片说明：{image['caption']}", "", f"型号：{image['model']}；来源资料：{image['source_title']}", ""])
         if image["url"]: lines.extend(["![" + image["caption"].replace("]", "") + "](" + image["url"] + ")", ""])
         if image["source_url"]: lines.extend(["[打开图片来源](" + image["source_url"] + ")", ""])
-    lines.extend(["## 四、核验结果", "", result["message"], ""])
-    for check in result["checks"]:
-        lines.append(f"- [{check['status']}] {check['type']}：{check['claim']}。{check['action']}")
+    checks = result["checks"]
+    pass_states = {"pass", "passed", "ok", "success", "verified"}
+    passed = sum(str(check.get("status", "")).lower() in pass_states for check in checks)
+    lines.extend(["## 四、核验结果", "", f"{passed} 项通过。", ""])
+    for check in checks:
+        if str(check.get("status", "")).lower() in pass_states:
+            continue
+        lines.append(f"- [{check['status']}] {check['type']}：{check['claim']}")
+        if check.get("evidence"):
+            lines.append("  - 依据：" + str(check["evidence"]))
+        if check.get("action"):
+            lines.append("  - 处理：" + str(check["action"]))
     if result.get("growth_plan"):
         from growth import growth_markdown
         lines.append(growth_markdown(result["growth_plan"]))
