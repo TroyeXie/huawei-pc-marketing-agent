@@ -85,7 +85,7 @@
   }
 
   function modeLabel(mode) {
-    const names = { live: "实时检索与生成", live_llm: "真实模型生成 · ima 资料", online: "实时检索与生成", llm: "模型生成", ima_live: "ima 实时检索", live_ima: "ima 实时检索", local: "本地资料模式", local_fallback: "本地资料备用模式", offline: "离线资料模式", demo: "演示模式", fallback: "备用模式", hybrid: "混合检索模式", rules: "规则生成模式", rule_based: "规则生成模式", verified: "已核验资料模式", clarification: "等待信息确认", unconfigured: "生成服务待配置" };
+    const names = { live: "实时检索与生成", live_llm: "模型生成 · ima 产品资料", online: "实时检索与生成", llm: "模型生成", ima_live: "ima 实时检索", live_ima: "ima 实时检索", local: "本地资料模式", local_fallback: "本地资料备用模式", offline: "离线资料模式", demo: "演示模式", fallback: "备用模式", hybrid: "混合检索模式", rules: "规则生成模式", rule_based: "规则生成模式", verified: "已核验资料模式", clarification: "等待信息确认", unconfigured: "生成服务待配置" };
     return names[mode] || textOf(mode);
   }
 
@@ -101,10 +101,7 @@
       if (result.llm_configured === false) labels.push("生成模型待配置");
       $("connection-label").textContent = labels.join(" · ");
       $("connection-label").title = textOf(result.message);
-      const base = result.knowledge_base;
-      const baseName = typeof base === "object" && base ? base.name || base.title : base;
-      $("knowledge-label").textContent = baseName ? `资料来源：${textOf(baseName)}` : "ima 产品事实 · 官方来源配图";
-      $("knowledge-label").title = cached ? "使用此前已取回并核对的 ima 资料，内容由模型现场生成。" : "ima 知识库产品资料";
+      // Source links are shown beside the adopted facts and images.
       if (result.github_url && safeUrl(result.github_url)?.startsWith("https://")) {
         $("github-link").href = safeUrl(result.github_url);
         $("github-link").target = "_blank";
@@ -117,7 +114,7 @@
       $("connection-dot").className = "status-dot warning";
       $("connection-label").textContent = "暂时无法读取服务状态";
       $("connection-label").title = error.message;
-      $("knowledge-label").textContent = "请刷新状态或稍后重试";
+      // The status label above already states the connection issue.
     } finally { $("refresh-status").disabled = false; }
   }
 
@@ -555,7 +552,7 @@
       const detail = element("div");
       detail.append(element("p", "check-claim", inlineText(check.claim || check.message || "核验完成")));
       if (check.evidence) detail.append(element("p", "check-evidence", `依据：${inlineText(check.evidence)}`));
-      if (check.action && !/^(无需|无须|无需修改|无需处理|无|none|no action)/i.test(inlineText(check.action))) detail.append(element("p", "check-action", `建议：${inlineText(check.action)}`));
+      if (status.style !== "pass" && check.action && !/^(无需|无须|无需修改|无需处理|无|none|no action)/i.test(inlineText(check.action))) detail.append(element("p", "check-action", `建议：${inlineText(check.action)}`));
       row.append(element("div", "check-type", checkType(check.type)), element("span", `check-badge ${status.style}`, status.label), detail);
       (status.style === "pass" ? passedList : needsAttention).append(row);
     });
@@ -581,7 +578,7 @@
     state.input = input;
     $("result").hidden = false;
     $("result-heading").textContent = result.status === "blocked" ? "本次内容需要修订" : result.status === "needs_clarification" ? "补充信息后继续任务" : result.status === "error" ? "本次运行未成功完成" : "为这次任务准备的营销方案";
-    $("article-heading").textContent = result.status === "blocked" ? "待修订内容" : "图文成稿";
+    $("article-heading").textContent = result.status === "blocked" ? "待修订内容" : result.publication_revision ? "图文成稿 · 发布整理版" : "图文成稿";
     $("result-meta").textContent = [input.scene, input.platform].filter(Boolean).join(" · ");
     const banner = $("result-status");
     const fallbackMessages = { blocked: "本次内容未通过核验，请根据逐项核验结果修订后再使用。", needs_clarification: "当前信息不足，请补充任务要求后重新生成。", error: "本次任务未成功完成，请稍后重试。" };
@@ -705,22 +702,23 @@
       state.examples.forEach((example, index) => {
         const row = element("article", "example-row");
         const body = element("div", "example-body");
-        const input = example.input || {};
-        body.append(element("h2", "", example.label || example.result?.article?.title || `运行案例 ${index + 1}`));
+        const input = example.publication_input || example.input || {};
+        const result = example.publication_result || example.result;
+        body.append(element("h2", "", example.label || result?.article?.title || `运行案例 ${index + 1}`));
         body.append(element("p", "example-description", [input.audience, input.scene].filter(Boolean).join(" · ")));
-        const details = [input.platform, example.result?.images?.length ? `${example.result.images.length} 张配图` : ""].filter(Boolean);
+        const details = [input.platform, result?.images?.length ? `${result.images.length} 张配图` : ""].filter(Boolean);
         body.append(element("p", "example-detail", details.join(" / ")));
         const actions = element("div", "example-actions");
-        const view = element("button", "secondary-button", "查看实际结果 ↗");
+        const view = element("button", "secondary-button", example.publication_result ? "查看整理成稿 ↗" : "查看实际结果 ↗");
         view.type = "button";
-        view.disabled = !example.result;
+        view.disabled = !result;
         view.addEventListener("click", () => {
           if (state.running) return toast("当前任务正在运行，请等待结果后再打开案例。");
           fillInput(input);
           showView("workbench");
           $("notice").hidden = true;
           $("run-progress").hidden = true;
-          renderResult(example.result, input, example.report_note || "");
+          renderResult(result, input, example.report_note || "");
           requestAnimationFrame(() => $("result").scrollIntoView({ behavior: "smooth", block: "start" }));
         });
         const load = element("button", "text-button", "用这个任务试一遍");

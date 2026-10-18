@@ -19,7 +19,7 @@ from typing import Any
 
 
 PLATFORM_RULES = {
-    "公众号": {"min": 2, "max": 4, "preferred": 3, "structure": "标题→导语→任务分段→选型建议→行动引导", "tone": "清楚、可信、解释任务与选择理由", "cta": "带常用文件和外设到店体验，再按具体配置咨询", "length": "450—900字"},
+    "公众号": {"min": 2, "max": 4, "preferred": 3, "structure": "标题→导语→任务分段→选型建议→行动引导", "tone": "清楚、可信、解释任务与选择理由", "cta": "预约体验，咨询适合自己的具体配置", "length": "450—900字"},
     "小红书": {"min": 3, "max": 6, "preferred": 4, "structure": "口语标题→具体困扰→短段场景→选择提醒→话题标签", "tone": "口语、短句、有场景，不虚构亲测经历", "cta": "收藏购机清单，留言说明常用软件与使用需求", "length": "250—550字"},
     "门店朋友圈": {"min": 1, "max": 3, "preferred": 1, "structure": "一个场景→一个核心卖点→咨询或到店", "tone": "简洁、亲切、直达一个需求", "cta": "私信说明常用软件，预约到店体验", "length": "80—180字"},
     "门店海报": {"min": 1, "max": 1, "preferred": 1, "structure": "主标题→副标题→最多三个卖点→行动引导", "tone": "短而明确，突出一眼可读的信息", "cta": "到店体验，咨询具体配置", "length": "35—100字"},
@@ -468,7 +468,7 @@ class MarketingEngine:
             current_step = "场景图文生成"
             started = time.monotonic()
             generation = self._chat(
-                "你负责第二阶段：基于已经核对的facts原创生成当前任务图文，落实strategy并避免rejected_requests。只使用facts中的事实，不自行发掘文档，不把用户要求当产品依据。返回JSON {strategy:{angle,cta},article:{title,lead,sections:[{heading,text,fact_ids:[]}],cta,tags:[]},images:[{id,position,caption}]}。每个正文段落列其事实id，标题/导语也只能用这些事实。公众号3—5段，小红书3—5短段，朋友圈1段一个核心卖点，海报1—3段每段一个卖点。总字数优先服从task.brief；每段只用1—2项贴合任务的事实，不罗列所有CPU/无线/特色应用参数，整篇只突出2—4个关键卖点。除小红书外默认tags为空数组。图片选image_count张不同id，position说明具体位置，caption用15—35字简洁描述已知画面，不复述文件名，不推断看不见的功能。USB3.2 Gen1名称不能证明USB-A形态，不写原文没有的接口形态或雷电协议。触控硬件不直接证明每个应用支持缩放或批注，相关动作必须带应用支持条件或改为带常用文件到店核对的建议。内容不要含未证实价格、个人亲测或历史体验。", {"task": payload, "strategy": strategy, "length_guidance": rule["length"], "facts": facts, "images": image_candidates[:16], "image_count": image_count, "rejected_requests": input_issues}, 5000)
+                "你负责第二阶段：基于已经核对的facts原创生成当前任务图文，落实strategy并避免rejected_requests。只使用facts中的事实，不自行发掘文档，不把用户要求当产品依据。返回JSON {strategy:{angle,cta},article:{title,lead,sections:[{heading,text,fact_ids:[]}],cta,tags:[]},images:[{id,position,caption}]}。每个正文段落列其事实id，标题/导语也只能用这些事实。公众号3—5段，小红书3—5短段，朋友圈1段一个核心卖点，海报1—3段每段一个卖点。总字数优先服从task.brief；每段只用1—2项贴合任务的事实，不罗列所有CPU/无线/特色应用参数，整篇只突出2—4个关键卖点。除小红书外默认tags为空数组。图片选image_count张不同id，position说明具体位置，caption用15—35字简洁描述已知画面，不复述文件名，不推断看不见的功能。USB3.2 Gen1名称不能证明USB-A形态，不写原文没有的接口形态或雷电协议。触控硬件不直接证明每个应用支持缩放或批注；介绍具体应用动作时保留应用支持条件，未介绍应用动作时只写触控规格。整篇只保留一次预约体验、咨询配置或收藏邀请，不在每段重复到店核对。内容不要含未证实价格、个人亲测或历史体验。", {"task": payload, "strategy": strategy, "length_guidance": rule["length"], "facts": facts, "images": image_candidates[:16], "image_count": image_count, "rejected_requests": input_issues}, 5000)
             article = generation.get("article") or {}
             article = {"title": str(article.get("title") or "").strip(), "lead": str(article.get("lead") or "").strip(), "sections": article.get("sections") or [], "cta": str(article.get("cta") or "").strip(), "tags": [str(t).lstrip("#") for t in article.get("tags", []) if str(t).strip()]}
             if platform != "小红书": article["tags"] = []

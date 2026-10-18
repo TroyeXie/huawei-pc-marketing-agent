@@ -102,6 +102,8 @@ async def headers(request:Request,call_next):
  response.headers['Referrer-Policy']='same-origin'
  if request.url.path.startswith('/api/'):
   response.headers['Cache-Control']='no-store'
+ if request.url.path in ('/static/app.js','/static/styles.css'):
+  response.headers['Cache-Control']='no-cache, max-age=0, must-revalidate'
  return response
 
 def client():
@@ -262,7 +264,7 @@ def examples():
  if not path.exists():return {'examples':[]}
  data=json.loads(path.read_text(encoding='utf-8'))
  for entry in data.get('examples',[]):
-  result=entry.get('result',{})
+  result=entry.get('publication_result') or entry.get('result',{})
   run_id=result.get('run_id')
   if run_id:
    with _lock:_runs.setdefault(run_id,result)

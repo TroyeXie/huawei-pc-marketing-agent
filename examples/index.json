@@ -743,6 +743,735 @@
           ],
           "stable_image_note": "本历史案例的图片由ima取得；展示地址为已确认SHA-256完全相同的华为公开图片。"
         }
+      },
+      "publication_result": {
+        "status": "success",
+        "questions": [],
+        "strategy": {
+          "audience": "准备开学购机的大学新生",
+          "scene": "开学季",
+          "platform": "小红书",
+          "goal": "让新生按课程文档、随身携带与常用外设需求形成购机清单。",
+          "angle": "按课程软件、随身携带与日常连接组织购机清单，优先解释系统、尺寸重量和接口。",
+          "structure": "口语标题→具体困扰→短段场景→选择提醒→话题标签",
+          "tone": "口语、短句、有场景，不虚构亲测经历",
+          "cta": "收藏这份购机清单，留言说说你常用的软件和外设。",
+          "image_count": 3
+        },
+        "article": {
+          "title": "开学买本别只看跑分！先按课程文档和随身需求列清单",
+          "lead": "大学新生的第一台笔记本，先想清楚三件事：课程文档用什么软件打开、每天要不要背着走、常用外设怎么接。",
+          "sections": [
+            {
+              "heading": "先看课程文档用什么软件",
+              "text": "不同专业用的软件不一样，选机前先列出课程必用软件。这台 MateBook 14 酷睿 Ultra 搭载 Windows 11 家庭版。",
+              "fact_ids": [
+                "F1"
+              ]
+            },
+            {
+              "heading": "每天背着走，尺寸重量要心里有数",
+              "text": "上课、图书馆、宿舍来回跑，机身宽度 312.6 mm、深度 226.8 mm、高度 14.5 mm，重量 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法不同可能有所差异。背包里放不放得下，最好按这个数据量一量。",
+              "fact_ids": [
+                "F2",
+                "F3"
+              ]
+            },
+            {
+              "heading": "常用外设怎么接，先看接口",
+              "text": "U 盘、投影、耳机这些开学常用外设，提前对一下接口。这台机型有 USB-C 接口 × 1（全功能）、USB3.2 Gen1 × 2、HDMI × 1、3.5 mm 耳机 & 麦克风二合一接口 × 1。",
+              "fact_ids": [
+                "F15"
+              ]
+            },
+            {
+              "heading": "屏幕和键盘，按使用习惯选",
+              "text": "14.2 英寸 OLED 屏，屏占比 91%，屏幕比例 3:2，分辨率 2880 × 1920、243 ppi。配全尺寸背光键盘，快捷键功能仅限 Windows 版本产品支持。触控屏最多支持 10 点触控，十点触控仅限 Windows 版本产品支持。",
+              "fact_ids": [
+                "F4",
+                "F5",
+                "F8",
+                "F16"
+              ]
+            }
+          ],
+          "cta": "收藏这份购机清单，留言说说你常用的软件和外设。",
+          "tags": [
+            "开学季",
+            "大学新生笔记本",
+            "MateBook14",
+            "购机清单",
+            "Windows11"
+          ]
+        },
+        "facts": [
+          {
+            "id": "F1",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 提供 Windows 11 家庭版操作系统。",
+            "quote": "## 操作系统\nWindows 11 家庭版",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "系统",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F2",
+            "text": "该机型宽度 312.6 mm、深度 226.8 mm、高度 14.5 mm。",
+            "quote": "宽度\n312.6 mm\n深度\n226.8 mm\n高度\n14.5 mm",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "尺寸",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F3",
+            "text": "重量为 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。",
+            "quote": "重量\n1.31 kg\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "重量",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F4",
+            "text": "屏幕为 14.2 英寸 OLED，屏占比 91%，屏幕比例 3:2。",
+            "quote": "尺寸\n14.2 英寸\n类型\nOLED\n屏占比\n91%\n屏幕比例\n3:2",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F5",
+            "text": "屏幕分辨率 2880 × 1920，243 ppi。",
+            "quote": "分辨率\n2880 × 1920，243 ppi",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F6",
+            "text": "屏幕亮度 450 尼特，亮度、色域、对比度等数据为典型值。",
+            "quote": "亮度\n450 尼特\n色域\nWindows 版：Adobe RGB / P3 / sRGB\nLinux V20 版：P3\n对比度\n1000000:1\n触摸屏\n多点触控触摸屏，最多支持 10 点触控\n*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。\n*屏幕亮度、色域、对比度等数据为典型值。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F7",
+            "text": "Windows 版色域为 Adobe RGB / P3 / sRGB。",
+            "quote": "色域\nWindows 版：Adobe RGB / P3 / sRGB",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F8",
+            "text": "支持多点触控触摸屏，最多支持 10 点触控，十点触控仅限 Windows 版本产品支持。",
+            "quote": "触摸屏\n多点触控触摸屏，最多支持 10 点触控\n*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F9",
+            "text": "处理器为英特尔® 酷睿™ Ultra 7 155H，仅限 Windows 版本产品搭载。",
+            "quote": "英特尔® 酷睿™ Ultra 7 155H 处理器\n*仅限 Windows 版本产品搭载。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "处理器",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F10",
+            "text": "存储为 1 TB NVMe PCIe SSD，硬盘格式化之后的实际容量可能较小。",
+            "quote": "1 TB NVMe PCIe SSD\n*硬盘格式化之后的实际容量可能较小。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "存储",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F11",
+            "text": "内存可选 16 GB / 24 GB / 32 GB。",
+            "quote": "16 GB / 24 GB / 32 GB",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "内存",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F12",
+            "text": "无线连接支持 IEEE 802.11a/b/g/n/ac/ax，160 MHz，2.4 GHz 和 5 GHz，2 × 2 MIMO，支持 WPA/WPA2/WPA3。",
+            "quote": "IEEE 802.11a/b/g/n/ac/ax，160 MHz\n2.4 GHz 和 5 GHz\n2 × 2 MIMO\n支持 WPA/WPA2/WPA3",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "无线连接",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F13",
+            "text": "Windows 版蓝牙为蓝牙 5.1。",
+            "quote": "蓝牙\nWindows 版：蓝牙 5.1",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "无线连接",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F14",
+            "text": "电池为锂聚合物，容量 70 Wh（额定容量）。",
+            "quote": "材料\n锂聚合物\n容量\n70 Wh（额定容量）",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "电池",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F15",
+            "text": "接口包括 USB-C 接口 × 1（全功能）、USB3.2 Gen1 × 2、HDMI × 1、3.5 mm 耳机 & 麦克风二合一接口 × 1。",
+            "quote": "USB-C 接口 × 1（全功能）\nUSB3.2 Gen1 × 2\nHDMI × 1\n3.5 mm 耳机 & 麦克风二合一接口 × 1",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "接口",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F16",
+            "text": "配备全尺寸背光键盘，快捷键功能仅限 Windows 版本产品支持。",
+            "quote": "全尺寸背光键盘\n*快捷键功能仅限 Windows 版本产品支持。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "键盘",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F17",
+            "text": "配备大尺寸触控板，支持多点触控。",
+            "quote": "大尺寸触控板，支持多点触控",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "触控板",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F18",
+            "text": "配备指纹电源键。",
+            "quote": "电源键\n指纹电源键",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "电源键",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F19",
+            "text": "摄像头为 1080P 高清摄像头。",
+            "quote": "1080P 高清摄像头",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "摄像头",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F20",
+            "text": "音频配置为麦克风 × 2、扬声器 × 2。",
+            "quote": "麦克风 × 2\n扬声器 × 2",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "音频",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F21",
+            "text": "特色应用包括超级终端、AI 概要、AI 空间、Super Turbo、华为电脑管家、华为应用市场、华为浏览器、高能模式/省电模式（热键 Fn + P 开启）、华为 F10 一键还原、显示管理（护眼模式），以上功能仅限 Windows 版本产品支持。",
+            "quote": "超级终端*\nAI 概要\nAI 空间\nSuper Turbo\n华为电脑管家\n华为应用市场\n华为浏览器\n高能模式/省电模式：热键 Fn + P 开启\n华为 F10 一键还原\n显示管理（护眼模式）\n*以上功能仅限 Windows 版本产品支持。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "特色应用",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F22",
+            "text": "包装清单为 PC × 1、USB-C 电源适配器(适配器和充电线一体式连接) × 1、快速指南 × 1。",
+            "quote": "PC × 1\nUSB-C 电源适配器(适配器和充电线一体式连接) × 1\n快速指南 × 1",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "包装",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          }
+        ],
+        "images": [
+          {
+            "id": "I1",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+            "title": "MateBook 14 酷睿 Ultra 产品主视觉",
+            "source_title": "MateBook 14 酷睿 Ultra 产品主视觉",
+            "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+            "position": "导语之后，正文第一段之前",
+            "caption": "MateBook 14 酷睿 Ultra 产品主视觉，展示整机外观。",
+            "model": "MateBook 14 酷睿 Ultra",
+            "status": "matched",
+            "visual_review": "已核对为该型号产品主视觉；不从画面推断性能、材质或使用效果。",
+            "verification_basis": "ima产品目录、文件元数据及制作阶段图像预览核查",
+            "sha256": "1287e5a6d1d6fd75e79f2dc4ca19c83e0436253e53b9c11f178be023c2d38981",
+            "public_equivalent_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+            "source_provider": "ima"
+          },
+          {
+            "id": "I2",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+            "title": "MateBook 14 酷睿 Ultra 屏幕与键盘近景",
+            "source_title": "MateBook 14 酷睿 Ultra 屏幕与键盘近景",
+            "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+            "position": "屏幕和键盘段落之后",
+            "caption": "屏幕与键盘近景，笔靠近屏幕和键盘的构图。",
+            "model": "MateBook 14 酷睿 Ultra",
+            "status": "matched",
+            "visual_review": "已核对笔、屏幕与键盘构图；画面不能证明笔的购买配套、协议兼容或所有应用均支持书写。",
+            "verification_basis": "ima产品目录、文件元数据及制作阶段图像预览核查",
+            "sha256": "42fe5f2856ddddf71d2099e9d2a43a53e100c08ead52d63b7a616a31276bba29",
+            "public_equivalent_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+            "source_provider": "ima"
+          },
+          {
+            "id": "I3",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+            "title": "MateBook 14 酷睿 Ultra 彩色屏幕画面",
+            "source_title": "MateBook 14 酷睿 Ultra 彩色屏幕画面",
+            "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+            "position": "结尾 CTA 之前",
+            "caption": "产品屏幕展示彩色羽毛画面，示意屏幕显示效果。",
+            "model": "MateBook 14 酷睿 Ultra",
+            "status": "matched",
+            "visual_review": "已核对为产品屏幕的彩色羽毛画面；不从示意色彩推断实测色准或护眼效果。",
+            "verification_basis": "ima产品目录、文件元数据及制作阶段图像预览核查",
+            "sha256": "3c1145f841caab0c3b13aef08a825cffb8c36d8d59b8935bc4269639c06485da",
+            "public_equivalent_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+            "source_provider": "ima"
+          }
+        ],
+        "checks": [
+          {
+            "type": "公开来源核对",
+            "status": "pass",
+            "claim": "模型输入资料",
+            "evidence": "仅使用本次ima原文中与已核对华为公开资料对应的必要摘录和通过字节匹配的图片元数据",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F1 · HUAWEI MateBook 14 酷睿 Ultra 提供 Windows 11 家庭版操作系统。",
+            "evidence": "产品事实.md：“## 操作系统\nWindows 11 家庭版”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F2 · 该机型宽度 312.6 mm、深度 226.8 mm、高度 14.5 mm。",
+            "evidence": "产品事实.md：“宽度\n312.6 mm\n深度\n226.8 mm\n高度\n14.5 mm”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F3 · 重量为 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。",
+            "evidence": "产品事实.md：“重量\n1.31 kg\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F4 · 屏幕为 14.2 英寸 OLED，屏占比 91%，屏幕比例 3:2。",
+            "evidence": "产品事实.md：“尺寸\n14.2 英寸\n类型\nOLED\n屏占比\n91%\n屏幕比例\n3:2”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F5 · 屏幕分辨率 2880 × 1920，243 ppi。",
+            "evidence": "产品事实.md：“分辨率\n2880 × 1920，243 ppi”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F6 · 屏幕亮度 450 尼特，亮度、色域、对比度等数据为典型值。",
+            "evidence": "产品事实.md：“亮度\n450 尼特\n色域\nWindows 版：Adobe RGB / P3 / sRGB\nLinux V20 版：P3\n对比度\n1000000:1\n触摸屏\n多点触控触摸屏，最多支持 10 点触控\n*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。\n*屏幕亮度、色域、对比度等数据为典型值。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F7 · Windows 版色域为 Adobe RGB / P3 / sRGB。",
+            "evidence": "产品事实.md：“色域\nWindows 版：Adobe RGB / P3 / sRGB”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F8 · 支持多点触控触摸屏，最多支持 10 点触控，十点触控仅限 Windows 版本产品支持。",
+            "evidence": "产品事实.md：“触摸屏\n多点触控触摸屏，最多支持 10 点触控\n*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F9 · 处理器为英特尔® 酷睿™ Ultra 7 155H，仅限 Windows 版本产品搭载。",
+            "evidence": "产品事实.md：“英特尔® 酷睿™ Ultra 7 155H 处理器\n*仅限 Windows 版本产品搭载。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F10 · 存储为 1 TB NVMe PCIe SSD，硬盘格式化之后的实际容量可能较小。",
+            "evidence": "产品事实.md：“1 TB NVMe PCIe SSD\n*硬盘格式化之后的实际容量可能较小。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F11 · 内存可选 16 GB / 24 GB / 32 GB。",
+            "evidence": "产品事实.md：“16 GB / 24 GB / 32 GB”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F12 · 无线连接支持 IEEE 802.11a/b/g/n/ac/ax，160 MHz，2.4 GHz 和 5 GHz，2 × 2 MIMO，支持 WPA/WPA2/WPA3。",
+            "evidence": "产品事实.md：“IEEE 802.11a/b/g/n/ac/ax，160 MHz\n2.4 GHz 和 5 GHz\n2 × 2 MIMO\n支持 WPA/WPA2/WPA3”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F13 · Windows 版蓝牙为蓝牙 5.1。",
+            "evidence": "产品事实.md：“蓝牙\nWindows 版：蓝牙 5.1”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F14 · 电池为锂聚合物，容量 70 Wh（额定容量）。",
+            "evidence": "产品事实.md：“材料\n锂聚合物\n容量\n70 Wh（额定容量）”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F15 · 接口包括 USB-C 接口 × 1（全功能）、USB3.2 Gen1 × 2、HDMI × 1、3.5 mm 耳机 & 麦克风二合一接口 × 1。",
+            "evidence": "产品事实.md：“USB-C 接口 × 1（全功能）\nUSB3.2 Gen1 × 2\nHDMI × 1\n3.5 mm 耳机 & 麦克风二合一接口 × 1”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F16 · 配备全尺寸背光键盘，快捷键功能仅限 Windows 版本产品支持。",
+            "evidence": "产品事实.md：“全尺寸背光键盘\n*快捷键功能仅限 Windows 版本产品支持。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F17 · 配备大尺寸触控板，支持多点触控。",
+            "evidence": "产品事实.md：“大尺寸触控板，支持多点触控”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F18 · 配备指纹电源键。",
+            "evidence": "产品事实.md：“电源键\n指纹电源键”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F19 · 摄像头为 1080P 高清摄像头。",
+            "evidence": "产品事实.md：“1080P 高清摄像头”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F20 · 音频配置为麦克风 × 2、扬声器 × 2。",
+            "evidence": "产品事实.md：“麦克风 × 2\n扬声器 × 2”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F21 · 特色应用包括超级终端、AI 概要、AI 空间、Super Turbo、华为电脑管家、华为应用市场、华为浏览器、高能模式/省电模式（热键 Fn + P 开启）、华为 F10 一键还原、显示管理（护眼模式），以上功能仅限 Windows 版本产品支持。",
+            "evidence": "产品事实.md：“超级终端*\nAI 概要\nAI 空间\nSuper Turbo\n华为电脑管家\n华为应用市场\n华为浏览器\n高能模式/省电模式：热键 Fn + P 开启\n华为 F10 一键还原\n显示管理（护眼模式）\n*以上功能仅限 Windows 版本产品支持。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F22 · 包装清单为 PC × 1、USB-C 电源适配器(适配器和充电线一体式连接) × 1、快速指南 × 1。",
+            "evidence": "产品事实.md：“PC × 1\nUSB-C 电源适配器(适配器和充电线一体式连接) × 1\n快速指南 × 1”",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "开学买本别只看跑分！先按课程文档和随身需求列清单",
+            "evidence": "标题为选购建议与任务引导，未提出产品参数声明，无需产品事实支持。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "大学新生的第一台笔记本，先想清楚三件事：课程文档用什么软件打开、每天要不要背着走、常用外设怎么接。",
+            "evidence": "导语为任务框架建议，未提出具体产品声明。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "开学季 大学新生笔记本 MateBook14 购机清单 Windows11",
+            "evidence": "标签为话题词，未提出需证据的产品声明。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "这台 MateBook 14 酷睿 Ultra 搭载 Windows 11 家庭版",
+            "evidence": "F1 text『HUAWEI MateBook 14 酷睿 Ultra 提供 Windows 11 家庭版操作系统。』quote『## 操作系统\\nWindows 11 家庭版』，与quote一致，支持该声明。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "机身宽度 312.6 mm、深度 226.8 mm、高度 14.5 mm",
+            "evidence": "F2 text与quote『宽度\\n312.6 mm\\n深度\\n226.8 mm\\n高度\\n14.5 mm』一致，数字单位对应。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "重量 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法不同可能有所差异",
+            "evidence": "F3 text与quote『重量\\n1.31 kg\\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。』一致，限定条件保留。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "这台机型有 USB-C 接口 × 1（全功能）、USB3.2 Gen1 × 2、HDMI × 1、3.5 mm 耳机 & 麦克风二合一接口 × 1",
+            "evidence": "F15 text与quote『USB-C 接口 × 1（全功能）\\nUSB3.2 Gen1 × 2\\nHDMI × 1\\n3.5 mm 耳机 & 麦克风二合一接口 × 1』一致，沿用原文接口名称，未补写连接器形态。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "14.2 英寸 OLED 屏，屏占比 91%，屏幕比例 3:2",
+            "evidence": "F4 text与quote『尺寸\\n14.2 英寸\\n类型\\nOLED\\n屏占比\\n91%\\n屏幕比例\\n3:2』一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "分辨率 2880 × 1920、243 ppi",
+            "evidence": "F5 text与quote『分辨率\\n2880 × 1920，243 ppi』一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "配全尺寸背光键盘，快捷键功能仅限 Windows 版本产品支持",
+            "evidence": "F16 text与quote『全尺寸背光键盘\\n*快捷键功能仅限 Windows 版本产品支持。』一致，版本限定保留。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "触控屏最多支持 10 点触控，十点触控仅限 Windows 版本产品支持",
+            "evidence": "F8 text与quote『触摸屏\\n多点触控触摸屏，最多支持 10 点触控\\n*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。』一致，版本限定保留。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "MateBook 14 酷睿 Ultra 产品主视觉，展示整机外观。",
+            "evidence": "I1元数据model为MateBook 14 酷睿 Ultra，description为官方主视觉展示产品外观，visual_review已核对为该型号主视觉且不从画面推断性能，图注与元数据一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "屏幕与键盘近景，笔靠近屏幕和键盘的构图。",
+            "evidence": "I2元数据description为笔靠近屏幕和键盘的产品近景，visual_review已核对笔、屏幕与键盘构图且不推断笔的配套或兼容，图注与元数据一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "产品屏幕展示彩色羽毛画面，示意屏幕显示效果。",
+            "evidence": "I3元数据description为产品屏幕展示彩色羽毛画面，visual_review已核对且不从示意色彩推断实测色准或护眼效果，图注与元数据一致。",
+            "action": ""
+          },
+          {
+            "type": "合规规则",
+            "status": "pass",
+            "claim": "最终发布稿",
+            "evidence": "检查绝对化、全面兼容、虚构体验、动态权益、医疗功效及无依据数字",
+            "action": ""
+          },
+          {
+            "type": "图片与平台",
+            "status": "pass",
+            "claim": "3张MateBook 14 酷睿 Ultra图片",
+            "evidence": "ima产品目录与文件元数据；小红书要求3—6张；3张另有图像预览核查说明",
+            "action": ""
+          }
+        ],
+        "trace": [
+          {
+            "step": "输入解析",
+            "status": "pass",
+            "detail": "完整任务已解析；场景与渠道策略已分别确定",
+            "ms": 0
+          },
+          {
+            "step": "公开来源核对",
+            "status": "pass",
+            "detail": "已匹配公开证据并缩减模型输入；保留ima实际来源与获取时间",
+            "ms": 2
+          },
+          {
+            "step": "接收ima资料",
+            "status": "pass",
+            "detail": "接收1份ima原文及3张候选图片，来源随结果保留",
+            "ms": 0
+          },
+          {
+            "step": "原文事实提取",
+            "status": "pass",
+            "detail": "22条事实通过连续原文引用与数字校验；剔除0条",
+            "ms": 10294
+          },
+          {
+            "step": "场景图文生成",
+            "status": "pass",
+            "detail": "完成小红书结构、4段内容与3张图片编排",
+            "ms": 9959
+          },
+          {
+            "step": "独立语义核验",
+            "status": "pass",
+            "detail": "覆盖11个内容位置；发现并处理0处问题",
+            "ms": 11803
+          },
+          {
+            "step": "独立规则检查",
+            "status": "pass",
+            "detail": "最终内容通过规则检查，来源与限制随稿保留",
+            "ms": 4
+          },
+          {
+            "step": "导出",
+            "status": "pass",
+            "detail": "已生成包含场景、依据、图文和核验结果的Markdown",
+            "ms": 0
+          }
+        ],
+        "mode": "live_llm",
+        "message": "已基于本轮ima资料完成原创生成、独立语义核验和规则检查。",
+        "markdown": "# 开学买本别只看跑分！先按课程文档和随身需求列清单\n\n发布整理版\n\n## 场景策略\n\n- 目标人群：准备开学购机的大学新生\n- 使用场景：开学季\n- 发布平台：小红书\n- 内容目标：让新生按课程文档、随身携带与常用外设需求形成购机清单。\n\n## 图文成稿\n\n大学新生的第一台笔记本，先想清楚三件事：课程文档用什么软件打开、每天要不要背着走、常用外设怎么接。\n\n### 先看课程文档用什么软件\n\n不同专业用的软件不一样，选机前先列出课程必用软件。这台 MateBook 14 酷睿 Ultra 搭载 Windows 11 家庭版。\n\n### 每天背着走，尺寸重量要心里有数\n\n上课、图书馆、宿舍来回跑，机身宽度 312.6 mm、深度 226.8 mm、高度 14.5 mm，重量 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法不同可能有所差异。背包里放不放得下，最好按这个数据量一量。\n\n### 常用外设怎么接，先看接口\n\nU 盘、投影、耳机这些开学常用外设，提前对一下接口。这台机型有 USB-C 接口 × 1（全功能）、USB3.2 Gen1 × 2、HDMI × 1、3.5 mm 耳机 & 麦克风二合一接口 × 1。\n\n### 屏幕和键盘，按使用习惯选\n\n14.2 英寸 OLED 屏，屏占比 91%，屏幕比例 3:2，分辨率 2880 × 1920、243 ppi。配全尺寸背光键盘，快捷键功能仅限 Windows 版本产品支持。触控屏最多支持 10 点触控，十点触控仅限 Windows 版本产品支持。\n\n收藏这份购机清单，留言说说你常用的软件和外设。\n\n#开学季 #大学新生笔记本 #MateBook14 #购机清单 #Windows11\n\n## 配图出处\n\n### MateBook 14 酷睿 Ultra 产品主视觉\n\nMateBook 14 酷睿 Ultra 产品主视觉，展示整机外观。\n\n![MateBook 14 酷睿 Ultra 产品主视觉，展示整机外观。](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg)\n\n位置：导语之后，正文第一段之前\n[图片来源](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg)\n\n### MateBook 14 酷睿 Ultra 屏幕与键盘近景\n\n屏幕与键盘近景，笔靠近屏幕和键盘的构图。\n\n![屏幕与键盘近景，笔靠近屏幕和键盘的构图。](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png)\n\n位置：屏幕和键盘段落之后\n[图片来源](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png)\n\n### MateBook 14 酷睿 Ultra 彩色屏幕画面\n\n产品屏幕展示彩色羽毛画面，示意屏幕显示效果。\n\n![产品屏幕展示彩色羽毛画面，示意屏幕显示效果。](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg)\n\n位置：结尾 CTA 之前\n[图片来源](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg)\n\n## 产品依据\n\n- **F1** HUAWEI MateBook 14 酷睿 Ultra 提供 Windows 11 家庭版操作系统。\n  - 原文摘录：## 操作系统 Windows 11 家庭版\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F2** 该机型宽度 312.6 mm、深度 226.8 mm、高度 14.5 mm。\n  - 原文摘录：宽度 312.6 mm 深度 226.8 mm 高度 14.5 mm\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F3** 重量为 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。\n  - 原文摘录：重量 1.31 kg *实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F4** 屏幕为 14.2 英寸 OLED，屏占比 91%，屏幕比例 3:2。\n  - 原文摘录：尺寸 14.2 英寸 类型 OLED 屏占比 91% 屏幕比例 3:2\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F5** 屏幕分辨率 2880 × 1920，243 ppi。\n  - 原文摘录：分辨率 2880 × 1920，243 ppi\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F8** 支持多点触控触摸屏，最多支持 10 点触控，十点触控仅限 Windows 版本产品支持。\n  - 原文摘录：触摸屏 多点触控触摸屏，最多支持 10 点触控 *十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F15** 接口包括 USB-C 接口 × 1（全功能）、USB3.2 Gen1 × 2、HDMI × 1、3.5 mm 耳机 & 麦克风二合一接口 × 1。\n  - 原文摘录：USB-C 接口 × 1（全功能） USB3.2 Gen1 × 2 HDMI × 1 3.5 mm 耳机 & 麦克风二合一接口 × 1\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F16** 配备全尺寸背光键盘，快捷键功能仅限 Windows 版本产品支持。\n  - 原文摘录：全尺寸背光键盘 *快捷键功能仅限 Windows 版本产品支持。\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n\n## 核验结果\n\n39 项通过。\n",
+        "public_evidence": {
+          "verified_at": "2026-10-18T06:07:53+00:00",
+          "runtime_checked_at": "2026-10-18T06:23:26+00:00",
+          "source_urls": [
+            "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+            "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+            "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg"
+          ],
+          "matched_count": 15,
+          "excluded_count": 0,
+          "unmatched_reference_count": 0,
+          "matched_image_count": 3,
+          "excluded_image_count": 0,
+          "policy": "仅当前 ima 原文中与已核对公开参考完整匹配的章节，以及与公开素材 SHA-256 相同且画面已核对的图片，可进入模型请求。"
+        },
+        "run_id": "final-01-xiaohongshu-52d87beda2c6",
+        "generated_at": "2026-10-18T06:23:58+00:00",
+        "elapsed_ms": 32065,
+        "input": {
+          "product": "MateBook 14 酷睿 Ultra",
+          "audience": "准备开学购机的大学新生",
+          "scene": "开学季",
+          "platform": "小红书",
+          "goal": "让新生按课程文档、随身携带与常用外设需求形成购机清单。",
+          "brief": "介绍 Windows 11 家庭版。使用短段落和话题标签，按课程任务、携带与连接组织内容，保留所选规格紧邻的版本及配置条件。只使用已核对的产品事实，不虚构亲测经历、价格、补贴或固定续航时长；不承诺具体软件已兼容。结尾给出一次收藏或咨询邀请。"
+        },
+        "material_provenance": {
+          "provider": "ima OpenAPI",
+          "knowledge_base": "任德耀新建华为PC知识库",
+          "source_retrieved_at": [
+            "2026-10-18T05:56:33+00:00"
+          ],
+          "fresh_ima_retrieval_for_this_saved_case": false,
+          "note": "使用2026-10-18实际ima接口取回的原文与图片；本次生成没有再次检索。",
+          "model_calls": 3,
+          "model_name": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "image_retrieved_at": [
+            "2026-10-18T06:04:04+00:00",
+            "2026-10-18T06:04:12+00:00",
+            "2026-10-18T06:04:24+00:00"
+          ],
+          "stable_image_note": "本历史案例的图片由ima取得；展示地址为已确认SHA-256完全相同的华为公开图片。"
+        },
+        "publication_revision": {
+          "revision": "editorial-20261018-1",
+          "type": "publication_cleanup",
+          "label": "发布整理版",
+          "revised_at": "2026-10-18T08:07:03+00:00",
+          "original_run_id": "final-01-xiaohongshu-52d87beda2c6",
+          "note": "在原始运行结果上删减通用提示及一处无原文支持的体验措辞；未新增产品事实，原始结果与运行记录完整保留。"
+        }
+      },
+      "publication_input": {
+        "product": "MateBook 14 酷睿 Ultra",
+        "audience": "准备开学购机的大学新生",
+        "scene": "开学季",
+        "platform": "小红书",
+        "goal": "让新生按课程文档、随身携带与常用外设需求形成购机清单。",
+        "brief": "介绍 Windows 11 家庭版。使用短段落和话题标签，按课程任务、携带与连接组织内容，保留所选规格紧邻的版本及配置条件。只使用已核对的产品事实，不虚构亲测经历、价格、补贴或固定续航时长；不承诺具体软件已兼容。结尾给出一次收藏或咨询邀请。"
+      },
+      "publication_revision": {
+        "revision": "editorial-20261018-1",
+        "type": "publication_cleanup",
+        "label": "发布整理版",
+        "revised_at": "2026-10-18T08:07:03+00:00",
+        "original_run_id": "final-01-xiaohongshu-52d87beda2c6",
+        "note": "在原始运行结果上删减通用提示及一处无原文支持的体验措辞；未新增产品事实，原始结果与运行记录完整保留。"
       }
     },
     {
@@ -1364,7 +2093,596 @@
         }
       },
       "release_note": "本次历史运行使用 screen_inference v1；2 条 warning 分别为 2 条候选事实剔除、1 条到店核对建议句误删。该建议句并非无据产品效果。当前代码 v2 已修复疑问在前的语序误报，并通过另存的 9 项专项回归；没有再次调用模型或修改原始运行记录。",
-      "report_note": "历史运行使用 screen_inference v1。2 条提示分别为候选事实剔除、到店核对建议误删；当前 v2 已修复后者，9 项专项回归另记。原结果与耗时保持原样。"
+      "report_note": "历史运行使用 screen_inference v1。2 条提示分别为候选事实剔除、到店核对建议误删；当前 v2 已修复后者，9 项专项回归另记。原结果与耗时保持原样。",
+      "publication_result": {
+        "status": "success",
+        "questions": [],
+        "strategy": {
+          "audience": "经常出差、需要会议投屏与处理文档的职场用户",
+          "scene": "职场办公",
+          "platform": "公众号",
+          "goal": "围绕出差会议的连接、文档与携带需求，提供有依据的选型建议。",
+          "angle": "从出差会议的连接需求切入，再介绍屏幕规格与携带重量，帮助读者比较具体配置。",
+          "structure": "标题→导语→任务分段→选型建议→行动引导",
+          "tone": "清楚、可信、解释任务与选择理由",
+          "cta": "留言说明你的差旅需求，咨询适合的具体配置。",
+          "image_count": 3
+        },
+        "article": {
+          "title": "出差开会，笔记本先看接口、屏幕和重量",
+          "lead": "经常出差、要连会议设备、还要随时处理文档，选笔记本时不妨先核对三件事：接口够不够用、屏幕规格是否合适、背着走是否轻便。HUAWEI MateBook 14 酷睿 Ultra 搭载 Windows 11 家庭版，下面按出差办公的实际任务逐项核对。",
+          "sections": [
+            {
+              "heading": "接口核对：会议投屏与外设怎么接",
+              "text": "出差开会，最怕到了会议室发现接口对不上。这款机型配备 USB-C 接口 × 1（全功能），以及 USB3.2 Gen1 × 2，方便你按手头的投屏线、扩展坞和外设逐一核对。",
+              "fact_ids": [
+                "F6",
+                "F7"
+              ]
+            },
+            {
+              "heading": "屏幕规格核对：文档阅读看哪些参数",
+              "text": "处理文档时，屏幕是每天面对时间最长的部分。这款机型屏幕尺寸为 14.2 英寸，屏幕比例 3:2，类型为 OLED，分辨率 2880 × 1920、243 ppi，屏占比 91%；屏幕亮度、色域、对比度等数据为典型值。",
+              "fact_ids": [
+                "F3",
+                "F4",
+                "F5"
+              ]
+            },
+            {
+              "heading": "携带核对：重量与随行设备",
+              "text": "出差路上，重量直接影响背包负担。这款机型重量为 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。包装清单包含 PC × 1、USB-C 电源适配器（适配器和充电线一体式连接）× 1、快速指南 × 1，出门前可以按这份清单核对随行物品。",
+              "fact_ids": [
+                "F2",
+                "F12"
+              ]
+            }
+          ],
+          "cta": "留言说明你的差旅需求，咨询适合的具体配置。",
+          "tags": []
+        },
+        "facts": [
+          {
+            "id": "F1",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 搭载 Windows 11 家庭版操作系统。",
+            "quote": "## 操作系统\nWindows 11 家庭版",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "操作系统",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F2",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 重量为 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。",
+            "quote": "重量\n1.31 kg\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "尺寸与重量",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F3",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 屏幕尺寸为 14.2 英寸。",
+            "quote": "尺寸\n14.2 英寸",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F4",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 屏幕为 OLED 类型，屏占比 91%，分辨率 2880 × 1920，243 ppi。",
+            "quote": "类型\nOLED\n屏占比\n91%\n屏幕比例\n3:2\n分辨率\n2880 × 1920，243 ppi",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F5",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 屏幕亮度、色域、对比度等数据为典型值。",
+            "quote": "*屏幕亮度、色域、对比度等数据为典型值。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F6",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 配备 USB-C 接口 × 1（全功能）。",
+            "quote": "USB-C 接口 × 1（全功能）",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "接口",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F7",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 配备 USB3.2 Gen1 × 2。",
+            "quote": "USB3.2 Gen1 × 2",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "接口",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F8",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 配备 3.5 mm 耳机 & 麦克风二合一接口 × 1。",
+            "quote": "3.5 mm 耳机 & 麦克风二合一接口 × 1",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "接口",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F9",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 电池容量为 70 Wh（额定容量）。",
+            "quote": "容量\n70 Wh（额定容量）",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "电池",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F10",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 配备 1080P 高清摄像头。",
+            "quote": "1080P 高清摄像头",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "摄像头",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F11",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 配备麦克风 × 2、扬声器 × 2。",
+            "quote": "麦克风 × 2\n扬声器 × 2",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "音频",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F12",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 包装清单包含 PC × 1、USB-C 电源适配器(适配器和充电线一体式连接) × 1、快速指南 × 1。",
+            "quote": "PC × 1\nUSB-C 电源适配器(适配器和充电线一体式连接) × 1\n快速指南 × 1",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "包装清单",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          }
+        ],
+        "images": [
+          {
+            "id": "I1",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+            "title": "MateBook 14 酷睿 Ultra 产品主视觉",
+            "source_title": "MateBook 14 酷睿 Ultra 产品主视觉",
+            "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+            "position": "导语之后、正文之前",
+            "caption": "MateBook 14 酷睿 Ultra 产品主视觉，展示整机外观",
+            "model": "MateBook 14 酷睿 Ultra",
+            "status": "matched",
+            "visual_review": "已核对为该型号产品主视觉；不从画面推断性能、材质或使用效果。",
+            "verification_basis": "ima产品目录、文件元数据及制作阶段图像预览核查"
+          },
+          {
+            "id": "I2",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+            "title": "MateBook 14 酷睿 Ultra 屏幕与键盘近景",
+            "source_title": "MateBook 14 酷睿 Ultra 屏幕与键盘近景",
+            "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+            "position": "“接口核对：会议投屏与外设怎么接”段落之后",
+            "caption": "屏幕与键盘近景，画面中笔仅作展示示意，不代表包装清单",
+            "model": "MateBook 14 酷睿 Ultra",
+            "status": "matched",
+            "visual_review": "已核对笔、屏幕与键盘构图；画面不能证明笔的购买配套、协议兼容或所有应用均支持书写。",
+            "verification_basis": "ima产品目录、文件元数据及制作阶段图像预览核查"
+          },
+          {
+            "id": "I3",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+            "title": "MateBook 14 酷睿 Ultra 彩色屏幕画面",
+            "source_title": "MateBook 14 酷睿 Ultra 彩色屏幕画面",
+            "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+            "position": "“屏幕规格核对：文档阅读看哪些参数”段落之后",
+            "caption": "产品屏幕展示彩色羽毛画面，仅示意屏幕显示",
+            "model": "MateBook 14 酷睿 Ultra",
+            "status": "matched",
+            "visual_review": "已核对为产品屏幕的彩色羽毛画面；不从示意色彩推断实测色准或护眼效果。",
+            "verification_basis": "ima产品目录、文件元数据及制作阶段图像预览核查"
+          }
+        ],
+        "checks": [
+          {
+            "type": "公开来源核对",
+            "status": "pass",
+            "claim": "模型输入资料",
+            "evidence": "仅使用本次ima原文中与已核对华为公开资料对应的必要摘录和通过字节匹配的图片元数据",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F1 · HUAWEI MateBook 14 酷睿 Ultra 搭载 Windows 11 家庭版操作系统。",
+            "evidence": "产品事实.md：“## 操作系统\nWindows 11 家庭版”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F2 · HUAWEI MateBook 14 酷睿 Ultra 重量为 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。",
+            "evidence": "产品事实.md：“重量\n1.31 kg\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F3 · HUAWEI MateBook 14 酷睿 Ultra 屏幕尺寸为 14.2 英寸。",
+            "evidence": "产品事实.md：“尺寸\n14.2 英寸”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F4 · HUAWEI MateBook 14 酷睿 Ultra 屏幕为 OLED 类型，屏占比 91%，分辨率 2880 × 1920，243 ppi。",
+            "evidence": "产品事实.md：“类型\nOLED\n屏占比\n91%\n屏幕比例\n3:2\n分辨率\n2880 × 1920，243 ppi”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F5 · HUAWEI MateBook 14 酷睿 Ultra 屏幕亮度、色域、对比度等数据为典型值。",
+            "evidence": "产品事实.md：“*屏幕亮度、色域、对比度等数据为典型值。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F6 · HUAWEI MateBook 14 酷睿 Ultra 配备 USB-C 接口 × 1（全功能）。",
+            "evidence": "产品事实.md：“USB-C 接口 × 1（全功能）”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F7 · HUAWEI MateBook 14 酷睿 Ultra 配备 USB3.2 Gen1 × 2。",
+            "evidence": "产品事实.md：“USB3.2 Gen1 × 2”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F8 · HUAWEI MateBook 14 酷睿 Ultra 配备 3.5 mm 耳机 & 麦克风二合一接口 × 1。",
+            "evidence": "产品事实.md：“3.5 mm 耳机 & 麦克风二合一接口 × 1”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F9 · HUAWEI MateBook 14 酷睿 Ultra 电池容量为 70 Wh（额定容量）。",
+            "evidence": "产品事实.md：“容量\n70 Wh（额定容量）”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F10 · HUAWEI MateBook 14 酷睿 Ultra 配备 1080P 高清摄像头。",
+            "evidence": "产品事实.md：“1080P 高清摄像头”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F11 · HUAWEI MateBook 14 酷睿 Ultra 配备麦克风 × 2、扬声器 × 2。",
+            "evidence": "产品事实.md：“麦克风 × 2\n扬声器 × 2”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F12 · HUAWEI MateBook 14 酷睿 Ultra 包装清单包含 PC × 1、USB-C 电源适配器(适配器和充电线一体式连接) × 1、快速指南 × 1。",
+            "evidence": "产品事实.md：“PC × 1\nUSB-C 电源适配器(适配器和充电线一体式连接) × 1\n快速指南 × 1”",
+            "action": ""
+          },
+          {
+            "type": "事实筛选",
+            "status": "warning",
+            "claim": "2条候选事实未通过原文引用或数字校验",
+            "evidence": "逐条核对doc_id、quote和数字",
+            "action": "已剔除，不进入生成上下文"
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "出差开会，笔记本先看接口、屏幕和重量",
+            "evidence": "标题为选型建议，不含具体产品参数声明，无需产品事实支持。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "HUAWEI MateBook 14 酷睿 Ultra 搭载 Windows 11 家庭版",
+            "evidence": "F1 quote 明确为“## 操作系统\\nWindows 11 家庭版”，与声明一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "选笔记本时先核对接口、屏幕规格、重量三项",
+            "evidence": "属选型建议，不含产品参数声明。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "配备 USB-C 接口 × 1（全功能）",
+            "evidence": "F6 quote 为“USB-C 接口 × 1（全功能）”，与声明一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "配备 USB3.2 Gen1 × 2",
+            "evidence": "F7 quote 为“USB3.2 Gen1 × 2”，与声明一致，未补写接口形态。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "屏幕尺寸为 14.2 英寸",
+            "evidence": "F3 quote 为“尺寸\\n14.2 英寸”，与声明一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "屏幕比例 3:2",
+            "evidence": "F4 quote 含“屏幕比例\\n3:2”，与声明一致；未由比例推导显示内容多少。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "类型为 OLED，分辨率 2880 × 1920、243 ppi，屏占比 91%",
+            "evidence": "F4 quote 含“类型\\nOLED”“屏占比\\n91%”“分辨率\\n2880 × 1920，243 ppi”，与声明一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "屏幕亮度、色域、对比度等数据为典型值",
+            "evidence": "F5 quote 为“*屏幕亮度、色域、对比度等数据为典型值。”，与声明一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "重量为 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异",
+            "evidence": "F2 quote 含“重量\\n1.31 kg”及“*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。”，与声明一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "包装清单包含 PC × 1、USB-C 电源适配器（适配器和充电线一体式连接）× 1、快速指南 × 1",
+            "evidence": "F12 quote 含“PC × 1”“USB-C 电源适配器(适配器和充电线一体式连接) × 1”“快速指南 × 1”，与声明一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "fact_ids 标注 F1",
+            "evidence": "该段未复述 Windows 11 家庭版，但 F1 为已核对事实，不构成无依据声明。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "MateBook 14 酷睿 Ultra 产品主视觉，展示整机外观",
+            "evidence": "I1 元数据与视觉核查说明为产品主视觉、展示产品外观；图注未推断性能、材质或使用效果。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "屏幕与键盘近景，画面中笔仅作展示示意，不代表包装清单",
+            "evidence": "I2 视觉核查说明已核对笔、屏幕与键盘构图，并明确画面不能证明笔的购买配套；图注与之一致。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "产品屏幕展示彩色羽毛画面，仅示意屏幕显示",
+            "evidence": "I3 视觉核查说明为产品屏幕的彩色羽毛画面，且不从示意色彩推断实测色准或护眼效果；图注与之一致。",
+            "action": ""
+          },
+          {
+            "type": "图文位置",
+            "status": "pass",
+            "claim": "最终配图编排",
+            "evidence": "核验调整了正文或小标题，已按最终保留的内容重新分配图片位置",
+            "action": ""
+          },
+          {
+            "type": "合规规则",
+            "status": "pass",
+            "claim": "最终发布稿",
+            "evidence": "检查绝对化、全面兼容、虚构体验、动态权益、医疗功效及无依据数字",
+            "action": ""
+          },
+          {
+            "type": "图片与平台",
+            "status": "pass",
+            "claim": "3张MateBook 14 酷睿 Ultra图片",
+            "evidence": "ima产品目录与文件元数据；公众号要求2—4张；3张另有图像预览核查说明",
+            "action": ""
+          }
+        ],
+        "trace": [
+          {
+            "step": "输入解析",
+            "status": "pass",
+            "detail": "完整任务已解析；场景与渠道策略已分别确定",
+            "ms": 0
+          },
+          {
+            "step": "公开来源核对",
+            "status": "pass",
+            "detail": "已匹配公开证据并缩减模型输入；保留ima实际来源与获取时间",
+            "ms": 3
+          },
+          {
+            "step": "接收ima资料",
+            "status": "pass",
+            "detail": "接收1份ima原文及3张候选图片，来源随结果保留",
+            "ms": 0
+          },
+          {
+            "step": "原文事实提取",
+            "status": "pass",
+            "detail": "12条事实通过连续原文引用与数字校验；剔除2条",
+            "ms": 9999
+          },
+          {
+            "step": "场景图文生成",
+            "status": "pass",
+            "detail": "完成公众号结构、4段内容与3张图片编排",
+            "ms": 10859
+          },
+          {
+            "step": "独立语义核验",
+            "status": "pass",
+            "detail": "覆盖10个内容位置；发现并处理0处问题",
+            "ms": 11726
+          },
+          {
+            "step": "屏幕比例效果规则",
+            "status": "pass",
+            "detail": "按原文短引检查全部标题、导语、段落、标签与图注；处理1处无据效果句",
+            "ms": 2
+          },
+          {
+            "step": "独立规则检查",
+            "status": "pass",
+            "detail": "最终内容通过规则检查，来源与限制随稿保留",
+            "ms": 5
+          },
+          {
+            "step": "导出",
+            "status": "pass",
+            "detail": "已生成包含场景、依据、图文和核验结果的Markdown",
+            "ms": 0
+          }
+        ],
+        "mode": "live_llm",
+        "message": "已基于本轮ima资料完成原创生成、独立语义核验和规则检查。 部分无依据内容已自动移除，详见核验结果。",
+        "markdown": "# 出差开会，笔记本先看接口、屏幕和重量\n\n发布整理版\n\n## 场景策略\n\n- 目标人群：经常出差、需要会议投屏与处理文档的职场用户\n- 使用场景：职场办公\n- 发布平台：公众号\n- 内容目标：围绕出差会议的连接、文档与携带需求，提供有依据的选型建议。\n\n## 图文成稿\n\n经常出差、要连会议设备、还要随时处理文档，选笔记本时不妨先核对三件事：接口够不够用、屏幕规格是否合适、背着走是否轻便。HUAWEI MateBook 14 酷睿 Ultra 搭载 Windows 11 家庭版，下面按出差办公的实际任务逐项核对。\n\n### 接口核对：会议投屏与外设怎么接\n\n出差开会，最怕到了会议室发现接口对不上。这款机型配备 USB-C 接口 × 1（全功能），以及 USB3.2 Gen1 × 2，方便你按手头的投屏线、扩展坞和外设逐一核对。\n\n### 屏幕规格核对：文档阅读看哪些参数\n\n处理文档时，屏幕是每天面对时间最长的部分。这款机型屏幕尺寸为 14.2 英寸，屏幕比例 3:2，类型为 OLED，分辨率 2880 × 1920、243 ppi，屏占比 91%；屏幕亮度、色域、对比度等数据为典型值。\n\n### 携带核对：重量与随行设备\n\n出差路上，重量直接影响背包负担。这款机型重量为 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。包装清单包含 PC × 1、USB-C 电源适配器（适配器和充电线一体式连接）× 1、快速指南 × 1，出门前可以按这份清单核对随行物品。\n\n留言说明你的差旅需求，咨询适合的具体配置。\n\n## 配图出处\n\n### MateBook 14 酷睿 Ultra 产品主视觉\n\nMateBook 14 酷睿 Ultra 产品主视觉，展示整机外观\n\n![MateBook 14 酷睿 Ultra 产品主视觉，展示整机外观](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg)\n\n位置：导语之后、正文之前\n[图片来源](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg)\n\n### MateBook 14 酷睿 Ultra 屏幕与键盘近景\n\n屏幕与键盘近景，画面中笔仅作展示示意，不代表包装清单\n\n![屏幕与键盘近景，画面中笔仅作展示示意，不代表包装清单](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png)\n\n位置：“接口核对：会议投屏与外设怎么接”段落之后\n[图片来源](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png)\n\n### MateBook 14 酷睿 Ultra 彩色屏幕画面\n\n产品屏幕展示彩色羽毛画面，仅示意屏幕显示\n\n![产品屏幕展示彩色羽毛画面，仅示意屏幕显示](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg)\n\n位置：“屏幕规格核对：文档阅读看哪些参数”段落之后\n[图片来源](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg)\n\n## 产品依据\n\n- **F2** HUAWEI MateBook 14 酷睿 Ultra 重量为 1.31 kg，实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。\n  - 原文摘录：重量 1.31 kg *实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F3** HUAWEI MateBook 14 酷睿 Ultra 屏幕尺寸为 14.2 英寸。\n  - 原文摘录：尺寸 14.2 英寸\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F4** HUAWEI MateBook 14 酷睿 Ultra 屏幕为 OLED 类型，屏占比 91%，分辨率 2880 × 1920，243 ppi。\n  - 原文摘录：类型 OLED 屏占比 91% 屏幕比例 3:2 分辨率 2880 × 1920，243 ppi\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F5** HUAWEI MateBook 14 酷睿 Ultra 屏幕亮度、色域、对比度等数据为典型值。\n  - 原文摘录：*屏幕亮度、色域、对比度等数据为典型值。\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F6** HUAWEI MateBook 14 酷睿 Ultra 配备 USB-C 接口 × 1（全功能）。\n  - 原文摘录：USB-C 接口 × 1（全功能）\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F7** HUAWEI MateBook 14 酷睿 Ultra 配备 USB3.2 Gen1 × 2。\n  - 原文摘录：USB3.2 Gen1 × 2\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F12** HUAWEI MateBook 14 酷睿 Ultra 包装清单包含 PC × 1、USB-C 电源适配器(适配器和充电线一体式连接) × 1、快速指南 × 1。\n  - 原文摘录：PC × 1 USB-C 电源适配器(适配器和充电线一体式连接) × 1 快速指南 × 1\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n\n## 核验结果\n\n31 项通过。\n- 事实筛选：2条候选事实未通过原文引用或数字校验\n  - 依据：逐条核对doc_id、quote和数字\n  - 处理：已剔除，不进入生成上下文\n",
+        "public_evidence": {
+          "verified_at": "2026-10-18T06:07:53+00:00",
+          "runtime_checked_at": "2026-10-18T07:28:58+00:00",
+          "source_urls": [
+            "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+            "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+            "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg"
+          ],
+          "matched_count": 15,
+          "excluded_count": 0,
+          "unmatched_reference_count": 0,
+          "matched_image_count": 3,
+          "excluded_image_count": 0,
+          "policy": "仅当前 ima 原文中与已核对公开参考完整匹配的章节，以及与公开素材 SHA-256 相同且画面已核对的图片，可进入模型请求。"
+        },
+        "rule_revision": {
+          "screen_inference": "v1",
+          "executed": true,
+          "removed_items": 1
+        },
+        "run_id": "guarded-02-wechat-127b25376adc",
+        "generated_at": "2026-10-18T07:29:31+00:00",
+        "elapsed_ms": 32594,
+        "input": {
+          "product": "MateBook 14 酷睿 Ultra",
+          "audience": "经常出差、需要会议投屏与处理文档的职场用户",
+          "scene": "职场办公",
+          "platform": "公众号",
+          "goal": "围绕出差会议的连接、文档与携带需求，提供有依据的选型建议。",
+          "brief": "介绍 Windows 11 家庭版。面向经常出差、需要会议设备连接和处理文档的职场用户，正文约350至450字，按会议连接、屏幕规格与携带需求组织三个简洁段落。每段只选一两项相关事实，保留精确数字和适用条件，不增加实际兼容或显示效果承诺。结尾给出一次预约体验或咨询配置邀请。选用3张不同构图的本机型原图，附客观图注、来源和有效段落位置；图中展示的配件不作为包装清单承诺。"
+        },
+        "material_provenance": {
+          "provider": "ima OpenAPI",
+          "knowledge_base": "任德耀新建华为PC知识库",
+          "source_mode": "verified_cache",
+          "source_retrieved_at": [
+            "2026-10-18T05:56:33+00:00"
+          ],
+          "image_retrieved_at": [
+            "2026-10-18T06:04:04+00:00",
+            "2026-10-18T06:04:12+00:00",
+            "2026-10-18T06:04:24+00:00"
+          ],
+          "fresh_ima_retrieval_for_this_saved_case": false,
+          "note": "使用2026-10-18实际ima接口取回并与公开资料核对的原文和图片；本轮没有再次检索。新引擎重新执行公开输入门禁、事实提取、图文生成、独立语义核验和程序检查。",
+          "model_calls": 3,
+          "model_name": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "model_call_records": [
+            {
+              "stage": 1,
+              "elapsed_ms": 9996,
+              "status": "completed"
+            },
+            {
+              "stage": 2,
+              "elapsed_ms": 10858,
+              "status": "completed"
+            },
+            {
+              "stage": 3,
+              "elapsed_ms": 11726,
+              "status": "completed"
+            }
+          ],
+          "engine_sha256": "193e585e2d9a62b9fa020ce5fab822880d5ae48883aa48c2227a151adcb1f78e",
+          "system_prompt_sha256": "bf751de7764457fe0126a0a787cbaff4f4e9fd9f4ea15db85605a9e0b8bd1fd3",
+          "targeted_revision": "screen_inference_v1"
+        },
+        "publication_revision": {
+          "revision": "editorial-20261018-1",
+          "type": "publication_cleanup",
+          "label": "发布整理版",
+          "revised_at": "2026-10-18T08:07:03+00:00",
+          "original_run_id": "guarded-02-wechat-127b25376adc",
+          "note": "在原始运行结果上删减通用提示及一处无原文支持的体验措辞；未新增产品事实，原始结果与运行记录完整保留。"
+        }
+      },
+      "publication_input": {
+        "product": "MateBook 14 酷睿 Ultra",
+        "audience": "经常出差、需要会议投屏与处理文档的职场用户",
+        "scene": "职场办公",
+        "platform": "公众号",
+        "goal": "围绕出差会议的连接、文档与携带需求，提供有依据的选型建议。",
+        "brief": "介绍 Windows 11 家庭版。面向经常出差、需要会议设备连接和处理文档的职场用户，正文约350至450字，按会议连接、屏幕规格与携带需求组织三个简洁段落。每段只选一两项相关事实，保留精确数字和适用条件，不增加实际兼容或显示效果承诺。结尾给出一次预约体验或咨询配置邀请。选用3张不同构图的本机型原图，附客观图注、来源和有效段落位置；图中展示的配件不作为包装清单承诺。"
+      },
+      "publication_revision": {
+        "revision": "editorial-20261018-1",
+        "type": "publication_cleanup",
+        "label": "发布整理版",
+        "revised_at": "2026-10-18T08:07:03+00:00",
+        "original_run_id": "guarded-02-wechat-127b25376adc",
+        "note": "在原始运行结果上删减通用提示及一处无原文支持的体验措辞；未新增产品事实，原始结果与运行记录完整保留。"
+      }
     },
     {
       "id": "03",
@@ -1824,6 +3142,457 @@
           ],
           "stable_image_note": "本历史案例的图片由ima取得；展示地址为已确认SHA-256完全相同的华为公开图片。"
         }
+      },
+      "publication_result": {
+        "status": "success",
+        "questions": [],
+        "strategy": {
+          "audience": "准备到店体验的职场通勤用户",
+          "scene": "门店到访",
+          "platform": "门店朋友圈",
+          "goal": "邀请附近职场用户体验 Windows 版触控屏。",
+          "angle": "从职场通勤场景切入，聚焦 Windows 版触控屏，以一次预约体验邀请收束。",
+          "structure": "一个场景→一个核心卖点→咨询或到店",
+          "tone": "简洁、亲切、直达一个需求",
+          "cta": "私信预约到店体验，看看是否适合你的办公习惯。",
+          "image_count": 1
+        },
+        "article": {
+          "title": "通勤办公，来体验触控屏",
+          "lead": "附近职场通勤的朋友，路过门店可以进来体验MateBook 14酷睿Ultra的触控屏。",
+          "sections": [
+            {
+              "heading": "到店体验触控屏",
+              "text": "这台Windows 11家庭版机型配备多点触控触摸屏，最多支持10点触控（十点触控仅限Windows版本产品支持）。",
+              "fact_ids": [
+                "F1",
+                "F2",
+                "F3"
+              ]
+            }
+          ],
+          "cta": "私信预约到店体验，看看是否适合你的办公习惯。",
+          "tags": []
+        },
+        "facts": [
+          {
+            "id": "F1",
+            "text": "HUAWEI MateBook 14 酷睿 Ultra 提供 Windows 11 家庭版操作系统。",
+            "quote": "## 操作系统\nWindows 11 家庭版",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "操作系统",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F2",
+            "text": "该机型屏幕为多点触控触摸屏，最多支持 10 点触控。",
+            "quote": "触摸屏\n多点触控触摸屏，最多支持 10 点触控",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F3",
+            "text": "十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。",
+            "quote": "*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕-版本限定",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F4",
+            "text": "该机型屏幕为 14.2 英寸 OLED 屏，屏幕比例 3:2。",
+            "quote": "尺寸\n14.2 英寸\n类型\nOLED\n屏占比\n91%\n屏幕比例\n3:2",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F5",
+            "text": "该机型屏幕分辨率为 2880 × 1920，243 ppi。",
+            "quote": "分辨率\n2880 × 1920，243 ppi",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "屏幕",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F6",
+            "text": "该机型重量为 1.31 kg，高度 14.5 mm。",
+            "quote": "高度\n14.5 mm\n重量\n1.31 kg",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "尺寸与重量",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F7",
+            "text": "该机型搭载英特尔® 酷睿™ Ultra 7 155H 处理器，仅限 Windows 版本产品搭载。",
+            "quote": "英特尔® 酷睿™ Ultra 7 155H 处理器\n*仅限 Windows 版本产品搭载。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "处理器-版本限定",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F8",
+            "text": "该机型配备全尺寸背光键盘，快捷键功能仅限 Windows 版本产品支持。",
+            "quote": "全尺寸背光键盘\n*快捷键功能仅限 Windows 版本产品支持。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "键盘",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F9",
+            "text": "该机型配备大尺寸触控板，支持多点触控。",
+            "quote": "大尺寸触控板，支持多点触控",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "触控板",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F10",
+            "text": "该机型电池容量为 70 Wh（额定容量）。",
+            "quote": "容量\n70 Wh（额定容量）",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "电池",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F11",
+            "text": "该机型接口包括 USB-C 接口 × 1（全功能）、USB3.2 Gen1 × 2、HDMI × 1、3.5 mm 耳机 & 麦克风二合一接口 × 1。",
+            "quote": "USB-C 接口 × 1（全功能）\nUSB3.2 Gen1 × 2\nHDMI × 1\n3.5 mm 耳机 & 麦克风二合一接口 × 1",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "接口",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F12",
+            "text": "该机型配备 1080P 高清摄像头。",
+            "quote": "1080P 高清摄像头",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "摄像头",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F13",
+            "text": "超级终端、AI 概要、AI 空间、Super Turbo、华为电脑管家、华为应用市场、华为浏览器、高能模式/省电模式（热键 Fn + P 开启）、华为 F10 一键还原、显示管理（护眼模式）等功能仅限 Windows 版本产品支持。",
+            "quote": "*以上功能仅限 Windows 版本产品支持。",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "特色应用-版本限定",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          },
+          {
+            "id": "F14",
+            "text": "包装清单包含 PC × 1、USB-C 电源适配器（适配器和充电线一体式连接）× 1、快速指南 × 1。",
+            "quote": "PC × 1\nUSB-C 电源适配器(适配器和充电线一体式连接) × 1\n快速指南 × 1",
+            "source_title": "产品事实.md",
+            "locator": "产品事实.md",
+            "source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "category": "包装清单",
+            "retrieved_at": "2026-10-18T05:56:33+00:00"
+          }
+        ],
+        "images": [
+          {
+            "id": "I1",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+            "title": "MateBook 14 酷睿 Ultra 彩色屏幕画面",
+            "source_title": "MateBook 14 酷睿 Ultra 彩色屏幕画面",
+            "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+            "position": "正文第一段后",
+            "caption": "MateBook 14酷睿Ultra屏幕展示彩色羽毛画面",
+            "model": "MateBook 14 酷睿 Ultra",
+            "status": "matched",
+            "visual_review": "已核对为产品屏幕的彩色羽毛画面；不从示意色彩推断实测色准或护眼效果。",
+            "verification_basis": "ima产品目录、文件元数据及制作阶段图像预览核查",
+            "sha256": "3c1145f841caab0c3b13aef08a825cffb8c36d8d59b8935bc4269639c06485da",
+            "public_equivalent_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+            "source_provider": "ima"
+          }
+        ],
+        "checks": [
+          {
+            "type": "公开来源核对",
+            "status": "pass",
+            "claim": "模型输入资料",
+            "evidence": "仅使用本次ima原文中与已核对华为公开资料对应的必要摘录和通过字节匹配的图片元数据",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F1 · HUAWEI MateBook 14 酷睿 Ultra 提供 Windows 11 家庭版操作系统。",
+            "evidence": "产品事实.md：“## 操作系统\nWindows 11 家庭版”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F2 · 该机型屏幕为多点触控触摸屏，最多支持 10 点触控。",
+            "evidence": "产品事实.md：“触摸屏\n多点触控触摸屏，最多支持 10 点触控”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F3 · 十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。",
+            "evidence": "产品事实.md：“*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F4 · 该机型屏幕为 14.2 英寸 OLED 屏，屏幕比例 3:2。",
+            "evidence": "产品事实.md：“尺寸\n14.2 英寸\n类型\nOLED\n屏占比\n91%\n屏幕比例\n3:2”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F5 · 该机型屏幕分辨率为 2880 × 1920，243 ppi。",
+            "evidence": "产品事实.md：“分辨率\n2880 × 1920，243 ppi”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F6 · 该机型重量为 1.31 kg，高度 14.5 mm。",
+            "evidence": "产品事实.md：“高度\n14.5 mm\n重量\n1.31 kg”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F7 · 该机型搭载英特尔® 酷睿™ Ultra 7 155H 处理器，仅限 Windows 版本产品搭载。",
+            "evidence": "产品事实.md：“英特尔® 酷睿™ Ultra 7 155H 处理器\n*仅限 Windows 版本产品搭载。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F8 · 该机型配备全尺寸背光键盘，快捷键功能仅限 Windows 版本产品支持。",
+            "evidence": "产品事实.md：“全尺寸背光键盘\n*快捷键功能仅限 Windows 版本产品支持。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F9 · 该机型配备大尺寸触控板，支持多点触控。",
+            "evidence": "产品事实.md：“大尺寸触控板，支持多点触控”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F10 · 该机型电池容量为 70 Wh（额定容量）。",
+            "evidence": "产品事实.md：“容量\n70 Wh（额定容量）”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F11 · 该机型接口包括 USB-C 接口 × 1（全功能）、USB3.2 Gen1 × 2、HDMI × 1、3.5 mm 耳机 & 麦克风二合一接口 × 1。",
+            "evidence": "产品事实.md：“USB-C 接口 × 1（全功能）\nUSB3.2 Gen1 × 2\nHDMI × 1\n3.5 mm 耳机 & 麦克风二合一接口 × 1”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F12 · 该机型配备 1080P 高清摄像头。",
+            "evidence": "产品事实.md：“1080P 高清摄像头”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F13 · 超级终端、AI 概要、AI 空间、Super Turbo、华为电脑管家、华为应用市场、华为浏览器、高能模式/省电模式（热键 Fn + P 开启）、华为 F10 一键还原、显示管理（护眼模式）等功能仅限 Windows 版本产品支持。",
+            "evidence": "产品事实.md：“*以上功能仅限 Windows 版本产品支持。”",
+            "action": ""
+          },
+          {
+            "type": "原文引用",
+            "status": "pass",
+            "claim": "F14 · 包装清单包含 PC × 1、USB-C 电源适配器（适配器和充电线一体式连接）× 1、快速指南 × 1。",
+            "evidence": "产品事实.md：“PC × 1\nUSB-C 电源适配器(适配器和充电线一体式连接) × 1\n快速指南 × 1”",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "附近职场通勤的朋友，路过门店可以进来体验MateBook 14酷睿Ultra的触控屏。",
+            "evidence": "导语仅邀请到店体验触控屏，未声明具体参数、价格、体验结果或兼容性，属于行动引导，无需产品事实支持。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "这台Windows 11家庭版机型配备多点触控触摸屏，最多支持10点触控（十点触控仅限Windows版本产品支持）。",
+            "evidence": "F1原文quote为“## 操作系统\\nWindows 11 家庭版”，支持Windows 11家庭版；F2原文quote为“触摸屏\\n多点触控触摸屏，最多支持 10 点触控”，支持多点触控触摸屏及最多10点触控；F3原文quote为“*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。”，支持十点触控仅限Windows版本产品的限定。正文保留该限定，未将十点触控扩大至其他版本。",
+            "action": ""
+          },
+          {
+            "type": "语义核验",
+            "status": "pass",
+            "claim": "MateBook 14酷睿Ultra屏幕展示彩色羽毛画面",
+            "evidence": "图片元数据I1的visual_review为“已核对为产品屏幕的彩色羽毛画面；不从示意色彩推断实测色准或护眼效果。”，caption仅描述画面内容，未推断色准、护眼或性能。",
+            "action": ""
+          },
+          {
+            "type": "合规规则",
+            "status": "pass",
+            "claim": "最终发布稿",
+            "evidence": "检查绝对化、全面兼容、虚构体验、动态权益、医疗功效及无依据数字",
+            "action": ""
+          },
+          {
+            "type": "图片与平台",
+            "status": "pass",
+            "claim": "1张MateBook 14 酷睿 Ultra图片",
+            "evidence": "ima产品目录与文件元数据；门店朋友圈要求1—3张；1张另有图像预览核查说明",
+            "action": ""
+          }
+        ],
+        "trace": [
+          {
+            "step": "输入解析",
+            "status": "pass",
+            "detail": "完整任务已解析；场景与渠道策略已分别确定",
+            "ms": 0
+          },
+          {
+            "step": "公开来源核对",
+            "status": "pass",
+            "detail": "已匹配公开证据并缩减模型输入；保留ima实际来源与获取时间",
+            "ms": 1
+          },
+          {
+            "step": "接收ima资料",
+            "status": "pass",
+            "detail": "接收1份ima原文及1张候选图片，来源随结果保留",
+            "ms": 0
+          },
+          {
+            "step": "原文事实提取",
+            "status": "pass",
+            "detail": "14条事实通过连续原文引用与数字校验；剔除0条",
+            "ms": 8488
+          },
+          {
+            "step": "场景图文生成",
+            "status": "pass",
+            "detail": "完成门店朋友圈结构、1段内容与1张图片编排",
+            "ms": 5673
+          },
+          {
+            "step": "独立语义核验",
+            "status": "pass",
+            "detail": "覆盖5个内容位置；发现并处理0处问题",
+            "ms": 6879
+          },
+          {
+            "step": "独立规则检查",
+            "status": "pass",
+            "detail": "最终内容通过规则检查，来源与限制随稿保留",
+            "ms": 1
+          },
+          {
+            "step": "导出",
+            "status": "pass",
+            "detail": "已生成包含场景、依据、图文和核验结果的Markdown",
+            "ms": 0
+          }
+        ],
+        "mode": "live_llm",
+        "message": "已基于本轮ima资料完成原创生成、独立语义核验和规则检查。",
+        "markdown": "# 通勤办公，来体验触控屏\n\n发布整理版\n\n## 场景策略\n\n- 目标人群：准备到店体验的职场通勤用户\n- 使用场景：门店到访\n- 发布平台：门店朋友圈\n- 内容目标：邀请附近职场用户体验 Windows 版触控屏。\n\n## 图文成稿\n\n附近职场通勤的朋友，路过门店可以进来体验MateBook 14酷睿Ultra的触控屏。\n\n### 到店体验触控屏\n\n这台Windows 11家庭版机型配备多点触控触摸屏，最多支持10点触控（十点触控仅限Windows版本产品支持）。\n\n私信预约到店体验，看看是否适合你的办公习惯。\n\n## 配图出处\n\n### MateBook 14 酷睿 Ultra 彩色屏幕画面\n\nMateBook 14酷睿Ultra屏幕展示彩色羽毛画面\n\n![MateBook 14酷睿Ultra屏幕展示彩色羽毛画面](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg)\n\n位置：正文第一段后\n[图片来源](https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg)\n\n## 产品依据\n\n- **F1** HUAWEI MateBook 14 酷睿 Ultra 提供 Windows 11 家庭版操作系统。\n  - 原文摘录：## 操作系统 Windows 11 家庭版\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F2** 该机型屏幕为多点触控触摸屏，最多支持 10 点触控。\n  - 原文摘录：触摸屏 多点触控触摸屏，最多支持 10 点触控\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n- **F3** 十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。\n  - 原文摘录：*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。\n  - [查看来源](https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/)\n\n## 核验结果\n\n20 项通过。\n",
+        "public_evidence": {
+          "verified_at": "2026-10-18T06:07:53+00:00",
+          "runtime_checked_at": "2026-10-18T06:27:16+00:00",
+          "source_urls": [
+            "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg"
+          ],
+          "matched_count": 15,
+          "excluded_count": 0,
+          "unmatched_reference_count": 0,
+          "matched_image_count": 1,
+          "excluded_image_count": 0,
+          "policy": "仅当前 ima 原文中与已核对公开参考完整匹配的章节，以及与公开素材 SHA-256 相同且画面已核对的图片，可进入模型请求。"
+        },
+        "run_id": "final-03-moments-8bec01a5b046",
+        "generated_at": "2026-10-18T06:27:37+00:00",
+        "elapsed_ms": 21046,
+        "input": {
+          "product": "MateBook 14 酷睿 Ultra",
+          "audience": "准备到店体验的职场通勤用户",
+          "scene": "门店到访",
+          "platform": "门店朋友圈",
+          "goal": "邀请附近职场用户体验 Windows 版触控屏。",
+          "brief": "按 Windows 11 家庭版介绍，整篇约120字，聚焦触控屏一个卖点。数值只用最多10点触控，并紧邻说明仅限Windows版本。不声称比鼠标或触控板更顺手，不承诺具体应用支持缩放或批注，不编造价格、补贴或亲测经历。结尾只保留一次预约体验邀请。"
+        },
+        "material_provenance": {
+          "provider": "ima OpenAPI",
+          "knowledge_base": "任德耀新建华为PC知识库",
+          "source_retrieved_at": [
+            "2026-10-18T05:56:33+00:00"
+          ],
+          "fresh_ima_retrieval_for_this_saved_case": false,
+          "note": "使用2026-10-18实际ima接口取回的原文与图片；本次生成没有再次检索。",
+          "model_calls": 3,
+          "model_name": "deepseek-ai/DeepSeek-V4.1-Flash",
+          "image_retrieved_at": [
+            "2026-10-18T06:04:12+00:00"
+          ],
+          "stable_image_note": "本历史案例的图片由ima取得；展示地址为已确认SHA-256完全相同的华为公开图片。"
+        },
+        "publication_revision": {
+          "revision": "editorial-20261018-1",
+          "type": "publication_cleanup",
+          "label": "发布整理版",
+          "revised_at": "2026-10-18T08:07:03+00:00",
+          "original_run_id": "final-03-moments-8bec01a5b046",
+          "note": "在原始运行结果上删减通用提示及一处无原文支持的体验措辞；未新增产品事实，原始结果与运行记录完整保留。"
+        }
+      },
+      "publication_input": {
+        "product": "MateBook 14 酷睿 Ultra",
+        "audience": "准备到店体验的职场通勤用户",
+        "scene": "门店到访",
+        "platform": "门店朋友圈",
+        "goal": "邀请附近职场用户体验 Windows 版触控屏。",
+        "brief": "按 Windows 11 家庭版介绍，整篇约120字，聚焦触控屏一个卖点。数值只用最多10点触控，并紧邻说明仅限Windows版本。不声称比鼠标或触控板更顺手，不承诺具体应用支持缩放或批注，不编造价格、补贴或亲测经历。结尾只保留一次预约体验邀请。"
+      },
+      "publication_revision": {
+        "revision": "editorial-20261018-1",
+        "type": "publication_cleanup",
+        "label": "发布整理版",
+        "revised_at": "2026-10-18T08:07:03+00:00",
+        "original_run_id": "final-03-moments-8bec01a5b046",
+        "note": "在原始运行结果上删减通用提示及一处无原文支持的体验措辞；未新增产品事实，原始结果与运行记录完整保留。"
       }
     }
   ]
