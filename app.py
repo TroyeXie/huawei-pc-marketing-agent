@@ -4,7 +4,7 @@ The public server exposes generated work only. Credentials, source documents and
 raw knowledge-base indexes remain outside the source tree and public routes.
 """
 from __future__ import annotations
-import os, json, time, uuid, threading, hashlib, mimetypes, logging
+import os, json, time, uuid, threading, hashlib, mimetypes, logging, shutil, re
 from pathlib import Path
 from datetime import datetime, timezone
 from collections import defaultdict, deque
@@ -43,6 +43,39 @@ _media:dict[tuple[str,str],Path]={}
 _limits=defaultdict(deque)
 _status_cache={'at':0.,'data':{}}
 _examples_cache=None
+SNAPSHOT_PATH=BASE/'data'/'ima_verified_cache.json'
+
+def cache_index():
+ if not SNAPSHOT_PATH.is_file():return {}
+ data=json.loads(SNAPSHOT_PATH.read_text(encoding='utf-8'))
+ return data.get('products',{}) if data.get('schema_version')==1 else {}
+
+def use_verified_cache():
+ return os.getenv('IMA_DATA_MODE','verified_cache')!='live' and bool(cache_index())
+
+def cached_materials(product):
+ materials=cache_index().get(product)
+ if not materials:raise ValueError('该型号尚无已核验的 ima 检索缓存。')
+ asset_root=(BASE/'data'/'ima_assets').resolve()
+ selected_dir=RUNTIME/'ima-selected'
+ selected_dir.mkdir(parents=True,exist_ok=True)
+ for img in materials.get('images',[]):
+  filename=img.pop('asset_filename','')
+  if not re.fullmatch(r'[a-f0-9]{64}\.(?:png|jpe?g|webp)',filename):continue
+  source=(asset_root/filename).resolve()
+  if not source.is_relative_to(asset_root) or not source.is_file():continue
+  destination=selected_dir/filename
+  if not destination.is_file():shutil.copyfile(source,destination)
+  img['local_path']=str(destination)
+ materials['cache']['used_at']=current_time()
+ return materials
+
+def acquire_materials(product):
+ if use_verified_cache():return cached_materials(product),'verified_cache'
+ try:return client().collect_product(product),'live'
+ except Exception:
+  if product not in cache_index():raise
+  return cached_materials(product),'verified_cache_fallback'
 
 class GenerateRequest(BaseModel):
  product:str=Field(default='auto',max_length=120)
@@ -109,12 +142,18 @@ def health():return {'status':'ok','application':'zhi-hua-agent'}
 def catalog():
  from public_evidence import supported_products
  available=set(supported_products())
- return {'products':[dict(p,available=p['name'] in available,availability_note='' if p['name'] in available else '来源待核对') for p in PRODUCTS],'platforms':PLATFORMS,'scenes':SCENES}
+ snapshots=cache_index()
+ return {'products':[dict(p,available=p['name'] in available,availability_note='' if p['name'] in available else '来源待核对',image_count=snapshots.get(p['name'],{}).get('cache',{}).get('image_count'),generation_tested=snapshots.get(p['name'],{}).get('cache',{}).get('generation_tested',False)) for p in PRODUCTS],'platforms':PLATFORMS,'scenes':SCENES}
 @app.get('/api/status')
 def status():
  now=time.monotonic()
  if now-_status_cache['at']<30:return _status_cache['data']
  output={'ima_connected':False,'knowledge_base':'任德耀新建华为PC知识库','account_label':'参赛团队 ima 账号','llm_configured':bool(os.getenv('MODEL_API_KEY') and os.getenv('MODEL_API_URL') and os.getenv('MODEL_NAME')),'mode':'live','github_url':GITHUB_URL,'message':''}
+ if use_verified_cache():
+  snapshots=cache_index()
+  output.update(source_available=True,source_mode='verified_cache',mode='verified_ima_cache',cached_products=list(snapshots),cache_source_times={name:value.get('cache',{}).get('source_retrieved_at',[]) for name,value in snapshots.items()},message='2026-10-18 ima 当日资料读取额度已达上限，演示采用当天真实检索并核验的 ima 缓存；每次仍由模型生成新内容并核验。')
+  _status_cache.update(at=now,data=output)
+  return output
  try:
   data=client().discover()
   output.update({'ima_connected':data.get('status') in ('connected','ok','success',True),'knowledge_base':data.get('kb_name',output['knowledge_base']),'account_label':data.get('account_label',output['account_label']),'message':data.get('message','共享知识库连接成功。')})
@@ -184,13 +223,15 @@ def generate(body:GenerateRequest,request:Request):
  trace=[]
  try:
   from engine import generate as run_engine
-  materials=client().collect_product(payload['product'])
-  trace.append({'step':'ima 资料与图片检索','status':'completed','detail':f"指定共享库；产品：{payload['product']}；取得 {len(materials.get('documents',[]))} 份资料、{len(materials.get('images',[]))} 个图片候选。",'ms':int((time.monotonic()-started)*1000)})
+  materials,source_mode=acquire_materials(payload['product'])
+  cached=source_mode.startswith('verified_cache')
+  source_times=materials.get('cache',{}).get('source_retrieved_at',[])
+  trace.append({'step':'载入已核验 ima 检索缓存' if cached else 'ima 资料与图片检索','status':'completed','detail':f"指定共享库；产品：{payload['product']}；载入 {len(materials.get('documents',[]))} 份资料、{len(materials.get('images',[]))} 个图片候选。"+(f' 使用真实检索缓存，原始取材时间：{source_times}。' if cached else ''),'ms':int((time.monotonic()-started)*1000)})
   materials=normalize_materials(materials,run_id)
   result=run_engine(payload,materials)
   result['trace']=trace+result.get('trace',[])
   result.update(run_id=run_id,generated_at=current_time(),elapsed_ms=int((time.monotonic()-started)*1000),input=payload)
-  result['material_provenance']={'provider':'ima OpenAPI','knowledge_base':materials.get('kb_name','任德耀新建华为PC知识库'),'fresh_ima_retrieval_for_this_run':True,'note':'本次任务通过 ima 接口检索产品事实与图片，再执行生成和核验。'}
+  result['material_provenance']={'provider':'ima OpenAPI','knowledge_base':materials.get('kb_name','任德耀新建华为PC知识库'),'source_mode':source_mode,'source_retrieved_at':source_times,'fresh_ima_retrieval_for_this_run':not cached,'note':('本次使用已真实检索并核验的 ima 缓存；原始取材时间：'+str(source_times)+'。本轮重新生成并核验，未重新读取 ima 原文。') if cached else '本次任务通过 ima 接口检索产品事实与图片，再执行生成和核验。'}
   result=scrub(result)
   with _lock:_runs[run_id]=result
   (RUNTIME/'runs').mkdir(exist_ok=True)

@@ -114,6 +114,96 @@
           "height": 584
         }
       ]
+    },
+    {
+      "product_name": "HUAWEI MateBook Pro",
+      "aliases": [
+        "MateBook Pro",
+        "华为 MateBook Pro"
+      ],
+      "verified_at": "2026-10-18T06:32:02+00:00",
+      "public_spec_url": "https://consumer.huawei.com/cn/harmonyos-computer/matebook-pro/specs/",
+      "public_page_url": "https://consumer.huawei.com/cn/harmonyos-computer/matebook-pro/",
+      "public_http_status": 200,
+      "required_sections": [
+        "操作系统",
+        "尺寸与重量",
+        "屏幕",
+        "处理器"
+      ],
+      "minimum_sections": 6,
+      "ignored_public_footers": [
+        "即将离开consumer.huawei.com\n您即将跳转至第三方页面，华为无法控制，也无法对该页面内容负责。\n继续访问\n取消"
+      ],
+      "limitations": [
+        "本次 ima 接口与对外供电资料未包含完整使用状态限定，接口章节已排除，不用于生成反向充电功率声明。",
+        "当前只有 1 张完成公开字节与画面核对的独立产品配图；渠道所需配图不足时须先补充素材。"
+      ],
+      "sections": [
+        {
+          "heading": "操作系统",
+          "text": "HarmonyOS 6.1"
+        },
+        {
+          "heading": "尺寸与重量",
+          "text": "宽度\n310.0 mm\n深度\n222.0 mm\n高度\n13.5 mm\n重量\n970 g\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。"
+        },
+        {
+          "heading": "屏幕",
+          "text": "尺寸\n14.2 英寸\n类型\nOLED 云晰柔光屏\n*仅 HUAWEI MateBook Pro 柔光版支持云晰柔光屏。云晰柔光屏是华为对屏幕设计的定义，屏幕形成漫反射，减轻灯光、阳光等光照的影响，让屏幕观感更舒适；不同使用条件、环境下体验可能略有差异，请以实际为⁠准。\n屏占比\n93%\n屏幕比例\n3:2\n分辨率\n3120（长）× 2080（宽）\n亮度\n典型亮度：600 nits\n峰值亮度：1000 nits\n色域\n100% sRGB色域（典型值）、P3 广色域（典型值）\n对比度\n1000000:1（典型值）\n可视角度\n178°（典型值）\n触摸屏\n多点触控触摸屏，最多支持 10 点触控\n*屏幕亮度、色域、对比度、可视角度等数据为典型值。"
+        },
+        {
+          "heading": "处理器",
+          "text": "麒麟X90 Plus"
+        },
+        {
+          "heading": "存储",
+          "text": "512 GB / 1 TB NVMe PCIe SSD\n*硬盘格式化之后的实际容量可能较小。"
+        },
+        {
+          "heading": "内存",
+          "text": "24 GB / 32 GB"
+        },
+        {
+          "heading": "无线连接",
+          "text": "WLAN\nIEEE 802.11a/b/g/n/ac/ax，160 MHz\n2.4 GHz 和 5 GHz 双频\n2 × 2 MIMO\n支持 WPA/WPA2/WPA3\n蓝牙\n蓝牙 5.2\n星闪\n支持"
+        },
+        {
+          "heading": "电池",
+          "text": "材料\n锂聚合物\n容量\n70 Wh（额定容量）"
+        },
+        {
+          "heading": "键盘和触控板",
+          "text": "1.8 mm 键程\n全尺寸背光键盘\n大尺寸触控板，支持多点触控\n电源键\n指纹电源键"
+        },
+        {
+          "heading": "摄像头",
+          "text": "1080P 高清摄像头"
+        },
+        {
+          "heading": "音频",
+          "text": "麦克风 × 4\n扬声器 × 6"
+        },
+        {
+          "heading": "特色应用",
+          "text": "小艺慧记、小艺深度研究、小艺智慧搜索、小艺输入法、待机屏保、华为笔记、AI 智慧伴唱、AI 降噪通话、文件管理、图库、畅连、备忘录、日历、智慧生活、我的华为、华为云空间、华为应用市场、华为分享、应用接续、键鼠共享、跨设备剪贴板、超级终端、碰一碰、通信共享、无线投屏、有线投屏\n*如在选购或使用时对功能体验、使用限制、支持机型等有疑问，请咨询华为客服（950800）。"
+        },
+        {
+          "heading": "包装清单",
+          "text": "HUAWEI MateBook Pro × 1\n华为超级快充电源适配器（Max 140 W）× 1\n电源适配器线（USB-C） × 1\nHUAWEI USB-C OTG 转接线 × 1\n快速指南 × 1\nType-C 数字耳机 × 1\n抛光布 × 1（仅柔光版）"
+        }
+      ],
+      "images": [
+        {
+          "sha256": "b497feae15d66cb640eb14345f324234243079d18e619ba34a76f6c1fa0c30f6",
+          "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/harmonyos-computer/matebook-pro/new/assets/pc/huawei-matebook-pro-design-1-blur.jpg",
+          "title": "MateBook Pro 粉色机身外观",
+          "description": "一位女性在绿植环绕的桌前使用粉色笔记本电脑，画面展示机身背面。",
+          "visual_review": "已核对为官网该型号配色创拍图，展示粉色机身背面与桌前场景。该图片不能证明屏幕观感、设备性能或人物真实使用评价。",
+          "width": 1220,
+          "height": 720
+        }
+      ]
     }
   ]
 }

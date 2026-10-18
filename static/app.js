@@ -95,14 +95,15 @@
     try {
       const result = await request("/api/status");
       const connected = result.ima_connected === true;
-      $("connection-dot").className = connected ? "status-dot online" : "status-dot warning";
-      const labels = [connected ? "ima 知识库已连接" : "ima 连接未就绪"];
+      const cached = result.source_mode === "verified_cache";
+      $("connection-dot").className = connected || cached ? "status-dot online" : "status-dot warning";
+      const labels = [cached ? "ima 已核验资料缓存" : connected ? "ima 知识库已连接" : "ima 连接未就绪"];
       if (result.llm_configured === false) labels.push("生成模型待配置");
       $("connection-label").textContent = labels.join(" · ");
       $("connection-label").title = textOf(result.message);
       const base = result.knowledge_base;
       const baseName = typeof base === "object" && base ? base.name || base.title : base;
-      $("knowledge-label").textContent = baseName ? `资料来源：${textOf(baseName)}` : result.message || "产品事实与图片来自 ima 知识库";
+      $("knowledge-label").textContent = cached ? `资料来源：${textOf(baseName)} · 2026-10-18 已核验缓存；新内容由模型现场生成。` : baseName ? `资料来源：${textOf(baseName)}` : result.message || "产品事实与图片来自 ima 知识库";
       if (result.github_url && safeUrl(result.github_url)?.startsWith("https://")) {
         $("github-link").href = safeUrl(result.github_url);
         $("github-link").target = "_blank";
@@ -131,7 +132,8 @@
           const id = typeof product === "string" ? product : product.id || name;
           if (name && id !== "auto") {
             const unavailable = typeof product === "object" && product.available === false;
-            const option = new Option(name + (unavailable ? "（来源待核对）" : ""), id);
+            const singleImage = !unavailable && typeof product === "object" && product.image_count === 1;
+            const option = new Option(name + (unavailable ? "（来源待核对）" : singleImage ? "（1张图：朋友圈/海报）" : ""), id);
             option.disabled = unavailable;
             $("product").add(option);
           }

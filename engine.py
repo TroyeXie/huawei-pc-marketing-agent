@@ -50,6 +50,15 @@ def _norm(text: Any) -> str:
 
 def _quantity_norm(text: Any) -> str:
     value = _norm(text).replace("千克", "kg").replace("公斤", "kg").replace("克", "g").replace("毫米", "mm").replace("尼特", "nits").replace("nit", "nits").replace("nitss", "nits").replace("赫兹", "hz").replace("瓦时", "wh").replace("小时", "h").replace("×", "x").replace("＊", "x")
+    def touch_number(match: re.Match[str]) -> str:
+        word = match.group(1)
+        digits = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9}
+        if "十" in word:
+            before, after = word.split("十", 1)
+            return str(digits.get(before, 1) * 10 + digits.get(after, 0))
+        return str(digits.get(word, word))
+    value = re.sub(r"([一二三四五六七八九十]{1,3})(?=点触控)", touch_number, value)
+    value = value.replace("bluetooth", "蓝牙")
     if value.startswith("¥"): value = value[1:] + "元"
     value = value.replace("块钱", "元").replace("块", "元")
     return value
@@ -59,11 +68,12 @@ _QUANTITY = re.compile(r"\d+(?:\.\d+)?\s*(?:kg|千克|公斤|mm|毫米|cm|英寸
 _RESOLUTION = re.compile(r"\d{3,5}\s*[×x*]\s*\d{3,5}", re.I)
 _CPU = re.compile(r"(?:i[3579]-?\d{4,5}[a-z]{0,3}|Ultra\s*[3579]\s*\d{3}[a-z]|麒麟\s*[a-z]{0,2}\d{2,3}(?:\s*Plus)?)", re.I)
 _CURRENCY = re.compile(r"[¥￥]\s*\d+(?:\.\d+)?")
+_CONFIG_VALUE = re.compile(r"Windows\s*\d+(?:\.\d+)?|Linux\s*V?\d+(?:\.\d+)?|(?:蓝牙|Bluetooth)\s*\d+(?:\.\d+)?|(?:\d+|[一二三四五六七八九十]{1,3})\s*点触控", re.I)
 
 
 def _quantities(text: str) -> set[str]:
     result = set()
-    for pattern in (_QUANTITY, _RESOLUTION, _CPU, _CURRENCY):
+    for pattern in (_QUANTITY, _RESOLUTION, _CPU, _CURRENCY, _CONFIG_VALUE):
         result.update(_quantity_norm(m.group()) for m in pattern.finditer(text))
     return result
 
@@ -156,7 +166,7 @@ def check_text(text: str, facts: list[dict[str, Any]] | None = None) -> list[dic
         if term not in _norm(corpus).replace("-", ""):
             findings.append({"type": "事实·接口形态", "status": "blocked", "claim": match.group(), "evidence": "原文未明确该接口形态或协议；不能从USB3.2等规范名称推断USB-A或雷电", "action": "保留已证实的接口原名，删除无依据形态或协议"})
     source_quantities = _quantities(corpus)
-    for match in list(_QUANTITY.finditer(text)) + list(_RESOLUTION.finditer(text)) + list(_CPU.finditer(text)) + list(_CURRENCY.finditer(text)):
+    for match in list(_QUANTITY.finditer(text)) + list(_RESOLUTION.finditer(text)) + list(_CPU.finditer(text)) + list(_CURRENCY.finditer(text)) + list(_CONFIG_VALUE.finditer(text)):
         if _is_denial(text, match.start(), match.end()):
             continue
         quantity = _quantity_norm(match.group())
@@ -486,6 +496,17 @@ class MarketingEngine:
                 result.update(status="blocked", article=article, images=used_images, message="文稿仍存在未通过核验的声明，已阻止导出。")
                 record(current_step, started, "最终检查仍有未解决问题", "blocked")
                 return result
+            if any(path.startswith("sections.") for path in bad_paths | remove_paths):
+                # A removed paragraph must never leave an image pointing to a
+                # non-existent heading in the final deliverable.
+                for index, selected in enumerate(used_images):
+                    if index == 0:
+                        selected["position"] = "导语之后、正文之前"
+                    else:
+                        section_index = min(index - 1, len(article["sections"]) - 1)
+                        heading = article["sections"][section_index].get("heading")
+                        selected["position"] = ("“" + heading + "”段落之后") if heading else f"正文第{section_index + 1}段之后"
+                result["checks"].append({"type": "图文位置", "status": "pass", "claim": "最终配图编排", "evidence": "核验删除了部分段落，已按最终保留的正文重新分配图片位置", "action": "所有位置均指向最终文稿的有效内容"})
             result["checks"].append({"type": "合规规则", "status": "pass", "claim": "最终发布稿", "evidence": "检查绝对化、全面兼容、虚构体验、动态权益、医疗功效及无依据数字", "action": "独立规则未发现残留问题；已完成前述语义核验"})
             visual_count = sum(bool(i.get("visual_review")) for i in used_images)
             result["checks"].append({"type": "图片与平台", "status": "pass", "claim": f"{len(used_images)}张{material_product}图片", "evidence": f"ima产品目录与文件元数据；{platform}要求{rule['min']}—{rule['max']}张；{visual_count}张另有图像预览核查说明", "action": "按已确认来源与图意编排；未核查画面的图片请预览后发布"})

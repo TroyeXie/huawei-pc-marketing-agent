@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "cache_recorded_at": "2026-10-18T06:33:22+00:00",
+  "cache_type": "verified_ima_retrieval_cache",
+  "policy": "此缓存来自已实际取回的指定 ima 共享知识库；仅保留与华为公开资料核对一致的必要章节和已核对画面的图片。API 配额不足时必须显式标注缓存与原始检索时间，不能宣称为新的实时检索。每次使用仍须执行 public_evidence.build_public_evidence；不得用公开参考目录独立补造检索来源。",
+  "products": {
+    "MateBook 14 酷睿 Ultra": {
+      "product_name": "MateBook 14 酷睿 Ultra",
+      "kb_name": "任德耀新建华为PC知识库",
+      "status": "public_evidence_verified",
+      "retrieval_mode": "ima_current_result_public_allowlist",
+      "documents": [
+        {
+          "title": "产品事实.md",
+          "text": "# HUAWEI MateBook 14 酷睿 Ultra - 产品事实\n## 操作系统\nWindows 11 家庭版\nLinux V20 版\n## 尺寸与重量\n宽度\n312.6 mm\n深度\n226.8 mm\n高度\n14.5 mm\n重量\n1.31 kg\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。\n## 屏幕\n尺寸\n14.2 英寸\n类型\nOLED\n屏占比\n91%\n屏幕比例\n3:2\n分辨率\n2880 × 1920，243 ppi\n亮度\n450 尼特\n色域\nWindows 版：Adobe RGB / P3 / sRGB\nLinux V20 版：P3\n对比度\n1000000:1\n触摸屏\n多点触控触摸屏，最多支持 10 点触控\n*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。\n*屏幕亮度、色域、对比度等数据为典型值。\n## 处理器\n英特尔® 酷睿™ Ultra 7 155H 处理器\n*仅限 Windows 版本产品搭载。\n英特尔® 酷睿™ Ultra 5 125H 处理器\n## 存储\n1 TB NVMe PCIe SSD\n*硬盘格式化之后的实际容量可能较小。\n## 显卡\n英特尔锐炫™显卡\n## 内存\n16 GB / 24 GB / 32 GB\n## 无线连接\nWLAN\nIEEE 802.11a/b/g/n/ac/ax，160 MHz\n2.4 GHz 和 5 GHz\n2 × 2 MIMO\n支持 WPA/WPA2/WPA3\n蓝牙\nWindows 版：蓝牙 5.1\nLinux V20 版：蓝牙 4.2\n## 电池\n材料\n锂聚合物\n容量\n70 Wh（额定容量）\n## 接口\nUSB-C 接口 × 1（全功能）\nUSB3.2 Gen1 × 2\nHDMI × 1\n3.5 mm 耳机 & 麦克风二合一接口 × 1\n## 键盘和触控板\n全尺寸背光键盘\n*快捷键功能仅限 Windows 版本产品支持。\n大尺寸触控板，支持多点触控\n电源键\n指纹电源键\n*Linux V20 版：仅支持电源键功能，不支持指纹识别。\n## 摄像头\n1080P 高清摄像头\n## 音频\n麦克风 × 2\n扬声器 × 2\n## 特色应用\n超级终端*\nAI 概要\nAI 空间\nSuper Turbo\n华为电脑管家\n华为应用市场\n华为浏览器\n高能模式/省电模式：热键 Fn + P 开启\n华为 F10 一键还原\n显示管理（护眼模式）\n*以上功能仅限 Windows 版本产品支持。\n## 包装清单\nPC × 1\nUSB-C 电源适配器(适配器和充电线一体式连接) × 1\n快速指南 × 1",
+          "source": {
+            "provider": "ima",
+            "knowledge_base": "任德耀新建华为PC知识库",
+            "title": "产品事实.md",
+            "model_context": "MateBook 14 酷睿 Ultra",
+            "url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "public_source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "public_verified": true,
+            "retrieved_at": "2026-10-18T05:56:33+00:00",
+            "public_verified_at": "2026-10-18T06:07:53+00:00",
+            "source_id": "IMA-c6bb1bf5477a"
+          },
+          "fact_excerpt_count": 15
+        }
+      ],
+      "facts": [
+        {
+          "text": "# HUAWEI MateBook 14 酷睿 Ultra - 产品事实\n## 操作系统\nWindows 11 家庭版\nLinux V20 版\n## 尺寸与重量\n宽度\n312.6 mm\n深度\n226.8 mm\n高度\n14.5 mm\n重量\n1.31 kg\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。\n## 屏幕\n尺寸\n14.2 英寸\n类型\nOLED\n屏占比\n91%\n屏幕比例\n3:2\n分辨率\n2880 × 1920，243 ppi\n亮度\n450 尼特\n色域\nWindows 版：Adobe RGB / P3 / sRGB\nLinux V20 版：P3\n对比度\n1000000:1\n触摸屏\n多点触控触摸屏，最多支持 10 点触控\n*十点触控仅限 Windows 版本产品支持，Linux V20 版仅支持五点触控。\n*屏幕亮度、色域、对比度等数据为典型值。\n## 处理器\n英特尔® 酷睿™ Ultra 7 155H 处理器\n*仅限 Windows 版本产品搭载。\n英特尔® 酷睿™ Ultra 5 125H 处理器\n## 存储\n1 TB NVMe PCIe SSD\n*硬盘格式化之后的实际容量可能较小。\n## 显卡\n英特尔锐炫™显卡\n## 内存\n16 GB / 24 GB / 32 GB\n## 无线连接\nWLAN\nIEEE 802.11a/b/g/n/ac/ax，160 MHz\n2.4 GHz 和 5 GHz\n2 × 2 MIMO\n支持 WPA/WPA2/WPA3\n蓝牙\nWindows 版：蓝牙 5.1\nLinux V20 版：蓝牙 4.2\n## 电池\n材料\n锂聚合物\n容量\n70 Wh（额定容量）\n## 接口\nUSB-C 接口 × 1（全功能）\nUSB3.2 Gen1 × 2\nHDMI × 1\n3.5 mm 耳机 & 麦克风二合一接口 × 1\n## 键盘和触控板\n全尺寸背光键盘\n*快捷键功能仅限 Windows 版本产品支持。\n大尺寸触控板，支持多点触控\n电源键\n指纹电源键\n*Linux V20 版：仅支持电源键功能，不支持指纹识别。\n## 摄像头\n1080P 高清摄像头\n## 音频\n麦克风 × 2\n扬声器 × 2\n## 特色应用\n超级终端*\nAI 概要\nAI 空间\nSuper Turbo\n华为电脑管家\n华为应用市场\n华为浏览器\n高能模式/省电模式：热键 Fn + P 开启\n华为 F10 一键还原\n显示管理（护眼模式）\n*以上功能仅限 Windows 版本产品支持。\n## 包装清单\nPC × 1\nUSB-C 电源适配器(适配器和充电线一体式连接) × 1\n快速指南 × 1",
+          "source": {
+            "provider": "ima",
+            "knowledge_base": "任德耀新建华为PC知识库",
+            "title": "产品事实.md",
+            "model_context": "MateBook 14 酷睿 Ultra",
+            "url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "public_source_url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+            "public_verified": true,
+            "retrieved_at": "2026-10-18T05:56:33+00:00",
+            "public_verified_at": "2026-10-18T06:07:53+00:00",
+            "source_id": "IMA-c6bb1bf5477a"
+          },
+          "product_name": "MateBook 14 酷睿 Ultra",
+          "status": "source_excerpt"
+        }
+      ],
+      "images": [
+        {
+          "sha256": "1287e5a6d1d6fd75e79f2dc4ca19c83e0436253e53b9c11f178be023c2d38981",
+          "title": "MateBook 14 酷睿 Ultra 产品主视觉",
+          "description": "笔记本电脑的官方主视觉，用于展示产品外观。",
+          "caption": "笔记本电脑的官方主视觉，用于展示产品外观。",
+          "visual_review": "已核对为该型号产品主视觉；不从画面推断性能、材质或使用效果。",
+          "product_name": "MateBook 14 酷睿 Ultra",
+          "model": "MateBook 14 酷睿 Ultra",
+          "source": {
+            "provider": "ima",
+            "knowledge_base": "任德耀新建华为PC知识库",
+            "title": "MateBook 14 酷睿 Ultra 产品主视觉",
+            "model_context": "MateBook 14 酷睿 Ultra",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+            "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+            "public_verified": true,
+            "retrieved_at": "2026-10-18T06:04:04+00:00",
+            "public_verified_at": "2026-10-18T06:07:53+00:00",
+            "source_id": "IMA-c8ed3eedbdd1"
+          },
+          "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+          "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+          "public_verified": true,
+          "public_verified_at": "2026-10-18T06:07:53+00:00",
+          "status": "public_source_verified",
+          "width": 1104,
+          "height": 870,
+          "asset_filename": "1287e5a6d1d6fd75e79f2dc4ca19c83e0436253e53b9c11f178be023c2d38981.jpg"
+        },
+        {
+          "sha256": "42fe5f2856ddddf71d2099e9d2a43a53e100c08ead52d63b7a616a31276bba29",
+          "title": "MateBook 14 酷睿 Ultra 屏幕与键盘近景",
+          "description": "笔靠近屏幕和键盘的产品近景。",
+          "caption": "笔靠近屏幕和键盘的产品近景。",
+          "visual_review": "已核对笔、屏幕与键盘构图；画面不能证明笔的购买配套、协议兼容或所有应用均支持书写。",
+          "product_name": "MateBook 14 酷睿 Ultra",
+          "model": "MateBook 14 酷睿 Ultra",
+          "source": {
+            "provider": "ima",
+            "knowledge_base": "任德耀新建华为PC知识库",
+            "title": "MateBook 14 酷睿 Ultra 屏幕与键盘近景",
+            "model_context": "MateBook 14 酷睿 Ultra",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+            "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+            "public_verified": true,
+            "retrieved_at": "2026-10-18T06:04:24+00:00",
+            "public_verified_at": "2026-10-18T06:07:53+00:00",
+            "source_id": "IMA-3b5f84f355da"
+          },
+          "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+          "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+          "public_verified": true,
+          "public_verified_at": "2026-10-18T06:07:53+00:00",
+          "status": "public_source_verified",
+          "width": 2175,
+          "height": 1623,
+          "asset_filename": "42fe5f2856ddddf71d2099e9d2a43a53e100c08ead52d63b7a616a31276bba29.png"
+        },
+        {
+          "sha256": "3c1145f841caab0c3b13aef08a825cffb8c36d8d59b8935bc4269639c06485da",
+          "title": "MateBook 14 酷睿 Ultra 彩色屏幕画面",
+          "description": "产品屏幕展示彩色羽毛画面。",
+          "caption": "产品屏幕展示彩色羽毛画面。",
+          "visual_review": "已核对为产品屏幕的彩色羽毛画面；不从示意色彩推断实测色准或护眼效果。",
+          "product_name": "MateBook 14 酷睿 Ultra",
+          "model": "MateBook 14 酷睿 Ultra",
+          "source": {
+            "provider": "ima",
+            "knowledge_base": "任德耀新建华为PC知识库",
+            "title": "MateBook 14 酷睿 Ultra 彩色屏幕画面",
+            "model_context": "MateBook 14 酷睿 Ultra",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+            "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+            "public_verified": true,
+            "retrieved_at": "2026-10-18T06:04:12+00:00",
+            "public_verified_at": "2026-10-18T06:07:53+00:00",
+            "source_id": "IMA-42af6b0042c1"
+          },
+          "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+          "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg",
+          "public_verified": true,
+          "public_verified_at": "2026-10-18T06:07:53+00:00",
+          "status": "public_source_verified",
+          "width": 1040,
+          "height": 584,
+          "asset_filename": "3c1145f841caab0c3b13aef08a825cffb8c36d8d59b8935bc4269639c06485da.jpg"
+        }
+      ],
+      "warnings": [
+        "有 2 张候选图未通过公开字节与画面核对，已排除。"
+      ],
+      "public_evidence": {
+        "verified_at": "2026-10-18T06:07:53+00:00",
+        "runtime_checked_at": "2026-10-18T06:33:22+00:00",
+        "source_urls": [
+          "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+          "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-kv1-blur.jpg",
+          "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-top-feactures1.png",
+          "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/laptops/matebook-14-2024/images/huawei-matebook-14-2024-display-bg-blur.jpg"
+        ],
+        "matched_count": 15,
+        "excluded_count": 37,
+        "unmatched_reference_count": 0,
+        "matched_image_count": 3,
+        "excluded_image_count": 2,
+        "policy": "仅当前 ima 原文中与已核对公开参考完整匹配的章节，以及与公开素材 SHA-256 相同且画面已核对的图片，可进入模型请求。"
+      },
+      "cache": {
+        "kind": "verified_ima_retrieval_cache",
+        "origin": "actual_ima_retrieval",
+        "recorded_at": "2026-10-18T06:33:22+00:00",
+        "source_retrieved_at": "2026-10-18T05:56:33+00:00",
+        "live_api": false,
+        "image_count": 3,
+        "generation_tested": true,
+        "generation_test_note": "本型号已有独立真实生成案例；缓存本身仅保存来源资料。"
+      }
+    },
+    "HUAWEI MateBook Pro": {
+      "product_name": "HUAWEI MateBook Pro",
+      "kb_name": "任德耀新建华为PC知识库",
+      "status": "public_evidence_verified",
+      "retrieval_mode": "ima_current_result_public_allowlist",
+      "documents": [
+        {
+          "title": "产品事实.md",
+          "text": "# HUAWEI MateBook Pro - 产品事实\n## 操作系统\nHarmonyOS 6.1\n## 尺寸与重量\n宽度\n310.0 mm\n深度\n222.0 mm\n高度\n13.5 mm\n重量\n970 g\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。\n## 屏幕\n尺寸\n14.2 英寸\n类型\nOLED 云晰柔光屏\n*仅 HUAWEI MateBook Pro 柔光版支持云晰柔光屏。云晰柔光屏是华为对屏幕设计的定义，屏幕形成漫反射，减轻灯光、阳光等光照的影响，让屏幕观感更舒适；不同使用条件、环境下体验可能略有差异，请以实际为⁠准。\n屏占比\n93%\n屏幕比例\n3:2\n分辨率\n3120（长）× 2080（宽）\n亮度\n典型亮度：600 nits\n峰值亮度：1000 nits\n色域\n100% sRGB色域（典型值）、P3 广色域（典型值）\n对比度\n1000000:1（典型值）\n可视角度\n178°（典型值）\n触摸屏\n多点触控触摸屏，最多支持 10 点触控\n*屏幕亮度、色域、对比度、可视角度等数据为典型值。\n## 处理器\n麒麟X90 Plus\n## 存储\n512 GB / 1 TB NVMe PCIe SSD\n*硬盘格式化之后的实际容量可能较小。\n## 内存\n24 GB / 32 GB\n## 无线连接\nWLAN\nIEEE 802.11a/b/g/n/ac/ax，160 MHz\n2.4 GHz 和 5 GHz 双频\n2 × 2 MIMO\n支持 WPA/WPA2/WPA3\n蓝牙\n蓝牙 5.2\n星闪\n支持\n## 电池\n材料\n锂聚合物\n容量\n70 Wh（额定容量）\n## 键盘和触控板\n1.8 mm 键程\n全尺寸背光键盘\n大尺寸触控板，支持多点触控\n电源键\n指纹电源键\n## 摄像头\n1080P 高清摄像头\n## 音频\n麦克风 × 4\n扬声器 × 6\n## 特色应用\n小艺慧记、小艺深度研究、小艺智慧搜索、小艺输入法、待机屏保、华为笔记、AI 智慧伴唱、AI 降噪通话、文件管理、图库、畅连、备忘录、日历、智慧生活、我的华为、华为云空间、华为应用市场、华为分享、应用接续、键鼠共享、跨设备剪贴板、超级终端、碰一碰、通信共享、无线投屏、有线投屏\n*如在选购或使用时对功能体验、使用限制、支持机型等有疑问，请咨询华为客服（950800）。\n## 包装清单\nHUAWEI MateBook Pro × 1\n华为超级快充电源适配器（Max 140 W）× 1\n电源适配器线（USB-C） × 1\nHUAWEI USB-C OTG 转接线 × 1\n快速指南 × 1\nType-C 数字耳机 × 1\n抛光布 × 1（仅柔光版）",
+          "source": {
+            "provider": "ima",
+            "knowledge_base": "任德耀新建华为PC知识库",
+            "title": "产品事实.md",
+            "model_context": "HUAWEI MateBook Pro",
+            "url": "https://consumer.huawei.com/cn/harmonyos-computer/matebook-pro/specs/",
+            "public_source_url": "https://consumer.huawei.com/cn/harmonyos-computer/matebook-pro/specs/",
+            "public_verified": true,
+            "retrieved_at": "2026-10-18T06:27:39+00:00",
+            "public_verified_at": "2026-10-18T06:32:02+00:00",
+            "source_id": "IMA-fc09a7716ed0"
+          },
+          "fact_excerpt_count": 13
+        }
+      ],
+      "facts": [
+        {
+          "text": "# HUAWEI MateBook Pro - 产品事实\n## 操作系统\nHarmonyOS 6.1\n## 尺寸与重量\n宽度\n310.0 mm\n深度\n222.0 mm\n高度\n13.5 mm\n重量\n970 g\n*实际尺寸和重量依配置、制造工艺、测量方法的不同可能有所差异。\n## 屏幕\n尺寸\n14.2 英寸\n类型\nOLED 云晰柔光屏\n*仅 HUAWEI MateBook Pro 柔光版支持云晰柔光屏。云晰柔光屏是华为对屏幕设计的定义，屏幕形成漫反射，减轻灯光、阳光等光照的影响，让屏幕观感更舒适；不同使用条件、环境下体验可能略有差异，请以实际为⁠准。\n屏占比\n93%\n屏幕比例\n3:2\n分辨率\n3120（长）× 2080（宽）\n亮度\n典型亮度：600 nits\n峰值亮度：1000 nits\n色域\n100% sRGB色域（典型值）、P3 广色域（典型值）\n对比度\n1000000:1（典型值）\n可视角度\n178°（典型值）\n触摸屏\n多点触控触摸屏，最多支持 10 点触控\n*屏幕亮度、色域、对比度、可视角度等数据为典型值。\n## 处理器\n麒麟X90 Plus\n## 存储\n512 GB / 1 TB NVMe PCIe SSD\n*硬盘格式化之后的实际容量可能较小。\n## 内存\n24 GB / 32 GB\n## 无线连接\nWLAN\nIEEE 802.11a/b/g/n/ac/ax，160 MHz\n2.4 GHz 和 5 GHz 双频\n2 × 2 MIMO\n支持 WPA/WPA2/WPA3\n蓝牙\n蓝牙 5.2\n星闪\n支持\n## 电池\n材料\n锂聚合物\n容量\n70 Wh（额定容量）\n## 键盘和触控板\n1.8 mm 键程\n全尺寸背光键盘\n大尺寸触控板，支持多点触控\n电源键\n指纹电源键\n## 摄像头\n1080P 高清摄像头\n## 音频\n麦克风 × 4\n扬声器 × 6\n## 特色应用\n小艺慧记、小艺深度研究、小艺智慧搜索、小艺输入法、待机屏保、华为笔记、AI 智慧伴唱、AI 降噪通话、文件管理、图库、畅连、备忘录、日历、智慧生活、我的华为、华为云空间、华为应用市场、华为分享、应用接续、键鼠共享、跨设备剪贴板、超级终端、碰一碰、通信共享、无线投屏、有线投屏\n*如在选购或使用时对功能体验、使用限制、支持机型等有疑问，请咨询华为客服（950800）。\n## 包装清单\nHUAWEI MateBook Pro × 1\n华为超级快充电源适配器（Max 140 W）× 1\n电源适配器线（USB-C） × 1\nHUAWEI USB-C OTG 转接线 × 1\n快速指南 × 1\nType-C 数字耳机 × 1\n抛光布 × 1（仅柔光版）",
+          "source": {
+            "provider": "ima",
+            "knowledge_base": "任德耀新建华为PC知识库",
+            "title": "产品事实.md",
+            "model_context": "HUAWEI MateBook Pro",
+            "url": "https://consumer.huawei.com/cn/harmonyos-computer/matebook-pro/specs/",
+            "public_source_url": "https://consumer.huawei.com/cn/harmonyos-computer/matebook-pro/specs/",
+            "public_verified": true,
+            "retrieved_at": "2026-10-18T06:27:39+00:00",
+            "public_verified_at": "2026-10-18T06:32:02+00:00",
+            "source_id": "IMA-fc09a7716ed0"
+          },
+          "product_name": "HUAWEI MateBook Pro",
+          "status": "source_excerpt"
+        }
+      ],
+      "images": [
+        {
+          "sha256": "b497feae15d66cb640eb14345f324234243079d18e619ba34a76f6c1fa0c30f6",
+          "title": "MateBook Pro 粉色机身外观",
+          "description": "一位女性在绿植环绕的桌前使用粉色笔记本电脑，画面展示机身背面。",
+          "caption": "一位女性在绿植环绕的桌前使用粉色笔记本电脑，画面展示机身背面。",
+          "visual_review": "已核对为官网该型号配色创拍图，展示粉色机身背面与桌前场景。该图片不能证明屏幕观感、设备性能或人物真实使用评价。",
+          "product_name": "HUAWEI MateBook Pro",
+          "model": "HUAWEI MateBook Pro",
+          "source": {
+            "provider": "ima",
+            "knowledge_base": "任德耀新建华为PC知识库",
+            "title": "MateBook Pro 粉色机身外观",
+            "model_context": "HUAWEI MateBook Pro",
+            "url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/harmonyos-computer/matebook-pro/new/assets/pc/huawei-matebook-pro-design-1-blur.jpg",
+            "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/harmonyos-computer/matebook-pro/new/assets/pc/huawei-matebook-pro-design-1-blur.jpg",
+            "public_verified": true,
+            "retrieved_at": "2026-10-18T06:27:53+00:00",
+            "public_verified_at": "2026-10-18T06:32:02+00:00",
+            "source_id": "IMA-6aef1abf418a"
+          },
+          "source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/harmonyos-computer/matebook-pro/new/assets/pc/huawei-matebook-pro-design-1-blur.jpg",
+          "public_source_url": "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/harmonyos-computer/matebook-pro/new/assets/pc/huawei-matebook-pro-design-1-blur.jpg",
+          "public_verified": true,
+          "public_verified_at": "2026-10-18T06:32:02+00:00",
+          "status": "public_source_verified",
+          "width": 1220,
+          "height": 720,
+          "asset_filename": "b497feae15d66cb640eb14345f324234243079d18e619ba34a76f6c1fa0c30f6.jpg"
+        }
+      ],
+      "warnings": [
+        "本次 ima 接口与对外供电资料未包含完整使用状态限定，接口章节已排除，不用于生成反向充电功率声明。",
+        "当前只有 1 张完成公开字节与画面核对的独立产品配图；渠道所需配图不足时须先补充素材。"
+      ],
+      "public_evidence": {
+        "verified_at": "2026-10-18T06:32:02+00:00",
+        "runtime_checked_at": "2026-10-18T06:33:22+00:00",
+        "source_urls": [
+          "https://consumer.huawei.com/cn/harmonyos-computer/matebook-pro/specs/",
+          "https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/harmonyos-computer/matebook-pro/new/assets/pc/huawei-matebook-pro-design-1-blur.jpg"
+        ],
+        "matched_count": 13,
+        "excluded_count": 38,
+        "unmatched_reference_count": 0,
+        "matched_image_count": 1,
+        "excluded_image_count": 0,
+        "policy": "仅当前 ima 原文中与已核对公开参考完整匹配的章节，以及与公开素材 SHA-256 相同且画面已核对的图片，可进入模型请求。"
+      },
+      "cache": {
+        "kind": "verified_ima_retrieval_cache",
+        "origin": "actual_ima_retrieval",
+        "recorded_at": "2026-10-18T06:33:22+00:00",
+        "source_retrieved_at": "2026-10-18T06:27:39+00:00",
+        "live_api": false,
+        "image_count": 1,
+        "generation_tested": false,
+        "generation_test_note": "本型号仅完成来源核对，尚无实测生成案例；当前仅 1 张独立产品配图。"
+      }
+    }
+  }
+}

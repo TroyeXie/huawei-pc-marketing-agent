@@ -1,0 +1,416 @@
+{
+  "recorded_at": "2026-10-18T06:29:10+00:00",
+  "scope": "Actual deterministic local checks; no external model calls",
+  "summary": {
+    "engine": 22,
+    "public_gate": 11,
+    "total": 33,
+    "passed": 33,
+    "external_model_calls": 0
+  },
+  "tests": [
+    {
+      "id": "absolute",
+      "kind": "deterministic_text_rule",
+      "input": "全网最低价，现在下单。",
+      "expected": "blocked",
+      "actual": "blocked",
+      "passed": true,
+      "findings": [
+        {
+          "type": "合规·绝对化",
+          "status": "blocked",
+          "claim": "全网最低",
+          "evidence": "本轮资料不足以支持该宣传表述",
+          "action": "移除无依据的绝对化宣传"
+        }
+      ]
+    },
+    {
+      "id": "invented_promotion",
+      "kind": "deterministic_text_rule",
+      "input": "编造999元补贴。",
+      "expected": "blocked",
+      "actual": "blocked",
+      "passed": true,
+      "findings": [
+        {
+          "type": "事实·数字依据",
+          "status": "blocked",
+          "claim": "999元",
+          "evidence": "未在已核对的原文事实中找到这一数值或型号",
+          "action": "删除该数值声明或补充对应型号的资料"
+        },
+        {
+          "type": "合规·动态权益",
+          "status": "blocked",
+          "claim": "补贴",
+          "evidence": "本轮缺少带配置、时间和条件的有效权益依据",
+          "action": "删除该权益承诺"
+        }
+      ]
+    },
+    {
+      "id": "invented_experience",
+      "kind": "deterministic_text_rule",
+      "input": "我亲测用了一个月。",
+      "expected": "blocked",
+      "actual": "blocked",
+      "passed": true,
+      "findings": [
+        {
+          "type": "合规·虚构体验",
+          "status": "blocked",
+          "claim": "我亲测",
+          "evidence": "本轮资料不足以支持该宣传表述",
+          "action": "删除没有实际体验或评价资料支持的表述"
+        }
+      ]
+    },
+    {
+      "id": "all_compatible",
+      "kind": "deterministic_text_rule",
+      "input": "所有软件都兼容。",
+      "expected": "blocked",
+      "actual": "blocked",
+      "passed": true,
+      "findings": [
+        {
+          "type": "合规·全面兼容",
+          "status": "blocked",
+          "claim": "所有软件都兼容",
+          "evidence": "本轮资料不足以支持该宣传表述",
+          "action": "改为按具体软件、版本和外设核验"
+        }
+      ]
+    },
+    {
+      "id": "negative_limit",
+      "kind": "deterministic_text_rule",
+      "input": "不保证所有软件兼容。",
+      "expected": "allow_limitation_or_supported_fact",
+      "actual": "no_rule_finding",
+      "passed": true,
+      "findings": []
+    },
+    {
+      "id": "not_equivalent",
+      "kind": "deterministic_text_rule",
+      "input": "接口存在不等于所有外设都兼容。",
+      "expected": "allow_limitation_or_supported_fact",
+      "actual": "no_rule_finding",
+      "passed": true,
+      "findings": []
+    },
+    {
+      "id": "no_runtime_promise",
+      "kind": "deterministic_text_rule",
+      "input": "不承诺一整天续航。",
+      "expected": "allow_limitation_or_supported_fact",
+      "actual": "no_rule_finding",
+      "passed": true,
+      "findings": []
+    },
+    {
+      "id": "do_not_invent",
+      "kind": "deterministic_text_rule",
+      "input": "不得虚构亲测、价格、补贴或续航小时数。",
+      "expected": "allow_limitation_or_supported_fact",
+      "actual": "no_rule_finding",
+      "passed": true,
+      "findings": []
+    },
+    {
+      "id": "contrast_scope",
+      "kind": "deterministic_text_rule",
+      "input": "不保证所有软件兼容，但是这台机器支持所有应用完全兼容。",
+      "expected": "blocked",
+      "actual": "blocked",
+      "passed": true,
+      "findings": [
+        {
+          "type": "合规·全面兼容",
+          "status": "blocked",
+          "claim": "所有应用完全兼容",
+          "evidence": "本轮资料不足以支持该宣传表述",
+          "action": "改为按具体软件、版本和外设核验"
+        }
+      ]
+    },
+    {
+      "id": "false_denial",
+      "kind": "deterministic_text_rule",
+      "input": "不要错过全网最低价。",
+      "expected": "blocked",
+      "actual": "blocked",
+      "passed": true,
+      "findings": [
+        {
+          "type": "合规·绝对化",
+          "status": "blocked",
+          "claim": "全网最低",
+          "evidence": "本轮资料不足以支持该宣传表述",
+          "action": "移除无依据的绝对化宣传"
+        }
+      ]
+    },
+    {
+      "id": "connector_inference",
+      "kind": "deterministic_text_rule",
+      "input": "USB-A 接口方便连接。",
+      "expected": "blocked",
+      "actual": "blocked",
+      "passed": true,
+      "findings": [
+        {
+          "type": "事实·接口形态",
+          "status": "blocked",
+          "claim": "USB-A",
+          "evidence": "原文未明确该接口形态或协议；不能从USB3.2等规范名称推断USB-A或雷电",
+          "action": "保留已证实的接口原名，删除无依据形态或协议"
+        }
+      ]
+    },
+    {
+      "id": "rated_capacity",
+      "kind": "deterministic_text_rule",
+      "input": "电池70 Wh（额定容量）。",
+      "expected": "allow_limitation_or_supported_fact",
+      "actual": "no_rule_finding",
+      "passed": true,
+      "findings": []
+    },
+    {
+      "id": "runtime_inference",
+      "kind": "deterministic_text_rule",
+      "input": "全天续航20小时。",
+      "expected": "blocked",
+      "actual": "blocked",
+      "passed": true,
+      "findings": [
+        {
+          "type": "事实·数字依据",
+          "status": "blocked",
+          "claim": "20小时",
+          "evidence": "未在已核对的原文事实中找到这一数值或型号",
+          "action": "删除该数值声明或补充对应型号的资料"
+        }
+      ]
+    },
+    {
+      "id": "ambiguous_model",
+      "kind": "input_or_configuration",
+      "input": {
+        "product": "MateBook 14",
+        "audience": "通勤用户",
+        "scene": "门店到访",
+        "platform": "门店朋友圈"
+      },
+      "expected": "needs_clarification",
+      "actual": "needs_clarification",
+      "mode": "clarification",
+      "questions": [
+        "MateBook 14指鸿蒙版，还是酷睿Ultra（Windows/Linux）版？请先确认版本，避免型号与图片混用。"
+      ],
+      "message": "请补充或确认以下信息后开始生成。",
+      "passed": true,
+      "external_model_calls": 0
+    },
+    {
+      "id": "missing_audience",
+      "kind": "input_or_configuration",
+      "input": {
+        "product": "MateBook 14 酷睿 Ultra",
+        "scene": "门店到访",
+        "platform": "门店朋友圈"
+      },
+      "expected": "needs_clarification",
+      "actual": "needs_clarification",
+      "mode": "clarification",
+      "questions": [
+        "这篇内容主要面向哪类人群？"
+      ],
+      "message": "请补充或确认以下信息后开始生成。",
+      "passed": true,
+      "external_model_calls": 0
+    },
+    {
+      "id": "unconfigured_model",
+      "kind": "input_or_configuration",
+      "input": {
+        "product": "MateBook 14 酷睿 Ultra",
+        "audience": "通勤用户",
+        "scene": "门店到访",
+        "platform": "门店朋友圈"
+      },
+      "expected": "error",
+      "actual": "error",
+      "mode": "unconfigured",
+      "questions": [],
+      "message": "尚未配置大模型服务。请设置MODEL_API_URL、MODEL_API_KEY和MODEL_NAME；本系统不会把样例或模板作为AI运行结果。",
+      "passed": true,
+      "external_model_calls": 0
+    },
+    {
+      "id": "deleted_section_image_reflow",
+      "kind": "deterministic_replay_of_saved_model_responses",
+      "input": "回放实际公众号模型响应，其中正文含无原文依据的14英寸概括",
+      "expected": "移除该段且图片位置只指向保留段落",
+      "actual": {
+        "status": "success",
+        "positions": [
+          "导语之后、正文之前",
+          "“会议投屏与外设：先看接口是否对得上”段落之后",
+          "“文档阅读：屏幕比例和清晰度影响长时间看稿”段落之后"
+        ]
+      },
+      "passed": true,
+      "external_model_calls": 0,
+      "saved_response_reads": 3
+    },
+    {
+      "id": "forged_quote_removed",
+      "kind": "deterministic_injected_extraction_response",
+      "input": "向提取阶段注入不在当前原文中的伪造quote",
+      "expected": "引用校验剔除且不进入图文生成",
+      "actual": {
+        "status": "error",
+        "facts": 0,
+        "markdown_empty": true,
+        "message": "没有事实通过原文引用与数字校验，已停止生成；请补充明确的产品资料"
+      },
+      "passed": true,
+      "external_model_calls": 0,
+      "injected_response_count": 1
+    },
+    {
+      "id": "touch_and_os_mismatch",
+      "kind": "deterministic_numeric_configuration_rule",
+      "input": "屏幕最多支持20点触控，运行Windows10。",
+      "expected": "blocked",
+      "actual": "blocked",
+      "passed": true,
+      "findings": [
+        {
+          "type": "事实·数字依据",
+          "status": "blocked",
+          "claim": "20点触控",
+          "evidence": "未在已核对的原文事实中找到这一数值或型号",
+          "action": "删除该数值声明或补充对应型号的资料"
+        },
+        {
+          "type": "事实·数字依据",
+          "status": "blocked",
+          "claim": "Windows10",
+          "evidence": "未在已核对的原文事实中找到这一数值或型号",
+          "action": "删除该数值声明或补充对应型号的资料"
+        }
+      ],
+      "external_model_calls": 0
+    },
+    {
+      "id": "chinese_touch_count",
+      "kind": "deterministic_numeric_configuration_rule",
+      "input": "Windows 11 家庭版，十点触控；Linux V20版支持5点触控。",
+      "expected": "allow_supported_configuration",
+      "actual": "no_rule_finding",
+      "passed": true,
+      "findings": [],
+      "external_model_calls": 0
+    },
+    {
+      "id": "bluetooth_version_mismatch",
+      "kind": "deterministic_numeric_configuration_rule",
+      "input": "蓝牙5.4",
+      "expected": "blocked",
+      "actual": "blocked",
+      "passed": true,
+      "findings": [
+        {
+          "type": "事实·数字依据",
+          "status": "blocked",
+          "claim": "蓝牙5.4",
+          "evidence": "未在已核对的原文事实中找到这一数值或型号",
+          "action": "删除该数值声明或补充对应型号的资料"
+        }
+      ],
+      "external_model_calls": 0
+    },
+    {
+      "id": "bluetooth_name_equivalence",
+      "kind": "deterministic_numeric_configuration_rule",
+      "input": "Bluetooth 5.1",
+      "expected": "allow_supported_configuration",
+      "actual": "no_rule_finding",
+      "passed": true,
+      "findings": [],
+      "external_model_calls": 0
+    },
+    {
+      "name": "尚未核对的 MateBook Pro S",
+      "expected": "阻止模型输入并返回脱敏 PublicEvidenceError",
+      "observed": "PublicEvidenceError；无原文或下载链接出现在错误中",
+      "status": "pass"
+    },
+    {
+      "name": "未明确版本的 MateBook 14",
+      "expected": "阻止模型输入并返回脱敏 PublicEvidenceError",
+      "observed": "PublicEvidenceError；无原文或下载链接出现在错误中",
+      "status": "pass"
+    },
+    {
+      "name": "缺少本次 ima 原文",
+      "expected": "阻止模型输入并返回脱敏 PublicEvidenceError",
+      "observed": "PublicEvidenceError；无原文或下载链接出现在错误中",
+      "status": "pass"
+    },
+    {
+      "name": "任务与资料型号不一致",
+      "expected": "阻止模型输入并返回脱敏 PublicEvidenceError",
+      "observed": "PublicEvidenceError；无原文或下载链接出现在错误中",
+      "status": "pass"
+    },
+    {
+      "name": "个人知识库资料",
+      "expected": "阻止模型输入并返回脱敏 PublicEvidenceError",
+      "observed": "PublicEvidenceError；无原文或下载链接出现在错误中",
+      "status": "pass"
+    },
+    {
+      "name": "必要章节重量被更改",
+      "expected": "阻止模型输入并返回脱敏 PublicEvidenceError",
+      "observed": "PublicEvidenceError；无原文或下载链接出现在错误中",
+      "status": "pass"
+    },
+    {
+      "name": "移除屏幕触控版本限制",
+      "expected": "阻止模型输入并返回脱敏 PublicEvidenceError",
+      "observed": "PublicEvidenceError；无原文或下载链接出现在错误中",
+      "status": "pass"
+    },
+    {
+      "name": "注入未公开文本和元数据",
+      "expected": "全部注入字段和不匹配章节被排除",
+      "observed": "所有 PRIVATE_ 标记消失；保留 14 个完整匹配章节，电池章节排除",
+      "status": "pass"
+    },
+    {
+      "name": "伪造图片已公开标记和声称的 SHA",
+      "expected": "按当前实际文件字节拒绝该候选",
+      "observed": "重新计算 SHA 后不匹配；3 张已核对候选降为 2 张",
+      "status": "pass"
+    },
+    {
+      "name": "图片链接边界",
+      "expected": "未知链接排除；合法本次媒体路由保留",
+      "observed": "未知链接替换为已核对官网图；/api/media/run/id 保留",
+      "status": "pass"
+    },
+    {
+      "name": "重复执行门禁",
+      "expected": "再次匹配当前原文和本地文件可用",
+      "observed": "完整章节一致，3 张已核对图片保留",
+      "status": "pass"
+    }
+  ]
+}

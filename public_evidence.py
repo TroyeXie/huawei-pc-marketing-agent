@@ -251,13 +251,16 @@ def build_public_evidence(product_name: str, ima_materials: dict) -> dict:
     if not documents:
         raise PublicEvidenceError("未收到指定 ima 共享知识库的当前产品原文，公开参考不能替代实时检索。")
     sections, origin, excluded_sections = _match_sections(documents, entry)
-    text = "# HUAWEI " + entry["product_name"] + " - 产品事实\n" + "\n".join(
+    display_name = entry["product_name"]
+    if not display_name.upper().startswith("HUAWEI "):
+        display_name = "HUAWEI " + display_name
+    text = "# " + display_name + " - 产品事实\n" + "\n".join(
         "## " + section["heading"] + "\n" + section["text"] for section in sections
     )
     source = _source(origin, entry)
     images, excluded_images = _match_images(ima_materials, entry)
     omitted = len(entry["sections"]) - len(sections)
-    warnings = []
+    warnings = list(entry.get("limitations", []))
     if omitted:
         warnings.append(f"有 {omitted} 个公开参考章节未在本次 ima 原文中完整匹配，已排除。")
     if excluded_images:
