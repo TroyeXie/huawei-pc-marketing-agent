@@ -177,7 +177,7 @@
     const data = {};
     ["product", "audience", "scene", "platform", "goal", "brief"].forEach((key) => { data[key] = ["audience", "scene"].includes(key) && $(key).value === "custom" ? $(key + "-custom").value.trim() : $(key).value.trim(); });
     data.customer_context = {};
-    ["occupation", "budget", "devices", "concerns"].forEach((key) => { const value = $("customer-" + key).value.trim(); if (value) data.customer_context[key] = value; });
+    ["occupation", "budget", "devices", "concerns", "purchase_stage"].forEach((key) => { const value = $("customer-" + key).value.trim(); if (value) data.customer_context[key] = value; });
     const quote = { base_price: $("quote-base-price").value, sku: $("quote-sku").value.trim(), source_url: $("quote-source-url").value.trim(), verified_at: $("quote-verified-at").value, benefits: [] };
     for (let index = 0; index < 3; index++) {
       const value = (key) => $("benefit-" + index + "-" + key).value.trim();
@@ -204,7 +204,7 @@
       } else node.value = textOf(input[key]);
     });
     const customer = input.customer_context || {};
-    ["occupation", "budget", "devices", "concerns"].forEach((key) => { $("customer-" + key).value = textOf(customer[key]); });
+    ["occupation", "budget", "devices", "concerns", "purchase_stage"].forEach((key) => { $("customer-" + key).value = textOf(customer[key]); });
     const quote = input.quote_inputs || {};
     [["quote-base-price", "base_price"], ["quote-sku", "sku"], ["quote-source-url", "source_url"], ["quote-verified-at", "verified_at"]].forEach(([id, key]) => { $(id).value = textOf(quote[key]); });
     for (let index = 0; index < 3; index++) {

@@ -119,17 +119,27 @@ def _sentence_at(text: str, start: int, end: int) -> tuple[str, int, int]:
     return text[left:right], start - left, end - left
 
 
-def _is_denial(text: str, start: int, end: int) -> bool:
+_CLAIM_TURN = re.compile(r"但是|然而|不过|实际上|反而|但")
+
+
+def _claim_clause_at(text: str, start: int, end: int) -> tuple[str, int, int]:
+    """Keep a disclaimer on its side of a contrast, with or without a comma."""
     sentence, a, b = _sentence_at(text, start, end)
+    turns = list(_CLAIM_TURN.finditer(sentence))
+    left = max([turn.end() for turn in turns if turn.end() <= a] + [0])
+    right = min([turn.start() for turn in turns if turn.start() >= b] + [len(sentence)])
+    return sentence[left:right], a - left, b - left
+
+
+def _is_denial(text: str, start: int, end: int) -> bool:
+    sentence, a, b = _claim_clause_at(text, start, end)
     prefix = sentence[max(0, a - 45):a]
-    # A prior disclaimer must not neutralise a later affirmative promise.
-    prefix = re.split(r"[，,](?:但|然而|不过|实际上)|(?:但是|然而|不过)", prefix)[-1]
     suffix = sentence[b:b + 35]
     if re.search(r"(?:并非|不是|并不是)\s*$", prefix):
         return True
     if re.search(r"(?:不|未|无法|不能|不会|尚未|不得|不应|请勿|不要)\s*$", prefix) and re.match(r"(?:保证|确保|承诺|宣称|表示|兼容|支持|编造|虚构|伪造)", sentence[a:]):
         return True
-    denial = r"(?:不能|不得|不可|不应|请勿|不要)\s*(?:把|将|写|宣传|宣称|承诺|使用|表示|称为|标注|声称|理解|认为|保证|说|编造|虚构|伪造)|(?:不|无法)(?:承诺|保证|代表|等于|意味着|支持|证明|声称)|不(?:能|直接)(?:证明|推断)|(?:禁止|拒绝|避免)(?:使用|宣称|承诺|表述|写|声称|虚构)|(?:没有|缺少|尚无)(?:可靠)?(?:依据|证据)"
+    denial = r"(?:不能|不得|不可|不应|请勿|不要)\s*(?:把|将|写|宣传|宣称|承诺|使用|表示|称为|标注|声称|理解|认为|保证|说|编造|虚构|伪造)|不(?:写|编造|虚构|伪造)|(?:不|无法)(?:承诺|保证|代表|等于|意味着|支持|证明|声称)|不(?:能|直接)(?:证明|推断)|(?:禁止|拒绝|避免)(?:使用|宣称|承诺|表述|写|声称|虚构)|(?:没有|缺少|尚无)(?:可靠)?(?:依据|证据)"
     return bool(re.search(denial, prefix) or re.search(r"(?:尚未|未获|未经).{0,10}(?:确认|证实|验证)|(?:未|不)(?:得到|能得到).{0,5}(?:确认|证实)", suffix))
 
 
@@ -232,7 +242,7 @@ def check_text(text: str, facts: list[dict[str, Any]] | None = None) -> list[dic
     for match in re.finditer(r"(?:赠送|立减|直降|补贴|优惠券|库存充足|限时特惠|包邮|免费换新|销量冠军|获奖)", text):
         if _is_denial(text, match.start(), match.end()):
             continue
-        surrounding, _, _ = _sentence_at(text, match.start(), match.end())
+        surrounding, _, _ = _claim_clause_at(text, match.start(), match.end())
         if re.search(r"(?:咨询|核对|确认|以.{0,8}为准|是否|不含|未提供|暂不|不写|不涉及|另行)", surrounding):
             continue
         if not any(match.group() in str(f.get("quote", "")) for f in facts):
