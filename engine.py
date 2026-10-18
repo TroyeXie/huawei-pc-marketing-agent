@@ -139,7 +139,7 @@ def _is_denial(text: str, start: int, end: int) -> bool:
         return True
     if re.search(r"(?:不|未|无法|不能|不会|尚未|不得|不应|请勿|不要)\s*$", prefix) and re.match(r"(?:保证|确保|承诺|宣称|表示|兼容|支持|编造|虚构|伪造)", sentence[a:]):
         return True
-    denial = r"(?:不能|不得|不可|不应|请勿|不要)\s*(?:把|将|写|宣传|宣称|承诺|使用|表示|称为|标注|声称|理解|认为|保证|说|编造|虚构|伪造)|不(?:写|编造|虚构|伪造)|(?:不|无法)(?:承诺|保证|代表|等于|意味着|支持|证明|声称)|不(?:能|直接)(?:证明|推断)|(?:禁止|拒绝|避免)(?:使用|宣称|承诺|表述|写|声称|虚构)|(?:没有|缺少|尚无)(?:可靠)?(?:依据|证据)"
+    denial = r"(?:不能|不得|不可|不应|请勿|不要)\s*(?:把|将|写|宣传|宣称|承诺|使用|表示|称为|标注|声称|理解|认为|保证|说|编造|虚构|伪造)|不(?:写|编造|虚构|伪造)|不(?:从|根据|依据).{0,12}(?:推导|推断)|(?:不|无法)(?:承诺|保证|代表|等于|意味着|支持|证明|声称)|不(?:能|直接)(?:证明|推断)|(?:禁止|拒绝|避免)(?:使用|宣称|承诺|表述|写|声称|虚构)|(?:没有|缺少|尚无)(?:可靠)?(?:依据|证据)"
     return bool(re.search(denial, prefix) or re.search(r"(?:尚未|未获|未经).{0,10}(?:确认|证实|验证)|(?:未|不)(?:得到|能得到).{0,5}(?:确认|证实)", suffix))
 
 
@@ -480,7 +480,7 @@ class MarketingEngine:
             current_step = "场景图文生成"
             started = time.monotonic()
             generation = self._chat(
-                "你负责第二阶段：基于已经核对的facts原创生成当前任务图文，落实strategy并避免rejected_requests。只使用facts中的事实，不自行发掘文档，不把用户要求当产品依据。返回JSON {strategy:{angle,cta},article:{title,lead,sections:[{heading,text,fact_ids:[]}],cta,tags:[]},images:[{id,position,caption}]}。每个正文段落列其事实id，标题/导语也只能用这些事实。公众号3—5段，小红书3—5短段，朋友圈1段一个核心卖点，海报1—3段每段一个卖点。总字数优先服从task.brief；每段只用1—2项贴合任务的事实，不罗列所有CPU/无线/特色应用参数，整篇只突出2—4个关键卖点。除小红书外默认tags为空数组。图片选image_count张不同id，position说明具体位置，caption用15—35字简洁描述已知画面，不复述文件名，不推断看不见的功能。USB3.2 Gen1名称不能证明USB-A形态，不写原文没有的接口形态或雷电协议。触控硬件不直接证明每个应用支持缩放或批注；介绍具体应用动作时保留应用支持条件，未介绍应用动作时只写触控规格。整篇只保留一次预约体验、咨询配置或收藏邀请，不在每段重复到店核对。内容不要含未证实价格、个人亲测或历史体验。", {"task": payload, "strategy": strategy, "length_guidance": rule["length"], "facts": facts, "images": image_candidates[:16], "image_count": image_count, "rejected_requests": input_issues}, 5000)
+                "你负责第二阶段：基于已经核对的facts原创生成当前任务图文，落实strategy并避免rejected_requests。只使用facts中的事实，不自行发掘文档，不把用户要求当产品依据。返回JSON {strategy:{angle,cta},article:{title,lead,sections:[{heading,text,fact_ids:[]}],cta,tags:[]},images:[{id,position,caption}]}。每个正文段落列其事实id，标题/导语也只能用这些事实。公众号3—5段，小红书3—5短段，朋友圈1段一个核心卖点，海报1—3段每段一个卖点。总字数优先服从task.brief；每段只用1—2项贴合任务的事实，不罗列所有CPU/无线/特色应用参数，整篇只突出2—4个关键卖点。除小红书外默认tags为空数组。图片选image_count张不同id，position说明具体位置，caption用15—35字简洁描述已知画面，不复述文件名，不推断看不见的功能。USB3.2 Gen1名称不能证明USB-A形态，不写原文没有的接口形态或雷电协议。触控硬件不直接证明每个应用支持缩放或批注；介绍具体应用动作时保留应用支持条件，未介绍应用动作时只写触控规格。硬件规格不能推导使用效果；原文未明确支持时，标题、导语和正文均不得写更顺手、更直接、更快、更高效、提升效率等体验结论。独立数字键盘与1.5 mm键程只能作为有据规格介绍；可联系客户的表格任务提出选购关注点，不得把任务适配写成已证实的体验优势。每段至少保留一句独立成立的有据产品事实，避免只有体验结论。整篇只保留一次预约体验、咨询配置或收藏邀请，不在每段重复到店核对。内容不要含未证实价格、个人亲测或历史体验。", {"task": payload, "strategy": strategy, "length_guidance": rule["length"], "facts": facts, "images": image_candidates[:16], "image_count": image_count, "rejected_requests": input_issues}, 5000)
             article = generation.get("article") or {}
             article = {"title": str(article.get("title") or "").strip(), "lead": str(article.get("lead") or "").strip(), "sections": article.get("sections") or [], "cta": str(article.get("cta") or "").strip(), "tags": [str(t).lstrip("#") for t in article.get("tags", []) if str(t).strip()]}
             if platform != "小红书": article["tags"] = []

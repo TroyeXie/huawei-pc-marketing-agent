@@ -8,12 +8,12 @@ FACTS = [{"id": "F1", "quote": "采用全尺寸键盘，1.5 mm 键程，并支�
 
 class KeyboardEffectTests(unittest.TestCase):
     def test_keyboard_effect_requires_direct_evidence(self):
-        for text in ("数字输入更顺手。", "数字输入可以更直接。", "数字键区更直接", "键盘录入更快。", "独立数字键盘提升输入效率。"):
+        for text in ("数字输入更顺手。", "数字输入可以更直接。", "数字键区更直接", "键盘录入更快。", "独立数字键盘提升输入效率。", "不从规格推导但键盘让数字输入更顺手。", "不从规格推导更顺手、更直接、更高效，但数字输入更顺手。"):
             with self.subTest(text=text):
                 self.assertTrue(any(f["type"] == "事实·规格使用效果" for f in check_text(text, FACTS)))
 
     def test_invitation_and_direct_source_are_preserved(self):
-        for text in ("请现场试试键盘是否更顺手。", "键盘是否更直接，建议带表格到店核对。", "不承诺数字输入更顺手。", "请现场试是否顺手。"):
+        for text in ("请现场试试键盘是否更顺手。", "键盘是否更直接，建议带表格到店核对。", "不承诺数字输入更顺手。", "请现场试是否顺手。", "不从规格推导更顺手、更直接、更高效等使用体验。", "不从规格推导更顺手、更直接、更高效。"):
             with self.subTest(text=text):
                 self.assertEqual(check_text(text, FACTS), [])
         text = "独立数字键盘让数字输入更顺手。"
