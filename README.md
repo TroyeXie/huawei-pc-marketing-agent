@@ -83,6 +83,7 @@ python app.py
 | `IMA_OPENAPI_CLIENTID`、`IMA_OPENAPI_APIKEY` | 已加入知识库的账号凭证，仅保存在私密环境 |
 | `MODEL_API_URL` | HTTPS 完整 `/chat/completions` 接口 |
 | `MODEL_API_KEY`、`MODEL_NAME` | 模型凭证和服务方实际模型 ID |
+| `IMA_KB_NAME` | 默认指定共享库；可选 `谢家兴的知识库` 作为同内容来源 |
 | `IMA_DATA_MODE` | 默认采用已核验缓存；`live` 尝试实时取材并在失败时使用可用缓存 |
 | `MODEL_TIMEOUT_SECONDS` | 模型单次超时，默认 55 秒 |
 | `PORT`、`ZHIHUA_RUNTIME_DIR` | 默认 7860、`/tmp/zhi-hua-runtime` |

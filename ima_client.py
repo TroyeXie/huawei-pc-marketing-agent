@@ -98,7 +98,7 @@ class IMAClient:
     def __init__(self, cache_dir: str | Path | None = None, timeout: float = 20):
         self._client_id = os.environ.get("IMA_OPENAPI_CLIENTID", "").strip()
         self._api_key = os.environ.get("IMA_OPENAPI_APIKEY", "").strip()
-        selected_kb = os.environ.get("IMA_KB_NAME", self.KB_NAME).strip()
+        selected_kb = os.environ.get("IMA_KB_NAME", "").strip() or self.KB_NAME
         if selected_kb not in self.AUTHORIZED_KB_NAMES:
             raise IMAError("仅可连接本任务已授权的共享知识库或个人知识库。")
         self.KB_NAME = selected_kb
