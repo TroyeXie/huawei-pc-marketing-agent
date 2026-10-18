@@ -26,14 +26,14 @@ PLATFORM_RULES = {
 }
 PLATFORM_ALIASES = {"微信公众号": "公众号", "微信公众平台": "公众号", "wechat": "公众号", "xiaohongshu": "小红书", "red": "小红书", "朋友圈": "门店朋友圈", "微信朋友圈": "门店朋友圈", "销售朋友圈": "门店朋友圈", "moments": "门店朋友圈", "海报": "门店海报", "poster": "门店海报"}
 SCENE_ANGLES = {
-    "开学": "从课程、文档与携带任务进入，再核对常用软件和接口，避免只堆性能",
+    "开学": "从课程、文档与携带任务进入，再核对常用软件和接口",
     "学生": "从学习任务和课程软件进入，解释阅读、携带及外设需求",
     "职场": "从会议投屏、移动办公与外设进入，再解释文档和差旅选择",
     "差旅": "从行李负担、会议连接与外设进入，给出具体核验动作",
-    "创作": "从素材导入、显示与工作流进入，仅使用已证实接口和功能",
+    "创作": "从素材导入、显示与工作流进入，结合已证实接口和功能组织体验",
     "家庭": "从全家常用软件、文件迁移与易用任务进入",
     "企业": "从应用、账号、网络与外设试点进入，关注可核验部署条件",
-    "门店": "只突出一个适合现场体验的卖点，给出到店理由",
+    "门店": "突出一个适合现场体验的卖点，给出到店理由",
     "新品": "解释已获证实的产品特点和适合任务，不编造代际变化",
     "节日": "从收礼者或家庭任务进入，提供有依据的选择建议",
 }
@@ -133,6 +133,60 @@ def _is_denial(text: str, start: int, end: int) -> bool:
     return bool(re.search(denial, prefix) or re.search(r"(?:尚未|未获|未经).{0,10}(?:确认|证实|验证)|(?:未|不)(?:得到|能得到).{0,5}(?:确认|证实)", suffix))
 
 
+_SCREEN_RULE = "事实·屏幕比例效果"
+_SCREEN_CONTEXT = re.compile(r"3\s*[:：∶比]\s*2|三比二|屏幕比例|纵向空间|竖向空间|一屏|屏幕|文档|表格", re.I)
+_SCREEN_EFFECT = re.compile(
+    r"(?:多显示|显示更多|显示.{0,4}更多|多看).{0,10}(?:内容|几行|行数|[一二三四五六七八九十\d]+行)"
+    r"|影响.{0,12}(?:多少行|几行|行数)"
+    r"|(?:(?:更|更加|更为|相对更)(?:贴合|适合)|贴合|适合).{0,16}(?:纵向|竖向|文档|表格|网页|阅读)"
+    r"|(?:纵向|竖向)(?:显示)?空间.{0,8}(?:更大|更多|增加|提升)"
+    r"|(?:更大|更多).{0,4}(?:纵向|竖向)(?:显示)?空间", re.I)
+_SENTENCE = re.compile(r"[^。！？!?；;\n]+[。！？!?；;]?")
+
+
+def _screen_inference_spans(text: str, facts: list[dict[str, Any]]) -> list[tuple[int, int, str]]:
+    """Locate only the demonstrated aspect-ratio effect gap, using source quotes.
+
+    An aspect ratio alone is not evidence for extra rows/content or a better
+    reading fit. Complete matching source sentences are accepted; negations and
+    explicit requests to check whether an effect exists are not assertions.
+    """
+    if not _SCREEN_CONTEXT.search(text):
+        return []
+    source_sentences = {_norm(m.group().strip("。！？!?；; \t"))
+                        for f in facts for m in _SENTENCE.finditer(str(f.get("quote") or f.get("text") or ""))}
+    spans = []
+    for unit in _SENTENCE.finditer(text):
+        sentence = unit.group()
+        if _norm(sentence.strip("。！？!?；; \t")) in source_sentences:
+            continue
+        for effect in _SCREEN_EFFECT.finditer(sentence):
+            prefix = sentence[:effect.start()]
+            prefix = re.split(r"[，,](?:但|然而|不过|实际上)|但是|然而|不过", prefix)[-1]
+            if _is_denial(sentence, effect.start(), effect.end()):
+                continue
+            if re.search(r"(?:不能|不得|不可|不应|不要|请勿|禁止).{0,18}(?:推导|推断|认定|宣称|保证|承诺|认为)|(?:未|没有|尚未|无法)(?:证明|证实|确认)", prefix):
+                continue
+            if re.search(r"(?:核对|确认|比较|检验|看看).{0,25}(?:是否|能否|能不能|会不会)", prefix):
+                continue
+            # The question may precede its on-site verification instruction.
+            suffix = sentence[effect.end():]
+            if (re.search(r"(?:是否|能否|能不能|会不会)\s*$", prefix)
+                    and re.search(r"(?:建议|请).{0,40}(?:到店|现场).{0,30}(?:核对|确认|比较|检验|试)", suffix)
+                    and not re.search(r"答案|肯定|确实|保证|一定|必然", suffix)):
+                continue
+            spans.append((unit.start(), unit.end(), sentence.strip()))
+            break
+    return spans
+
+
+def _screen_findings(text: str, facts: list[dict[str, Any]]) -> list[dict[str, str]]:
+    return [{"type": _SCREEN_RULE, "status": "blocked", "claim": sentence,
+             "evidence": "本轮原文短引未明确支持这一显示内容、行数或阅读适配效果；屏幕比例参数不能替代比较结论与条件",
+             "action": "删除无依据效果句，保留同段有据规格和现场核对建议"}
+            for _, _, sentence in _screen_inference_spans(text, facts)]
+
+
 def check_text(text: str, facts: list[dict[str, Any]] | None = None) -> list[dict[str, str]]:
     """Return independent rule findings; negative limitation statements are safe.
 
@@ -183,6 +237,7 @@ def check_text(text: str, facts: list[dict[str, Any]] | None = None) -> list[dic
             continue
         if not any(match.group() in str(f.get("quote", "")) for f in facts):
             findings.append({"type": "合规·动态权益", "status": "blocked", "claim": match.group(), "evidence": "本轮缺少带配置、时间和条件的有效权益依据", "action": "删除该权益承诺"})
+    findings.extend(_screen_findings(text, facts))
     return findings
 
 
@@ -253,6 +308,10 @@ class MarketingEngine:
 
         try:
             started = time.monotonic()
+            # Quote arithmetic and structured customer context stay entirely
+            # local; neither is forwarded to the product-writing model.
+            growth_inputs = {key: payload.get(key) for key in ("customer_context", "quote_inputs")
+                             if isinstance((payload or {}).get(key), dict)}
             payload = {str(k): str(v or "").strip() for k, v in (payload or {}).items() if k in {"product", "audience", "scene", "platform", "goal", "brief"}}
             materials = materials or {}
             questions = []
@@ -477,6 +536,18 @@ class MarketingEngine:
 
             current_step = "独立规则检查"
             started = time.monotonic()
+            article, used_images, screen_checks = _clean_screen_claims(article, used_images, facts, material_product, payload["scene"], rule["cta"])
+            result["checks"].extend(screen_checks)
+            for check in result["checks"]:
+                if check["type"] == "语义核验" and check["status"] == "pass" and any(_norm(check["claim"]) in _norm(item["claim"]) for item in screen_checks):
+                    check["action"] = "模型本轮判为通过；随后交付前规则已移除这一无据句"
+            residual_screen = [finding for text in _content_paths(article, used_images).values() for finding in _screen_findings(text, facts)]
+            result["rule_revision"] = {"screen_inference": "v2", "executed": True, "removed_items": len(screen_checks)}
+            record("屏幕比例效果规则", started, f"按原文短引检查全部标题、导语、段落、标签与图注；处理{len(screen_checks)}处无据效果句")
+            if residual_screen:
+                result["checks"].extend(residual_screen)
+                result.update(status="blocked", article=article, images=used_images, message="屏幕比例效果推断清理后仍有残留，已阻止交付。", markdown="")
+                return result
             rule_paths = _content_paths(article, used_images)
             remove_paths = set()
             for path, text in rule_paths.items():
@@ -486,6 +557,9 @@ class MarketingEngine:
                     for finding in findings:
                         result["checks"].append({**finding, "status": "warning", "action": "已移除对应内容，禁止进入发布稿"})
             article, used_images = _remove_paths(article, used_images, remove_paths, material_product, payload["scene"], rule["cta"])
+            headings_changed = _strip_section_numbers(article)
+            if headings_changed:
+                result["checks"].append({"type": "标题编排", "status": "pass", "claim": "正文小标题", "evidence": "移除纯序号前缀，避免核验删除段落后留下跳号", "action": f"已处理{headings_changed}个小标题，正文内容未因此改变"})
             if not article["sections"]:
                 result.update(status="blocked", article=article, images=used_images, message="正文未通过事实或合规核验，已阻止交付。请调整任务或补充产品资料后重试。")
                 record(current_step, started, "所有正文段落均被移除", "blocked")
@@ -496,7 +570,7 @@ class MarketingEngine:
                 result.update(status="blocked", article=article, images=used_images, message="文稿仍存在未通过核验的声明，已阻止导出。")
                 record(current_step, started, "最终检查仍有未解决问题", "blocked")
                 return result
-            if any(path.startswith("sections.") for path in bad_paths | remove_paths):
+            if screen_checks or headings_changed or any(path.startswith("sections.") for path in bad_paths | remove_paths):
                 # A removed paragraph must never leave an image pointing to a
                 # non-existent heading in the final deliverable.
                 for index, selected in enumerate(used_images):
@@ -506,7 +580,7 @@ class MarketingEngine:
                         section_index = min(index - 1, len(article["sections"]) - 1)
                         heading = article["sections"][section_index].get("heading")
                         selected["position"] = ("“" + heading + "”段落之后") if heading else f"正文第{section_index + 1}段之后"
-                result["checks"].append({"type": "图文位置", "status": "pass", "claim": "最终配图编排", "evidence": "核验删除了部分段落，已按最终保留的正文重新分配图片位置", "action": "所有位置均指向最终文稿的有效内容"})
+                result["checks"].append({"type": "图文位置", "status": "pass", "claim": "最终配图编排", "evidence": "核验调整了正文或小标题，已按最终保留的内容重新分配图片位置", "action": "所有位置均指向最终文稿的有效内容"})
             result["checks"].append({"type": "合规规则", "status": "pass", "claim": "最终发布稿", "evidence": "检查绝对化、全面兼容、虚构体验、动态权益、医疗功效及无依据数字", "action": "独立规则未发现残留问题；已完成前述语义核验"})
             visual_count = sum(bool(i.get("visual_review")) for i in used_images)
             result["checks"].append({"type": "图片与平台", "status": "pass", "claim": f"{len(used_images)}张{material_product}图片", "evidence": f"ima产品目录与文件元数据；{platform}要求{rule['min']}—{rule['max']}张；{visual_count}张另有图像预览核查说明", "action": "按已确认来源与图意编排；未核查画面的图片请预览后发布"})
@@ -514,8 +588,13 @@ class MarketingEngine:
             if missing_preview:
                 result["checks"].append({"type": "图片预览", "status": "warning", "claim": f"{missing_preview}张图片暂无浏览器预览URL", "evidence": "资料引用可追溯，但适配器未提供可展示地址", "action": "请打开来源确认画面后发布"})
             result["article"], result["images"] = article, used_images
-            result.update(status="success", mode="live_llm", message="已基于本轮ima资料完成原创生成、独立语义核验和规则检查。" + (" 部分无依据内容已自动移除，详见核验结果。" if bad_paths or remove_paths or input_issues else ""))
+            result.update(status="success", mode="live_llm", message="已基于本轮ima资料完成原创生成、独立语义核验和规则检查。" + (" 部分无依据内容已自动移除，详见核验结果。" if bad_paths or remove_paths or screen_checks or input_issues else ""))
             record(current_step, started, "最终内容通过规则检查，来源与限制随稿保留")
+            current_step = "客户洞察与门店执行"
+            started = time.monotonic()
+            from growth import build_growth_plan
+            result["growth_plan"] = build_growth_plan({**payload, **growth_inputs}, facts, strategy)
+            record(current_step, started, "按实际输入整理五维洞察；报价以Decimal核算且缺失时待补；生成180秒体验计划与第1/3/7天跟进草稿，未新增模型调用")
             current_step = "导出"
             started = time.monotonic()
             result["markdown"] = _render_markdown(result)
@@ -538,6 +617,63 @@ def _content_paths(article: dict[str, Any], images: list[dict[str, Any]]) -> dic
     for i, image in enumerate(images):
         paths[f"images.{i}.caption"] = str(image.get("caption") or "")
     return {k: v for k, v in paths.items() if v.strip()}
+
+
+def _clean_screen_claims(article: dict[str, Any], images: list[dict[str, Any]], facts: list[dict[str, Any]], product: str, scene: str, default_cta: str) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, str]]]:
+    checks = []
+
+    def clean(value: Any, fallback: str = "") -> str:
+        text = str(value or "")
+        spans = _screen_inference_spans(text, facts)
+        for _, _, sentence in spans:
+            checks.append({"type": _SCREEN_RULE, "status": "warning", "claim": sentence,
+                           "evidence": "本轮原文短引未明确给出相应显示或阅读比较结论与条件",
+                           "action": "已删除命中句；保留同段其余规格与现场核对建议，空标题或图注改为中性文字"})
+        for start, end, _ in reversed(spans):
+            text = text[:start] + text[end:]
+        return text.strip() or (fallback if spans else "")
+
+    article = dict(article)
+    article["title"] = clean(article.get("title"), product + "｜" + scene + "选购核对")
+    article["lead"] = clean(article.get("lead"))
+    article["cta"] = clean(article.get("cta"), default_cta)
+    article["tags"] = [value for tag in article.get("tags", []) if (value := clean(tag))]
+    sections = []
+    for original in article.get("sections", []):
+        section = dict(original)
+        # Preserve context from a heading when checking an unqualified next sentence.
+        heading = str(section.get("heading") or "")
+        body = str(section.get("text") or "")
+        combined = heading + "\n" + body
+        cleaned = clean(combined)
+        if not cleaned:
+            continue
+        original_heading_bad = bool(_screen_inference_spans(heading, facts))
+        if original_heading_bad:
+            section["heading"] = "屏幕规格与现场核对"
+            section["text"] = cleaned
+        else:
+            section["heading"] = heading
+            section["text"] = cleaned[len(heading):].lstrip("\n ") if heading and cleaned.startswith(heading) else cleaned
+        if section["text"].strip():
+            sections.append(section)
+    article["sections"] = sections
+    images = [dict(image) for image in images]
+    for image in images:
+        image["caption"] = clean(image.get("caption"), product + "产品展示图；具体规格请见原文")
+    return article, images, checks
+
+
+def _strip_section_numbers(article: dict[str, Any]) -> int:
+    pattern = r"^\s*(?:[一二三四五六七八九十]+[、．.]|\d{1,2}[、．.](?!\d)|[（(](?:[一二三四五六七八九十]+|\d{1,2})[)）])\s*"
+    count = 0
+    for section in article.get("sections", []):
+        before = str(section.get("heading") or "")
+        after = re.sub(pattern, "", before)
+        if after != before:
+            section["heading"] = after
+            count += 1
+    return count
 
 
 def _remove_paths(article: dict[str, Any], images: list[dict[str, Any]], paths: set[str], product: str, scene: str, default_cta: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -573,6 +709,9 @@ def _render_markdown(result: dict[str, Any]) -> str:
     lines.extend(["## 四、核验结果", "", result["message"], ""])
     for check in result["checks"]:
         lines.append(f"- [{check['status']}] {check['type']}：{check['claim']}。{check['action']}")
+    if result.get("growth_plan"):
+        from growth import growth_markdown
+        lines.append(growth_markdown(result["growth_plan"]))
     return "\n".join(lines).strip() + "\n"
 
 

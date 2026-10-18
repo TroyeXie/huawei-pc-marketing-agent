@@ -21,15 +21,15 @@ GITHUB_URL = os.getenv('GITHUB_URL', 'https://github.com/TroyeXie/huawei-pc-mark
 MODEL_URL = os.getenv('MODEL_API_URL', '')
 PRODUCTS = [
  {'id':'matebook14-ultra','name':'MateBook 14 酷睿 Ultra'},
- {'id':'matebook14-harmony','name':'HUAWEI MateBook 14 鸿蒙版'},
+ {'id':'matebook14-harmony','name':'HUAWEI MateBook 14（鸿蒙版）'},
  {'id':'matebook-pro','name':'HUAWEI MateBook Pro'},
  {'id':'matebook-pro-s','name':'HUAWEI MateBook Pro S'},
  {'id':'matebook-fold','name':'HUAWEI MateBook Fold 非凡大师'},
- {'id':'matebook-d14','name':'HUAWEI MateBook D 14'},
- {'id':'matebook-d16','name':'HUAWEI MateBook D 16'},
- {'id':'matebook-d16-se','name':'HUAWEI MateBook D 16 SE'},
- {'id':'matebook-gt','name':'HUAWEI MateBook GT'},
- {'id':'matebook-x','name':'HUAWEI MateBook X 系列'},
+ {'id':'matebook-d14','name':'HUAWEI MateBook D 14 2024'},
+ {'id':'matebook-d16','name':'HUAWEI MateBook D 16 2024'},
+ {'id':'matebook-d16-se','name':'HUAWEI MateBook D 16 SE 版 2024'},
+ {'id':'matebook-gt','name':'HUAWEI MateBook GT 14'},
+ {'id':'matebook-x','name':'HUAWEI MateBook X Pro 酷睿 Ultra 微绒典藏版'},
 ]
 SCENES=['开学季','职场办公','内容创作','家庭换新','企业采购','门店到访','新品首发','节日营销']
 PLATFORMS=['小红书','公众号','门店朋友圈','门店海报']
@@ -84,6 +84,8 @@ class GenerateRequest(BaseModel):
  platform:str=Field(default='',max_length=80)
  goal:str=Field(default='',max_length=500)
  brief:str=Field(default='',max_length=3000)
+ customer_context:dict=Field(default_factory=dict)
+ quote_inputs:dict=Field(default_factory=dict)
 class CheckRequest(BaseModel):
  text:str=Field(max_length=15000)
  product:str=Field(default='',max_length=120)
@@ -151,7 +153,8 @@ def status():
  output={'ima_connected':False,'knowledge_base':'任德耀新建华为PC知识库','account_label':'参赛团队 ima 账号','llm_configured':bool(os.getenv('MODEL_API_KEY') and os.getenv('MODEL_API_URL') and os.getenv('MODEL_NAME')),'mode':'live','github_url':GITHUB_URL,'message':''}
  if use_verified_cache():
   snapshots=cache_index()
-  output.update(source_available=True,source_mode='verified_cache',mode='verified_ima_cache',cached_products=list(snapshots),cache_source_times={name:value.get('cache',{}).get('source_retrieved_at',[]) for name,value in snapshots.items()},message='2026-10-18 ima 当日资料读取额度已达上限，演示采用当天真实检索并核验的 ima 缓存；每次仍由模型生成新内容并核验。')
+  bases=sorted({str(value.get('kb_name','')) for value in snapshots.values() if value.get('kb_name')})
+  output.update(source_available=True,source_mode='verified_cache',mode='verified_ima_cache',knowledge_base=' / '.join(bases),cached_products=list(snapshots),cache_source_times={name:value.get('cache',{}).get('source_retrieved_at',[]) for name,value in snapshots.items()},message='产品事实为实际 ima 检索并经官网规格核对的资料；配图按来源分别取自知识库上传档案或华为官网，均与官方文件核对。内容由模型现场生成。')
   _status_cache.update(at=now,data=output)
   return output
  try:
@@ -195,12 +198,13 @@ def normalize_materials(materials,run_id):
   source=im.get('source',{})
   if isinstance(source,dict):
    im.setdefault('source_title',source.get('title',im.get('title','ima 图片')))
-   im['source_url']='https://ima.qq.com/wikis'
-  im['source_url']='https://ima.qq.com/wikis'
+   im['source_url']=im.get('public_source_url') or source.get('public_source_url') or 'https://ima.qq.com/wikis'
+  im.setdefault('source_url','https://ima.qq.com/wikis')
   selected.append(im)
  out['images']=selected
  for doc in out.get('documents',[]):
-  if isinstance(doc.get('source'),dict):doc['source']['url']='https://ima.qq.com/wikis'
+  if isinstance(doc.get('source'),dict):
+   doc['source']['url']=doc['source'].get('public_source_url') or 'https://ima.qq.com/wikis'
  return out
 
 @app.post('/api/generate')
@@ -231,7 +235,7 @@ def generate(body:GenerateRequest,request:Request):
   result=run_engine(payload,materials)
   result['trace']=trace+result.get('trace',[])
   result.update(run_id=run_id,generated_at=current_time(),elapsed_ms=int((time.monotonic()-started)*1000),input=payload)
-  result['material_provenance']={'provider':'ima OpenAPI','knowledge_base':materials.get('kb_name','任德耀新建华为PC知识库'),'source_mode':source_mode,'source_retrieved_at':source_times,'fresh_ima_retrieval_for_this_run':not cached,'note':('本次使用已真实检索并核验的 ima 缓存；原始取材时间：'+str(source_times)+'。本轮重新生成并核验，未重新读取 ima 原文。') if cached else '本次任务通过 ima 接口检索产品事实与图片，再执行生成和核验。'}
+  result['material_provenance']={'provider':'ima OpenAPI','knowledge_base':materials.get('kb_name','任德耀新建华为PC知识库'),'source_mode':source_mode,'source_retrieved_at':source_times,'image_providers':sorted({str(i.get('source',{}).get('provider','')) for i in materials.get('images',[])}),'fresh_ima_retrieval_for_this_run':not cached,'note':('本次使用已实际检索并核验的 ima 事实资料；配图来源独立记录。本轮重新生成并核验。') if cached else '本次任务检索产品事实与图片，再执行生成和核验。'}
   result=scrub(result)
   with _lock:_runs[run_id]=result
   (RUNTIME/'runs').mkdir(exist_ok=True)

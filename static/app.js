@@ -5,9 +5,9 @@
   const $ = (id) => document.getElementById(id);
   const state = { result: null, input: null, running: false, examples: [], catalog: null, elapsedTimer: null, toastTimer: null };
   const presets = {
-    campus: { product: "matebook14-ultra", audience: "准备购机的大一新生", scene: "开学季：上课记笔记、查资料、做课程汇报，偶尔在宿舍追剧", platform: "小红书", goal: "帮助新生理解适合自己的使用体验，引导收藏选购要点", brief: "围绕 MateBook 14 酷睿 Ultra 写一篇自然、有具体使用场景的小红书图文，避免堆参数。围绕便携、学习效率与日常使用组织内容，给出有出处的配图建议。配置以知识库检索结果为准，不编造优惠价格。" },
-    business: { product: "matebook14-ultra", audience: "经常出差、需要移动办公的职场人士", scene: "商务办公：高铁途中处理文档，在客户现场展示方案，整理会议资料", platform: "公众号", goal: "解释真实办公场景中的产品价值，帮助读者判断适用性", brief: "围绕 MateBook 14 酷睿 Ultra 撰写一篇公众号场景文章。以一天的移动办公需求展开，表达克制、结构清楚。将具体功能和知识库中的产品事实对应起来，选择与实际型号匹配的图片，不承诺未经核实的续航或性能。" },
-    store: { product: "matebook14-ultra", audience: "有换机计划、正在比较选择的本地顾客", scene: "门店到访：导购通过朋友圈介绍产品，邀请顾客带着使用需求到店体验", platform: "门店朋友圈", goal: "用简短、亲切的内容引导到店体验与咨询", brief: "围绕 MateBook 14 酷睿 Ultra 写一段适合门店导购朋友圈发布的图文，正文尽量控制在 180 字以内。强调可以现场体验的具体功能，不编造门店地址、活动期限、现货情况、赠品或价格；活动信息需要时请标明待门店确认。" }
+    campus: { product: "matebook14-ultra", audience: "大学生", scene: "开学季", platform: "小红书", goal: "帮助新生理解适合自己的使用体验，引导收藏选购要点", brief: "围绕 MateBook 14 酷睿 Ultra 写一篇自然、有具体使用场景的小红书图文，避免堆参数。围绕便携、学习效率与日常使用组织内容，给出有出处的配图建议。配置以知识库检索结果为准，不编造优惠价格。" },
+    business: { product: "matebook14-ultra", audience: "职场人士", scene: "职场办公", platform: "公众号", goal: "解释真实办公场景中的产品价值，帮助读者判断适用性", brief: "围绕 MateBook 14 酷睿 Ultra 撰写一篇公众号场景文章。以一天的移动办公需求展开，表达克制、结构清楚。将具体功能和知识库中的产品事实对应起来，选择与实际型号匹配的图片，不承诺未经核实的续航或性能。" },
+    store: { product: "matebook14-ultra", audience: "到店顾客", scene: "门店到访", platform: "门店朋友圈", goal: "用简短、亲切的内容引导到店体验与咨询", brief: "围绕 MateBook 14 酷睿 Ultra 写一段适合门店导购朋友圈发布的图文，正文尽量控制在 180 字以内。强调可以现场体验的具体功能，不编造门店地址、活动期限、现货情况、赠品或价格；活动信息需要时请标明待门店确认。" }
   };
 
   function textOf(value) {
@@ -97,13 +97,14 @@
       const connected = result.ima_connected === true;
       const cached = result.source_mode === "verified_cache";
       $("connection-dot").className = connected || cached ? "status-dot online" : "status-dot warning";
-      const labels = [cached ? "ima 已核验资料缓存" : connected ? "ima 知识库已连接" : "ima 连接未就绪"];
+      const labels = [cached ? "产品资料可用" : connected ? "ima 知识库已连接" : "资料连接待恢复"];
       if (result.llm_configured === false) labels.push("生成模型待配置");
       $("connection-label").textContent = labels.join(" · ");
       $("connection-label").title = textOf(result.message);
       const base = result.knowledge_base;
       const baseName = typeof base === "object" && base ? base.name || base.title : base;
-      $("knowledge-label").textContent = cached ? `资料来源：${textOf(baseName)} · 2026-10-18 已核验缓存；新内容由模型现场生成。` : baseName ? `资料来源：${textOf(baseName)}` : result.message || "产品事实与图片来自 ima 知识库";
+      $("knowledge-label").textContent = baseName ? `资料来源：${textOf(baseName)}` : "ima 产品事实 · 官方来源配图";
+      $("knowledge-label").title = cached ? "使用此前已取回并核对的 ima 资料，内容由模型现场生成。" : "ima 知识库产品资料";
       if (result.github_url && safeUrl(result.github_url)?.startsWith("https://")) {
         $("github-link").href = safeUrl(result.github_url);
         $("github-link").target = "_blank";
@@ -149,19 +150,44 @@
         });
         if ([...$("platform").options].some((option) => option.value === selection)) $("platform").value = selection;
       }
-      if (Array.isArray(catalog.scenes)) {
-        $("scene-options").replaceChildren();
-        catalog.scenes.forEach((scene) => {
-          const name = typeof scene === "string" ? scene : scene.name || scene.label;
-          if (name) $("scene-options").append(new Option(name, name));
-        });
-      }
+      // Keep all eight contest scenes available; custom input is independent.
+      const requiredScenes = ["开学季", "职场办公", "内容创作", "家庭换新", "企业采购", "门店到访", "新品首发", "节日营销"];
+      const selection = $("scene").value;
+      $("scene").replaceChildren(new Option("请选择场景", ""));
+      requiredScenes.forEach((name) => $("scene").add(new Option(name, name)));
+      $("scene").add(new Option("自定义", "custom"));
+      if ([...$("scene").options].some((option) => option.value === selection)) $("scene").value = selection;
+
     } catch (_) { /* The form remains usable with its explicitly labelled defaults. */ }
+  }
+
+  function syncCustom(key) {
+    const custom = $(key + "-custom");
+    custom.hidden = $(key).value !== "custom";
+    custom.required = !custom.hidden;
+  }
+
+  function initBenefits() {
+    const target = $("quote-benefits");
+    ["门店优惠", "平台权益", "换新 / 专属权益"].forEach((name, index) => {
+      const row = element("div", "benefit-editor");
+      row.innerHTML = `<div class="benefit-label"><span>0${index + 1}</span><label><input type="checkbox" id="benefit-${index}-stackable">可叠加</label></div><div class="benefit-grid"><label class="field"><span>权益名称</span><input id="benefit-${index}-label" maxlength="100" placeholder="${name}"></label><label class="field"><span>计算方式</span><select id="benefit-${index}-kind"><option value="fixed">减免金额（元）</option><option value="percent">优惠比例（%）</option></select></label><label class="field"><span>优惠数值</span><input id="benefit-${index}-amount" type="number" min="0" step="0.01" placeholder="例：100 / 5"></label><label class="field benefit-condition"><span>适用条件</span><input id="benefit-${index}-conditions" maxlength="300" placeholder="领取资格、适用门店或其他条件"></label><label class="field"><span>权益来源链接</span><input id="benefit-${index}-source" type="url" maxlength="1000" placeholder="填写本项权益的 HTTPS 来源"></label><label class="field"><span>确认日期</span><input id="benefit-${index}-date" type="date"></label><label class="field"><span>有效期至</span><input id="benefit-${index}-expires" type="date"></label><label class="field"><span>互斥组</span><input id="benefit-${index}-exclusive" maxlength="80" placeholder="互斥权益填写相同名称"></label></div>`;
+      target.append(row);
+    });
   }
 
   function readInput() {
     const data = {};
-    ["product", "audience", "scene", "platform", "goal", "brief"].forEach((key) => { data[key] = $(key).value.trim(); });
+    ["product", "audience", "scene", "platform", "goal", "brief"].forEach((key) => { data[key] = ["audience", "scene"].includes(key) && $(key).value === "custom" ? $(key + "-custom").value.trim() : $(key).value.trim(); });
+    data.customer_context = {};
+    ["occupation", "budget", "devices", "concerns"].forEach((key) => { const value = $("customer-" + key).value.trim(); if (value) data.customer_context[key] = value; });
+    const quote = { base_price: $("quote-base-price").value, sku: $("quote-sku").value.trim(), source_url: $("quote-source-url").value.trim(), verified_at: $("quote-verified-at").value, benefits: [] };
+    for (let index = 0; index < 3; index++) {
+      const value = (key) => $("benefit-" + index + "-" + key).value.trim();
+      if (!value("amount") && !value("label")) continue;
+      quote.benefits.push({ id: "benefit" + index, label: value("label") || ["门店优惠", "平台权益", "换新权益"][index], kind: value("kind"), amount: value("amount"), source_url: value("source"), verified_at: value("date"), valid_until: value("expires"), conditions: value("conditions"), stackable: $("benefit-" + index + "-stackable").checked, exclusive_group: value("exclusive") });
+    }
+    if (quote.base_price || quote.sku || quote.source_url || quote.benefits.length) data.quote_inputs = quote;
     return data;
   }
 
@@ -169,28 +195,39 @@
     ["product", "audience", "scene", "platform", "goal", "brief"].forEach((key) => {
       if (input[key] === undefined) return;
       const node = $(key);
-      if (node.tagName === "SELECT") {
+      if (["audience", "scene"].includes(key)) {
+        const matched = [...node.options].find((item) => item.value === input[key] && item.value !== "custom");
+        node.value = matched ? matched.value : "custom";
+        $(key + "-custom").value = matched ? "" : textOf(input[key]);
+        syncCustom(key);
+      } else if (node.tagName === "SELECT") {
         let option = [...node.options].find((item) => item.value === input[key] || item.text === input[key]);
-        if (!option) {
-          option = new Option(textOf(input[key]), textOf(input[key]));
-          node.add(option);
-        }
+        if (!option) { option = new Option(textOf(input[key]), textOf(input[key])); node.add(option); }
         node.value = option.value;
       } else node.value = textOf(input[key]);
     });
+    const customer = input.customer_context || {};
+    ["occupation", "budget", "devices", "concerns"].forEach((key) => { $("customer-" + key).value = textOf(customer[key]); });
+    const quote = input.quote_inputs || {};
+    [["quote-base-price", "base_price"], ["quote-sku", "sku"], ["quote-source-url", "source_url"], ["quote-verified-at", "verified_at"]].forEach(([id, key]) => { $(id).value = textOf(quote[key]); });
+    for (let index = 0; index < 3; index++) {
+      const benefit = (quote.benefits || [])[index] || {};
+      [["label", "label"], ["kind", "kind"], ["amount", "amount"], ["source", "source_url"], ["date", "verified_at"], ["expires", "valid_until"], ["conditions", "conditions"], ["exclusive", "exclusive_group"]].forEach(([id, key]) => { $("benefit-" + index + "-" + id).value = textOf(benefit[key] || (key === "kind" ? "fixed" : "")); });
+      $("benefit-" + index + "-stackable").checked = benefit.stackable === true;
+    }
   }
 
   function setRunning(running) {
     state.running = running;
     $("generate-button").disabled = running;
     $("regenerate-button").disabled = running;
-    $("generate-button").firstElementChild.textContent = running ? "正在生成与核验" : "生成图文内容";
+    $("generate-button").firstElementChild.textContent = running ? "正在生成与核验" : "生成营销方案";
     document.querySelectorAll(".preset-button").forEach((button) => { button.disabled = running; });
     if (running) {
       $("run-progress").hidden = false;
       $("progress-spinner").className = "progress-spinner";
       $("progress-heading").textContent = "正在处理营销任务";
-      $("progress-description").textContent = "检索与核验需要一些时间；完成后会显示本次真实执行记录。";
+      $("progress-description").textContent = "正在匹配资料、组织图文与行动方案。";
       $("elapsed").textContent = "0 秒";
       const started = Date.now();
       clearInterval(state.elapsedTimer);
@@ -210,11 +247,12 @@
       const result = await request("/api/generate", { method: "POST", body: JSON.stringify(input) }, 300000);
       $("progress-spinner").className = "progress-spinner finished";
       $("progress-heading").textContent = ["ok", "success"].includes(result.status) ? "本次任务已返回结果" : "本次任务已完成处理";
-      $("progress-description").textContent = result.message || "请查看图文内容、资料依据与逐项核验结果。";
+      $("progress-description").textContent = "图文内容与行动方案已准备完成。";
+      $("run-progress").hidden = true;
       if (Number.isFinite(Number(result.elapsed_ms))) $("elapsed").textContent = `${(Number(result.elapsed_ms) / 1000).toFixed(1)} 秒`;
       if (result.status === "needs_clarification") showNotice("还需要确认几件事", result.message || "请将以下信息补充到任务中，再开始生成。", result.questions);
       else if (result.status === "blocked") showNotice("本次任务未形成可发布成稿", result.message || "请根据核验建议调整任务。", result.questions, true);
-      else if (result.status === "error") showNotice("本次任务未成功完成", result.message || "请查看返回记录后重试。", result.questions, true);
+      else if (result.status === "error") showNotice("本次任务未成功完成", result.message || "请稍后重试。", result.questions, true);
       renderResult(result, input);
       $("result").scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (error) {
@@ -235,6 +273,111 @@
     });
     if (grid.children.length) target.replaceChildren(grid);
     else empty(target, "本次响应没有提供场景策略。");
+  }
+
+  function readable(value) {
+    if (!value || typeof value !== "object") return inlineText(value);
+    if (Array.isArray(value)) return value.map(readable).filter(Boolean).join("；");
+    return Object.values(value).map(readable).filter(Boolean).join(" · ");
+  }
+
+  function growthBlock(title, subtitle) {
+    const block = element("section", "growth-block");
+    const heading = element("div", "growth-block-heading");
+    heading.append(element("h4", "", title));
+    if (subtitle) heading.append(element("p", "", subtitle));
+    block.append(heading);
+    return block;
+  }
+
+  function renderGrowth(plan) {
+    const target = $("growth-content");
+    target.replaceChildren();
+    const available = plan && typeof plan === "object" && Object.keys(plan).length;
+    $("growth-panel").hidden = !available;
+    $("growth-nav").hidden = !available;
+    if (!available) return;
+    const insights = plan.insights || plan.customer_insight || [];
+    if (Array.isArray(insights) && insights.length) {
+      const block = growthBlock("客户洞察", "从已提供的信息出发，找出这次沟通的重点。");
+      const grid = element("div", "insight-grid");
+      insights.forEach((insight) => {
+        const card = element("article", "insight-card");
+        const provided = insight.status !== "needs_confirmation";
+        card.append(element("h5", "", (insight.dimension || insight.label || "需求重点") + (provided ? "" : " · 待补充")), element("p", "insight-conclusion", readable(provided ? insight.conclusion || insight.insight : insight.action || insight.conclusion)));
+        if (provided && insight.evidence) card.append(element("p", "insight-evidence", `依据：${readable(insight.evidence)}`));
+        grid.append(card);
+      });
+      block.append(grid); target.append(block);
+    }
+    if (plan.content_strategy) {
+      const block = growthBlock("沟通策略");
+      const strategy = plan.content_strategy;
+      if (typeof strategy === "object" && !Array.isArray(strategy)) {
+        const labels = { angle: "切入点", hook: "开场", message: "核心表达", proof: "证明方式", cta: "下一步", tone: "沟通语气", opening: "开场", core_message: "核心表达", platform: "平台", structure: "内容结构", pain_point: "客户关切", value: "产品价值" };
+        const grid = element("dl", "strategy-grid growth-strategy");
+        Object.entries(strategy).forEach(([key, value]) => {
+          if (!value) return;
+          const pair = element("div"); pair.append(element("dt", "", labels[key] || "表达建议"), element("dd", "", readable(value))); grid.append(pair);
+        });
+        block.append(grid);
+      } else block.append(element("p", "growth-prose", readable(strategy)));
+      target.append(block);
+    }
+    if (plan.quote) {
+      const quote = plan.quote;
+      const block = growthBlock("四档报价", "按录入价格与权益试算，同一配置逐档比较。");
+      if (quote.sku || quote.source_url) {
+        const source = element("p", "quote-source");
+        if (quote.sku) source.append(document.createTextNode(inlineText(quote.sku) + " · "));
+        if (quote.source_url) source.append(link("价格来源 ↗", quote.source_url));
+        block.append(source);
+      }
+      if (Array.isArray(quote.tiers) && quote.tiers.length) {
+        const grid = element("div", "quote-grid");
+        quote.tiers.forEach((tier, index) => {
+          const card = element("article", "quote-card");
+          card.append(element("span", "quote-number", `0${index + 1}`), element("h5", "", tier.name || `方案 ${index + 1}`));
+          const hasPrice = tier.price !== null && tier.price !== undefined && tier.price !== "" && Number.isFinite(Number(tier.price));
+          card.append(element("p", `quote-price${hasPrice ? "" : " quote-price-pending"}`, hasPrice ? `¥ ${Number(tier.price).toLocaleString("zh-CN", { maximumFractionDigits: 2 })}` : "待补充价格"));
+          if (hasPrice) card.append(element("span", "quote-calculated-label", "按填报条件试算"));
+          if (tier.expression) card.append(element("p", "quote-expression", inlineText(tier.expression)));
+          if (tier.benefits && readable(tier.benefits)) card.append(element("p", "quote-benefits", readable(tier.benefits)));
+          if (tier.conditions && readable(tier.conditions)) card.append(element("p", "quote-conditions", readable(tier.conditions)));
+          grid.append(card);
+        });
+        block.append(grid);
+      }
+      if (quote.best_option && quote.best_option.price !== null) {
+        const best = element("p", "quote-source");
+        best.append(element("strong", "", `当前可计算方案最低：${quote.best_option.name} · ¥ ${Number(quote.best_option.price).toLocaleString("zh-CN", { maximumFractionDigits: 2 })}`), document.createTextNode("；" + textOf(quote.best_option.scope)));
+        block.append(best);
+      }
+      if (quote.missing && readable(quote.missing)) {
+        const pending = element("div", "quote-missing");
+        pending.append(element("strong", "", "报价前需确认"), element("p", "", readable(quote.missing))); block.append(pending);
+      }
+      target.append(block);
+    }
+    const demo = plan.demo_script || plan.demo_180s || [];
+    if (Array.isArray(demo) && demo.length) {
+      const block = growthBlock("180 秒产品演示", "让客户带着自己的任务，现场看见、亲手验证。");
+      const wrapper = element("div", "table-wrap demo-table");
+      wrapper.append(makeTable(["时间", "现场动作", "导购话术", "体验确认"], demo.map((step) => ({ cells: [step.time || `${step.seconds || ""} 秒`, readable(step.action), readable(step.words || step.script), readable(step.check)] }))));
+      block.append(wrapper); target.append(block);
+    }
+    if (Array.isArray(plan.followups) && plan.followups.length) {
+      const block = growthBlock("后续跟进", "按客户进度，安排下一次有用的沟通。");
+      const list = element("div", "followup-list");
+      plan.followups.forEach((step) => {
+        const row = element("article", "followup-row");
+        const label = /^\d+$/.test(textOf(step.day)) ? `D+${step.day}` : step.day;
+        const body = element("div");
+        body.append(element("h5", "", readable(step.action)), element("p", "", readable(step.message)));
+        row.append(element("span", "followup-day", label || "跟进"), body); list.append(row);
+      });
+      block.append(list); target.append(block);
+    }
   }
 
   function imageAllowed(image) {
@@ -323,7 +466,7 @@
       article.tags.forEach((tag) => tags.append(element("span", "", textOf(tag).startsWith("#") ? tag : `#${textOf(tag)}`)));
       target.append(tags);
     }
-    if (!selectedImages.length) target.append(element("p", "image-brief", "本次结果未返回可用于成稿的已核验图片。图片检索与处理情况请查看下方资料依据和运行记录。"));
+    if (!selectedImages.length) target.append(element("p", "image-brief", "本次结果未返回可用于成稿的已核验图片。请查看下方图片来源。"));
   }
 
   function makeTable(headers, rows) {
@@ -343,17 +486,27 @@
     return table;
   }
 
+  function inlineText(value) {
+    return textOf(value).replace(/\\[nr]/g, " ").replace(/\s+/g, " ").replace(/(^|\s)#{1,6}\s*/g, "$1").trim();
+  }
+
   function renderFacts(facts) {
     const target = $("facts-content");
     if (!facts.length) return empty(target, "本次响应没有返回可引用的产品事实。");
     const rows = facts.map((fact, index) => {
       const id = fact.id || `F${index + 1}`;
-      const source = element("div");
-      source.append(link(fact.source_title || "来源未标注", fact.source_url));
-      if (fact.locator) source.append(element("p", "source-secondary", fact.locator));
-      return { id: `fact-${id}`, cells: [element("span", "fact-id", id), fact.text || fact.claim || "", source] };
+      const source = element("div", "fact-source");
+      source.append(link("查看来源 ↗", fact.source_url));
+      const locator = inlineText(fact.locator);
+      if (locator && locator !== fact.source_title && locator !== "产品事实.md") source.append(element("span", "source-secondary", locator));
+      if (fact.quote) {
+        const excerpt = element("details", "fact-excerpt");
+        excerpt.append(element("summary", "", "原文摘录"), element("p", "", inlineText(fact.quote)));
+        source.append(excerpt);
+      }
+      return { id: `fact-${id}`, cells: [element("span", "fact-id", id), inlineText(fact.text || fact.claim), source] };
     });
-    target.replaceChildren(makeTable(["编号", "采用的产品事实", "来源与定位"], rows));
+    target.replaceChildren(makeTable(["依据", "采用的产品事实", "原文与来源"], rows));
   }
 
   function renderImages(images) {
@@ -390,40 +543,31 @@
     const tally = { pass: 0, warn: 0, fail: 0, neutral: 0 };
     checks.forEach((check) => { tally[statusInfo(check.status).style] += 1; });
     const summary = element("div", "check-summary");
-    [["核验项", checks.length], ["通过", tally.pass], ["待确认", tally.warn], ["需处理", tally.fail]].forEach(([label, count]) => {
-      const item = element("span");
-      item.append(element("strong", "", count), document.createTextNode(label));
-      summary.append(item);
+    [["项通过", tally.pass], ["项待确认", tally.warn], ["项需处理", tally.fail]].forEach(([label, count]) => {
+      if (!count) return;
+      const item = element("span"); item.append(element("strong", "", count), document.createTextNode(label)); summary.append(item);
     });
-    const list = element("div", "check-list");
+    const needsAttention = element("div", "check-list");
+    const passedList = element("div", "check-list");
     checks.forEach((check) => {
       const status = statusInfo(check.status);
       const row = element("div", "check-row");
       const detail = element("div");
-      detail.append(element("p", "check-claim", check.claim || check.message || "未提供待核验内容"));
-      if (check.evidence) detail.append(element("p", "check-evidence", `依据：${textOf(check.evidence)}`));
-      if (check.action) detail.append(element("p", "check-action", `处理建议：${textOf(check.action)}`));
+      detail.append(element("p", "check-claim", inlineText(check.claim || check.message || "核验完成")));
+      if (check.evidence) detail.append(element("p", "check-evidence", `依据：${inlineText(check.evidence)}`));
+      if (check.action && !/^(无需|无须|无需修改|无需处理|无|none|no action)/i.test(inlineText(check.action))) detail.append(element("p", "check-action", `建议：${inlineText(check.action)}`));
       row.append(element("div", "check-type", checkType(check.type)), element("span", `check-badge ${status.style}`, status.label), detail);
-      list.append(row);
+      (status.style === "pass" ? passedList : needsAttention).append(row);
     });
-    target.replaceChildren(summary, list);
+    target.replaceChildren(summary);
+    if (needsAttention.children.length) target.append(needsAttention);
+    if (passedList.children.length) {
+      const passed = element("details", "passed-checks");
+      passed.append(element("summary", "", `查看 ${tally.pass} 项已通过核验`), passedList);
+      target.append(passed);
+    }
   }
 
-  function renderTrace(trace) {
-    $("trace-count").textContent = trace.length ? `${trace.length} 个实际记录` : "";
-    const target = $("trace-content");
-    if (!trace.length) return empty(target, "本次响应没有附带执行记录。");
-    const list = element("ol", "trace-list");
-    trace.forEach((item) => {
-      const row = element("li");
-      const stage = element("span", "", item.step || item.name || "执行步骤");
-      if (Number.isFinite(Number(item.ms))) stage.append(element("small", "trace-ms", `${Number(item.ms)} ms`));
-      const status = statusInfo(item.status);
-      row.append(stage, element("span", `check-badge ${status.style}`, status.label), element("span", "trace-description", item.detail || item.message || ""));
-      list.append(row);
-    });
-    target.replaceChildren(list);
-  }
 
   function formatDate(value) {
     if (!value) return "";
@@ -432,17 +576,16 @@
     return new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(date);
   }
 
-  function renderResult(result, input = {}) {
+  function renderResult(result, input = {}, reviewNote = "") {
     state.result = result;
     state.input = input;
     $("result").hidden = false;
-    $("result-heading").textContent = result.status === "blocked" ? "本次内容需要修订" : result.status === "needs_clarification" ? "补充信息后继续任务" : result.status === "error" ? "本次运行未成功完成" : "为这次任务准备的内容";
+    $("result-heading").textContent = result.status === "blocked" ? "本次内容需要修订" : result.status === "needs_clarification" ? "补充信息后继续任务" : result.status === "error" ? "本次运行未成功完成" : "为这次任务准备的营销方案";
     $("article-heading").textContent = result.status === "blocked" ? "待修订内容" : "图文成稿";
-    const metadata = [result.run_id ? `运行 ${textOf(result.run_id)}` : "", formatDate(result.generated_at), modeLabel(result.mode), result.material_provenance?.note].filter(Boolean);
-    $("result-meta").textContent = metadata.join(" · ");
+    $("result-meta").textContent = [input.scene, input.platform].filter(Boolean).join(" · ");
     const banner = $("result-status");
-    const fallbackMessages = { blocked: "本次内容未通过核验，请根据逐项核验结果修订后再使用。", needs_clarification: "当前信息不足，请补充任务要求后重新生成。", error: "本次任务未成功完成，请查看实际运行记录。" };
-    if (result.message || fallbackMessages[result.status]) {
+    const fallbackMessages = { blocked: "本次内容未通过核验，请根据逐项核验结果修订后再使用。", needs_clarification: "当前信息不足，请补充任务要求后重新生成。", error: "本次任务未成功完成，请稍后重试。" };
+    if (fallbackMessages[result.status]) {
       banner.textContent = result.message || fallbackMessages[result.status];
       banner.className = `result-status ${["ok", "success"].includes(result.status) ? "success" : ["error", "blocked"].includes(result.status) ? "error" : ""}`;
       banner.hidden = false;
@@ -450,14 +593,13 @@
     const facts = Array.isArray(result.facts) ? result.facts : [];
     const images = Array.isArray(result.images) ? result.images : [];
     const checks = Array.isArray(result.checks) ? result.checks : [];
-    $("review-context").textContent = result.run_id ? `已绑定当前运行 ${textOf(result.run_id).slice(0, 12)}：核验时将请求对照该运行的产品事实；实际对照情况会在返回结果中说明。` : "尚未绑定运行记录：可检查营销措辞，产品事实仍需资料确认。";
+    $("review-context").textContent = result.run_id ? "将对照本次方案采用的产品资料。" : "生成后可自动对照本次产品资料。";
     renderStrategy(result.strategy || {}, input);
+    renderGrowth(result.growth_plan);
     renderArticle(result.article, images, input);
     renderFacts(facts);
     renderImages(images);
     renderChecks(checks, $("checks-content"));
-    renderTrace(Array.isArray(result.trace) ? result.trace : []);
-    $("raw-result").textContent = JSON.stringify(result, null, 2);
     $("copy-button").disabled = !result.article || ["blocked", "error", "needs_clarification"].includes(result.status);
     $("copy-button").textContent = result.status === "blocked" ? "成稿未通过核验" : "复制成稿";
     $("export-button").textContent = ["blocked", "error", "needs_clarification"].includes(result.status) ? "导出核验记录 ↓" : "导出 Markdown ↓";
@@ -558,7 +700,7 @@
     try {
       const response = await request("/api/examples");
       state.examples = Array.isArray(response.examples) ? response.examples : [];
-      if (!state.examples.length) return empty(target, "目前还没有已保存的实际运行案例。你可以先在工作台生成一份图文，查看完整结果。");
+      if (!state.examples.length) return empty(target, "目前还没有已保存的运行案例。可以先生成一份营销方案。");
       target.replaceChildren();
       state.examples.forEach((example, index) => {
         const row = element("article", "example-row");
@@ -566,7 +708,7 @@
         const input = example.input || {};
         body.append(element("h2", "", example.label || example.result?.article?.title || `运行案例 ${index + 1}`));
         body.append(element("p", "example-description", [input.audience, input.scene].filter(Boolean).join(" · ")));
-        const details = [input.platform, modeLabel(example.result?.mode), example.result?.generated_at ? formatDate(example.result.generated_at) : "", example.result?.material_provenance?.note].filter(Boolean);
+        const details = [input.platform, example.result?.images?.length ? `${example.result.images.length} 张配图` : ""].filter(Boolean);
         body.append(element("p", "example-detail", details.join(" / ")));
         const actions = element("div", "example-actions");
         const view = element("button", "secondary-button", "查看实际结果 ↗");
@@ -578,7 +720,7 @@
           showView("workbench");
           $("notice").hidden = true;
           $("run-progress").hidden = true;
-          renderResult(example.result, input);
+          renderResult(example.result, input, example.report_note || "");
           requestAnimationFrame(() => $("result").scrollIntoView({ behavior: "smooth", block: "start" }));
         });
         const load = element("button", "text-button", "用这个任务试一遍");
@@ -617,6 +759,8 @@
     document.querySelectorAll("[data-preset]").forEach((node) => node.classList.toggle("selected", node === button));
     toast("任务已载入，可调整后点击生成。");
   }));
+  initBenefits();
+  ["audience", "scene"].forEach((key) => $(key).addEventListener("change", () => syncCustom(key)));
   $("task-form").addEventListener("submit", generate);
   $("regenerate-button").addEventListener("click", () => $("task-form").requestSubmit());
   $("copy-button").addEventListener("click", copyArticle);

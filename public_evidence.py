@@ -1,4 +1,4 @@
-"""Allow only ima excerpts and selected images already proved public.
+"""Allow only source excerpts and selected images already proved public.
 
 The bundled catalog is a public reference allowlist, never a replacement data
 source. Every returned section must also occur in the current ima result. This
@@ -23,6 +23,7 @@ class PublicEvidenceError(RuntimeError):
 
 _CATALOG_PATH = Path(__file__).parent / "data" / "public_evidence.json"
 _KB_NAME = "任德耀新建华为PC知识库"
+_AUTHORIZED_KBS = frozenset({_KB_NAME, "谢家兴的知识库"})
 _SECTION = re.compile(r"^##[ \t]+([^\n]+)\n(.*?)(?=^#{1,2}[ \t]+|\Z)", re.M | re.S)
 _SOURCE_ID = re.compile(r"IMA-[a-f0-9]{12,64}\Z")
 _MEDIA_ROUTE = re.compile(r"/api/media/[A-Za-z0-9_-]{1,80}/[a-f0-9]{18,64}\Z")
@@ -77,11 +78,31 @@ def _safe_time(value: object) -> str:
         return ""
 
 
+def _kb_name(value: object) -> str:
+    # ima may prefix a decorative private-use icon to a personal KB name.
+    return "".join(c for c in str(value or "") if unicodedata.category(c) != "Co").strip()
+
+
+def _trusted_source(source: object, entry: dict, *, image: bool = False) -> bool:
+    if not isinstance(source, dict):
+        return False
+    if source.get("provider") == "ima":
+        return _kb_name(source.get("knowledge_base")) in _AUTHORIZED_KBS
+    # User-provided media are eligible only after their complete downloaded
+    # bytes match the public asset allowlist. They never become ima results.
+    if image and source.get("provider") == "user_uploaded_archive":
+        return (source.get("archive_sha256") == _catalog().get("source_archive_sha256")
+                and bool(source.get("archive_sha256")))
+    if image and source.get("provider") == "official_huawei":
+        return source.get("knowledge_base") == "华为官网"
+    return False
+
+
 def _source(source: dict, entry: dict, *, image: dict | None = None) -> dict:
     url = image["public_source_url"] if image else entry["public_spec_url"]
     clean = {
-        "provider": "ima",
-        "knowledge_base": _KB_NAME,
+        "provider": source.get("provider", "ima"),
+        "knowledge_base": _kb_name(source.get("knowledge_base")) or _KB_NAME,
         "title": image["title"] if image else "产品事实.md",
         "model_context": entry["product_name"],
         "url": url,
@@ -93,6 +114,8 @@ def _source(source: dict, entry: dict, *, image: dict | None = None) -> dict:
     source_id = source.get("source_id", "")
     if isinstance(source_id, str) and _SOURCE_ID.fullmatch(source_id):
         clean["source_id"] = source_id
+    if image and clean["provider"] == "user_uploaded_archive":
+        clean["archive_sha256"] = source["archive_sha256"]
     return clean
 
 
@@ -119,8 +142,7 @@ def _raw_documents(materials: dict, entry: dict) -> tuple[list[dict], int]:
                 continue
             seen.add(digest)
             source = item.get("source")
-            if (not isinstance(source, dict) or source.get("provider") != "ima"
-                    or source.get("knowledge_base") != _KB_NAME
+            if (not _trusted_source(source, entry)
                     or not _model_matches(item.get("product_name"), entry)
                     or not _model_matches(source.get("model_context"), entry)):
                 excluded += 1
@@ -194,8 +216,7 @@ def _match_images(materials: dict, entry: dict) -> tuple[list[dict], int]:
             excluded += 1
             continue
         source = item.get("source")
-        if (not isinstance(source, dict) or source.get("provider") != "ima"
-                or source.get("knowledge_base") != _KB_NAME
+        if (not _trusted_source(source, entry, image=True)
                 or not _model_matches(item.get("product_name") or item.get("model"), entry)
                 or not _model_matches(source.get("model_context"), entry)):
             excluded += 1
@@ -275,13 +296,13 @@ def build_public_evidence(product_name: str, ima_materials: dict) -> dict:
         "unmatched_reference_count": omitted,
         "matched_image_count": len(images),
         "excluded_image_count": excluded_images,
-        "policy": "仅当前 ima 原文中与已核对公开参考完整匹配的章节，以及与公开素材 SHA-256 相同且画面已核对的图片，可进入模型请求。",
+        "policy": "仅已实际读取的授权 ima 原文中与官网公开参考完整匹配的章节，以及与公开素材 SHA-256 相同且画面已核对的图片，可进入模型请求；图片逐项保留 ima、用户上传或官网来源身份。",
     }
     return {
         "product_name": entry["product_name"],
-        "kb_name": _KB_NAME,
+        "kb_name": _kb_name(origin.get("knowledge_base")) or _KB_NAME,
         "status": "public_evidence_verified",
-        "retrieval_mode": "ima_current_result_public_allowlist",
+        "retrieval_mode": "ima_facts_and_verified_public_media",
         "documents": [{"title": "产品事实.md", "text": text, "source": dict(source), "fact_excerpt_count": len(sections)}],
         "facts": [{"text": text, "source": dict(source), "product_name": entry["product_name"], "status": "source_excerpt"}],
         "images": images,

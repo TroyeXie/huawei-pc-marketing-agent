@@ -1,0 +1,148 @@
+{
+  "executed_at": "2026-10-18T07:31:50+00:00",
+  "test_type": "本地针对屏幕比例效果推断的确定性回归；不是新模型生成案例",
+  "external_model_calls": 0,
+  "rule_revision": "screen_inference_v2",
+  "scope": "原8项专项回归，加1项真实guard v1疑问语序误报回归；原33项记录不改。唯一guarded运行及三阶段模型响应保持原样。",
+  "engine_sha256": "230a33920b988bfd41ec675792ec08bdb9ec8daace952cd8a4457c3460092cad",
+  "total": 9,
+  "passed": 9,
+  "checks": [
+    {
+      "id": "actual_r2_effect",
+      "expected": "真实无据效果句被删除，正文其余有据规格与到店建议保留，无残留",
+      "actual": {
+        "removed": [
+          "文档阅读：3:2 屏幕比例更贴合纵向内容",
+          "处理文档时，屏幕比例会影响一屏能看多少行。",
+          "这款产品屏幕为 14.2 英寸、3:2 比例，纵向空间相对更贴合文档、表格和网页阅读。"
+        ],
+        "remaining": 0,
+        "sections": 4,
+        "retained_screen_text": "屏幕为 OLED 类型，屏占比 91%，分辨率 2880 × 1920、243 ppi，亮度 450 尼特且为典型值，适合在差旅途中查看材料。"
+      },
+      "passed": true
+    },
+    {
+      "id": "actual_v2_effect",
+      "expected": "真实无据效果句被删除，正文其余有据规格与到店建议保留，无残留",
+      "actual": {
+        "removed": [
+          "3:2 比例在纵向能多显示一些内容，适合文档和表格阅读。"
+        ],
+        "remaining": 0,
+        "sections": 3,
+        "retained_screen_text": "出差路上改文档、看表格，屏幕的纵向空间很关键。该机型配备 14.2 英寸 OLED 屏幕，屏幕比例为 3:2，屏占比为 91%，分辨率为 2880 × 1920、243 ppi，亮度为 450 尼特（屏幕亮度、色域、对比度等数据为典型值）。该机型还配备多点触控触摸屏，最多支持 10 点触控，十点触控仅限 Windows 版本产品支持；触控硬件本身不代表每个应用都支持缩放或批注，具体操作是否顺手，建议带常用文档到店实际试一下。"
+      },
+      "passed": true
+    },
+    {
+      "id": "preserve_specs_denials_and_advice",
+      "expected": "正确规格、明确否定和现场核对建议均保留",
+      "actual": {
+        "texts": [
+          "屏幕为14.2英寸，比例3:2。",
+          "3:2比例不代表能多显示几行内容。",
+          "不能由3:2比例推断文档能多显示几行。",
+          "请到店核对3:2屏幕是否能多显示几行，确认是否适合自己。",
+          "请带常用文件到店，按自己的显示设置核对是否适合自己。"
+        ],
+        "finding_counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "explicit_source_sentence",
+      "expected": "原文直接支持的完整比较句不拦截",
+      "actual": [],
+      "passed": true
+    },
+    {
+      "id": "negative_source_is_not_positive_evidence",
+      "expected": "否定原文不得用来支持正面效果宣称",
+      "actual": [
+        {
+          "type": "事实·屏幕比例效果",
+          "status": "blocked",
+          "claim": "3:2屏幕能多显示内容。",
+          "evidence": "本轮原文短引未明确支持这一显示内容、行数或阅读适配效果；屏幕比例参数不能替代比较结论与条件",
+          "action": "删除无依据效果句，保留同段有据规格和现场核对建议"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "all_paths_sentence_cleanup_and_numbering",
+      "expected": "标题、导语、图注均处理；仅删句，空段移除，小标题无跳号",
+      "actual": {
+        "article": {
+          "title": "MateBook 14 酷睿 Ultra｜职场办公选购核对",
+          "lead": "建议带文件到店核对。",
+          "sections": [
+            {
+              "heading": "屏幕规格",
+              "text": "屏幕为14.2英寸、3:2比例。建议带文件到店核对。",
+              "fact_ids": []
+            },
+            {
+              "heading": "接口核对",
+              "text": "建议带外设到店核对。",
+              "fact_ids": []
+            }
+          ],
+          "cta": "请到店核对是否适合自己。",
+          "tags": []
+        },
+        "images": [
+          {
+            "id": "I1",
+            "caption": "MateBook 14 酷睿 Ultra产品展示图；具体规格请见原文"
+          }
+        ],
+        "removed": 5,
+        "headings_stripped": 2,
+        "residual": 0
+      },
+      "passed": true
+    },
+    {
+      "id": "r1_unchanged",
+      "expected": "原正式成稿仍通过现有规则，原文件不修改",
+      "actual": {
+        "file": "01_xiaohongshu_final.json",
+        "findings": [],
+        "original_sha256": "a3084871d1f408fd3979917745e067b92e65a666208a8c9bf2b903ce55e394ed"
+      },
+      "passed": true
+    },
+    {
+      "id": "r3_unchanged",
+      "expected": "原正式成稿仍通过现有规则，原文件不修改",
+      "actual": {
+        "file": "03_moments_release.json",
+        "findings": [],
+        "original_sha256": "1919793cb0d6f3e1d5d95d3e6975b4f5f088e367001ce01d8a1bf4e52cc81ab6"
+      },
+      "passed": true
+    },
+    {
+      "id": "actual_guard_v1_question_order_false_positive",
+      "expected": "保留本次真实运行中疑问在前、到店核对建议在后的原句；不将其认作产品效果承诺",
+      "actual": {
+        "original_run_id": "guarded-02-wechat-127b25376adc",
+        "original_guard_version": "v1",
+        "original_sentence": "是否适合你的阅读习惯，建议带上常用文件到店，按自己的显示设置现场核对。",
+        "v2_findings": [],
+        "v2_removed": 0,
+        "retained_paragraph": "屏幕尺寸为14.2英寸，屏幕比例3:2。是否适合你的阅读习惯，建议带上常用文件到店，按自己的显示设置现场核对。"
+      },
+      "passed": true
+    }
+  ]
+}

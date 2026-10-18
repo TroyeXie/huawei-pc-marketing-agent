@@ -88,6 +88,7 @@ class _HTMLText(HTMLParser):
 class IMAClient:
     API_ORIGIN = "https://ima.qq.com"
     KB_NAME = "任德耀新建华为PC知识库"
+    AUTHORIZED_KB_NAMES = frozenset({KB_NAME, "谢家兴的知识库"})
     _READ_ENDPOINTS = frozenset({
         "wiki/v1/search_knowledge_base", "wiki/v1/get_knowledge_base",
         "wiki/v1/search_knowledge", "wiki/v1/get_knowledge_list",
@@ -97,6 +98,10 @@ class IMAClient:
     def __init__(self, cache_dir: str | Path | None = None, timeout: float = 20):
         self._client_id = os.environ.get("IMA_OPENAPI_CLIENTID", "").strip()
         self._api_key = os.environ.get("IMA_OPENAPI_APIKEY", "").strip()
+        selected_kb = os.environ.get("IMA_KB_NAME", self.KB_NAME).strip()
+        if selected_kb not in self.AUTHORIZED_KB_NAMES:
+            raise IMAError("仅可连接本任务已授权的共享知识库或个人知识库。")
+        self.KB_NAME = selected_kb
         self._kb_id = ""
         self._account_label = "ima API 账户"
         self._discovery_meta: dict[str, Any] = {}
@@ -189,7 +194,8 @@ class IMAClient:
                         kb_id = str(_first(entry, "kb_id", "id", "knowledge_base_id"))
                         base_type = str(entry.get("base_type", ""))
                         is_shared = not base_type or "共享" in base_type or "shared" in base_type.casefold()
-                        if _norm(name) == _norm(self.KB_NAME) and kb_id and is_shared:
+                        expected_type = is_shared or self.KB_NAME == "谢家兴的知识库"
+                        if _norm(name) == _norm(self.KB_NAME) and kb_id and expected_type:
                             matches.append(kb_id)
                             self._discovery_meta = {
                                 key: entry[key] for key in ("content_count", "base_type", "role_type")
@@ -205,7 +211,7 @@ class IMAClient:
                     break
             unique = set(matches)
             if not unique:
-                raise IMAError(f"当前 ima 账户未找到指定共享知识库「{self.KB_NAME}」，请确认已加入该共享库。")
+                raise IMAError(f"当前 ima 账户未找到已授权知识库「{self.KB_NAME}」，请确认该账户可访问。")
             if len(unique) > 1:
                 raise IMAError("ima 中存在多个同名共享知识库，需先在服务端明确正确的知识库。")
             self._kb_id = unique.pop()
@@ -744,6 +750,38 @@ class IMAClient:
         if not product or len(product) > 160:
             raise IMAError("请提供具体、完整的华为 PC 产品型号。")
         self.discover()
+        if self.KB_NAME == "谢家兴的知识库":
+            # The user's identical v7 upload uses flattened document names.
+            # Match the complete authorized archive path, not a fuzzy model
+            # hit from a marketing case or a dynamic price card.
+            paths = {
+                "HUAWEI MateBook 14（鸿蒙版）": "01-鸿蒙电脑__HUAWEI MateBook 14",
+                "HUAWEI MateBook Fold 非凡大师": "01-鸿蒙电脑__HUAWEI MateBook Fold 非凡大师",
+                "HUAWEI MateBook Pro": "01-鸿蒙电脑__HUAWEI MateBook Pro",
+                "HUAWEI MateBook Pro S": "01-鸿蒙电脑__HUAWEI MateBook Pro S",
+                "MateBook 14 酷睿 Ultra": "02-MateBook-Windows__MateBook 14 酷睿 Ultra",
+                "HUAWEI MateBook D 14 2024": "02-MateBook-Windows__MateBook D 14",
+                "HUAWEI MateBook D 16 2024": "02-MateBook-Windows__MateBook D 16",
+                "HUAWEI MateBook D 16 SE 版 2024": "02-MateBook-Windows__MateBook D 16 SE 版",
+                "HUAWEI MateBook GT 14": "02-MateBook-Windows__MateBook GT 系列",
+                "HUAWEI MateBook X Pro 酷睿 Ultra 微绒典藏版": "02-MateBook-Windows__MateBook X系列",
+            }
+            key = next((name for name in paths if self._model_key(name) == self._model_key(product)), "")
+            if key:
+                expected = "华为PC-v7__P1-产品参数库__" + paths[key] + "__产品事实.md"
+                page = self.search("产品事实")
+                items = [x for x in page["items"] if x["title"] == expected and not x["is_folder"]]
+                if len(items) == 1:
+                    record = self.read_media(dict(items[0], _target_product=key, model_context=key))
+                    text = "\n".join(p["text"] for p in record["pages"] if p.get("text"))
+                    if text:
+                        source = dict(record["source"], model_context=key)
+                        return {"product_name": key, "kb_name": self.KB_NAME, "status": "retrieved",
+                                "retrieval_mode": "exact_authorized_personal_document",
+                                "documents": [{"title": "产品事实.md", "text": text, "source": source}],
+                                "facts": [{"text": text, "source": dict(source), "product_name": key,
+                                           "status": "source_excerpt"}],
+                                "images": record["images"], "warnings": []}
         page = self.search(product)
         candidates = [x for x in page["items"] if not x["is_folder"]]
         matched_folders = [x for x in page["items"] if x["is_folder"]
