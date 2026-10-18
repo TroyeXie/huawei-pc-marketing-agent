@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f5f0">
+  <meta name="description" content="知华·有据，华为 PC 场景营销智能体。理解任务、检索产品事实、组织图文，并逐项核验内容。">
+  <title>知华·有据 — 华为 PC 场景营销智能体</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳至工作台</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#workbench" aria-label="知华·有据，回到工作台">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>知华<span class="brand-dot">·</span>有据</span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="#workbench" data-view="workbench" class="active" aria-current="page">工作台</a>
+        <a href="#examples" data-view="examples">运行案例</a>
+        <a href="#guide" data-view="guide">使用说明</a>
+        <a id="github-link" class="external-nav" href="https://github.com/TroyeXie/huawei-pc-marketing-agent" target="_blank" rel="noopener noreferrer" title="查看项目源代码">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page-shell">
+    <section id="view-workbench" class="view" aria-labelledby="workbench-heading">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">HUAWEI PC · SCENARIO MARKETING</p>
+          <h1 id="workbench-heading">让每一句卖点，<br class="mobile-break">都有依据。</h1>
+          <p class="hero-description">从一个真实任务出发，把产品资料变成适合人群、场景与平台的图文内容。</p>
+        </div>
+        <div class="hero-note"><span class="note-line"></span><p>你提出营销任务<br>我们查资料、配图片、写内容、核结果</p></div>
+      </div>
+
+      <div class="service-line" aria-live="polite">
+        <span id="connection-dot" class="status-dot loading"></span>
+        <span id="connection-label">正在读取服务状态</span>
+        <span class="service-divider" aria-hidden="true"></span>
+        <span id="knowledge-label">产品事实与图片来自 ima 知识库</span>
+        <button id="refresh-status" class="text-button" type="button">刷新状态 <span aria-hidden="true">↻</span></button>
+      </div>
+
+      <form id="task-form" class="task-sheet">
+        <div class="section-heading">
+          <div><p class="section-number">01 / 营销任务</p><h2>这一次，想和谁说什么？</h2></div>
+          <span class="subtle-note">任务越具体，表达越有针对性</span>
+        </div>
+        <div class="preset-row" aria-label="载入预设任务">
+          <span class="preset-label">试一个场景</span>
+          <button type="button" class="preset-button" data-preset="campus">开学季 · 小红书 <span aria-hidden="true">↗</span></button>
+          <button type="button" class="preset-button" data-preset="business">移动办公 · 公众号 <span aria-hidden="true">↗</span></button>
+          <button type="button" class="preset-button" data-preset="store">门店导购 · 朋友圈 <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="field-grid">
+          <label class="field"><span>产品型号</span><select name="product" id="product"><option value="auto">请选择完整产品型号</option></select></label>
+          <label class="field"><span>目标人群 <span class="required" aria-label="必填">*</span></span><input name="audience" id="audience" required maxlength="160" placeholder="例如：准备购机的大一新生" autocomplete="off"></label>
+          <label class="field"><span>使用场景 <span class="required" aria-label="必填">*</span></span><input name="scene" id="scene" required maxlength="100" placeholder="例如：上课、查文献、做汇报" list="scene-options" autocomplete="off"><datalist id="scene-options"></datalist></label>
+          <label class="field"><span>发布平台</span><select name="platform" id="platform"><option value="小红书">小红书</option><option value="公众号">公众号</option><option value="门店朋友圈">门店朋友圈</option><option value="门店海报">门店海报</option></select></label>
+        </div>
+        <div class="goal-field"><label class="field"><span>内容目标</span><input name="goal" id="goal" maxlength="220" placeholder="例如：帮助新生判断是否适合自己，引导到店体验" autocomplete="off"></label></div>
+        <label class="field brief-field"><span>补充要求 <span class="optional">选填</span></span><textarea name="brief" id="brief" rows="3" maxlength="3000" placeholder="补充你想强调的卖点、读者的顾虑、篇幅或图片要求。也可以直接粘贴一段完整任务。"></textarea></label>
+        <div class="form-footer">
+          <p class="form-note"><span aria-hidden="true">↳</span> 会一并给出图片出处、资料依据与逐项核验结果</p>
+          <button type="submit" id="generate-button" class="primary-button"><span>生成图文内容</span><span class="button-arrow" aria-hidden="true">↗</span></button>
+        </div>
+      </form>
+
+      <section id="run-progress" class="run-progress" hidden aria-live="polite" aria-label="任务运行进度">
+        <div class="progress-title"><span class="progress-spinner" id="progress-spinner" aria-hidden="true"></span><div><h3 id="progress-heading">正在处理营销任务</h3><p id="progress-description">检索与核验需要一些时间；完成后会显示本次真实执行记录。</p></div><span id="elapsed" class="elapsed">0 秒</span></div>
+        <div class="workflow-rail" aria-label="处理流程"><span>理解需求</span><i aria-hidden="true">→</i><span>查找资料</span><i aria-hidden="true">→</i><span>选择图片</span><i aria-hidden="true">→</i><span>组织内容</span><i aria-hidden="true">→</i><span>逐项核验</span></div>
+        <p class="workflow-note">上方展示处理流程，实际阶段与结果以完成后返回的运行记录为准。</p>
+      </section>
+      <div id="notice" class="notice" role="status" hidden></div>
+
+      <section id="result" class="result" hidden aria-labelledby="result-heading">
+        <div class="result-heading"><div><p class="section-number">02 / 运行结果</p><h2 id="result-heading">为这次任务准备的内容</h2><p id="result-meta" class="result-meta"></p></div><div class="result-actions"><button type="button" id="copy-button" class="secondary-button">复制成稿</button><button type="button" id="export-button" class="secondary-button">导出 Markdown <span aria-hidden="true">↓</span></button><button type="button" id="regenerate-button" class="text-button">重新生成 <span aria-hidden="true">↻</span></button></div></div>
+        <div id="result-status" class="result-status" hidden></div>
+        <nav class="result-nav" aria-label="结果板块"><a href="#strategy-panel">场景策略</a><a href="#article-panel">图文成稿</a><a href="#sources-panel">资料依据</a><a href="#checks-panel">逐项核验</a></nav>
+
+        <section id="strategy-panel" class="output-section" aria-labelledby="strategy-heading"><div class="output-title"><span class="small-number">01</span><h3 id="strategy-heading">场景策略</h3><span class="output-subtitle">从需求到表达</span></div><div id="strategy-content"></div></section>
+        <section id="article-panel" class="output-section" aria-labelledby="article-heading"><div class="output-title"><span class="small-number">02</span><h3 id="article-heading">图文成稿</h3><span id="article-platform" class="output-subtitle"></span></div><div id="article-content" class="article-content"></div></section>
+        <section id="sources-panel" class="output-section" aria-labelledby="sources-heading"><div class="output-title"><span class="small-number">03</span><h3 id="sources-heading">资料依据</h3><span class="output-subtitle">事实与图片均可回查</span></div><h4 class="table-heading">产品事实</h4><div id="facts-content" class="table-wrap"></div><h4 class="table-heading image-table-heading">图片与放置建议</h4><div id="images-content" class="table-wrap"></div></section>
+        <section id="checks-panel" class="output-section" aria-labelledby="checks-heading"><div class="output-title"><span class="small-number">04</span><h3 id="checks-heading">逐项核验</h3><span class="output-subtitle">查看每一项结论与处理建议</span></div><div id="checks-content"></div><details class="trace-details"><summary>查看完整运行记录 <span id="trace-count"></span></summary><div id="trace-content"></div><details class="raw-details"><summary>原始响应数据</summary><pre id="raw-result"></pre></details></details></section>
+      </section>
+
+      <section class="review-section" aria-labelledby="review-heading"><div><p class="section-number">独立校对</p><h2 id="review-heading">已有一段文案？再核一遍。</h2><p>检查产品事实、机型归属与营销措辞，查看需要修改的位置。</p></div><details id="review-details"><summary>展开文案核验 <span aria-hidden="true">＋</span></summary><form id="review-form"><label class="field"><span>待核验文案</span><textarea id="review-text" required maxlength="15000" rows="5" placeholder="粘贴需要核验的标题、正文或导购话术；已有运行结果时，将一并对照本次资料依据。" aria-describedby="review-context"></textarea></label><p id="review-context" class="review-context">尚未绑定运行记录：可检查营销措辞，产品事实仍需资料确认。</p><button type="submit" id="review-button" class="secondary-button">核验这段文案 <span aria-hidden="true">↗</span></button></form><div id="review-result" class="review-result" aria-live="polite"></div></details></section>
+    </section>
+
+    <section id="view-examples" class="view" hidden aria-labelledby="examples-heading"><div class="page-intro"><p class="eyebrow">REAL RUNS · DIFFERENT CONTEXTS</p><h1 id="examples-heading">同一份资料，<br>不同场景的表达。</h1><p>查看已保存的实际运行案例，比较受众、平台、内容结构和配图方式如何变化。</p></div><div id="examples-content" class="examples-content"><p class="empty-state">正在加载运行案例…</p></div></section>
+
+    <section id="view-guide" class="view" hidden aria-labelledby="guide-heading"><div class="page-intro"><p class="eyebrow">A SHORT GUIDE</p><h1 id="guide-heading">从任务出发，<br>带着依据交付。</h1><p>知华·有据 · 华为 PC 场景营销智能体</p></div><div class="guide-layout"><aside class="guide-aside">理解需求<br>查找资料<br>选择图片<br>组织内容<br>核验结果</aside><div class="guide-body"><section><h2>01　把营销任务说清楚</h2><p>选择产品型号，填写人群、使用场景与发布平台。内容目标可以是帮助选购、解释某个功能或引导到店体验。补充预算、疑问、篇幅和图片要求，可以让内容更贴合实际需求。</p><p>预设任务会填入输入框，你可以修改后再开始生成。</p></section><section><h2>02　查阅四个结果板块</h2><p><strong>场景策略</strong>说明为什么这样写；<strong>图文成稿</strong>展示正文和可用图片；<strong>资料依据</strong>记录事实来源与图片出处；<strong>逐项核验</strong>列出事实、型号、图片与合规检查的结论。</p><p>如果资料不足，任务会要求补充信息或给出待核验提示。服务连接情况和每次运行模式会在页面中显示。</p></section><section><h2>03　确认内容，再复制或导出</h2><p>查看核验中需要处理的项目，确认价格、优惠和门店活动等时效信息。成稿可以复制，完整结果可以导出为 Markdown。已有文案也可以放入独立校对区进行核验。</p></section><section><h2>资料来源与生成分工</h2><p>ima 知识库提供华为产品事实与图片素材。自研 Agent 负责理解业务场景、匹配平台表达、组织图文，并完成事实核验与合规检查。</p><p>本作品为赛事参赛项目，产品名称与图片版权归各自权利人所有；不代表华为官方发布。</p></section></div></div></section>
+  </main>
+
+  <footer class="site-footer"><span>知华·有据</span><span>华为 PC 场景营销智能体</span><span>AI+X 破界黑客松 · 2026</span></footer>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
