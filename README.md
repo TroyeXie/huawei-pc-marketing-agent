@@ -16,7 +16,7 @@ app_port: 7860
 
 - GitHub：https://github.com/TroyeXie/huawei-pc-marketing-agent
 - 魔搭创空间：https://www.modelscope.cn/studios/TroyeXie/huawei-pc-marketing-agent
-- [作品说明书 PDF](static/zhihua-work-description.pdf)：9页功能、运行结果与现场初赛标准。
+- [作品说明书 PDF](static/zhihua-work-description.pdf)：12页功能、运行结果与现场初赛标准。
 
 ## 使用流程
 
