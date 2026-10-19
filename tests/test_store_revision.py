@@ -42,6 +42,20 @@ class QuickIntakeTests(unittest.TestCase):
 
 
 class VerificationTests(unittest.TestCase):
+    def test_edit_review_preserves_only_returned_known_fact_ids(self):
+        facts=[{'id':'F1','text':'采用OLED屏幕。','quote':'采用OLED屏幕。'},
+               {'id':'F2','text':'系统版本可选择。','quote':'系统版本可选择。'}]
+        review={'reviewed_paths':['edited.0','edited.1'],'checks':[
+            {'path':'edited.0','status':'pass','claim':'屏幕介绍','evidence':'标题','fact_ids':[]},
+            {'path':'edited.1','status':'pass','claim':'采用OLED屏幕。','evidence':'原文','fact_ids':['F1','F999']}],
+            'issues':[]}
+        with patch.dict('os.environ',{'MODEL_API_URL':'https://example.invalid/chat/completions',
+                                    'MODEL_API_KEY':'test-value','MODEL_NAME':'test-model'},clear=True), \
+             patch.object(MarketingEngine,'_chat',return_value=review):
+            result=verify_edited_text('屏幕介绍\n采用OLED屏幕。',facts)
+        self.assertEqual(result['status'],'ok')
+        self.assertEqual(result['checks'][1]['fact_ids'],['F1'])
+
     def test_customer_question_does_not_prove_store_history(self):
         profile={'customer_question':'写论文屏幕怎么选？','experience_notes':''}
         for text in ('我们常被问到：写论文屏幕怎么选？','家里换电脑，很多顾客先问旧软件还能不能用。','今天有顾客过来问软件兼容。'):
@@ -146,6 +160,40 @@ class PersistenceAndExportTests(unittest.TestCase):
         self.assertEqual(result['status'],'blocked')
         self.assertNotIn('run_id',result)
         self.assertEqual(app._runs[self.run_id]['article'],self.result['article'])
+
+    def test_edit_binds_body_facts_without_title_or_unused_material(self):
+        original=copy.deepcopy(self.result)
+        original['facts']=[{'id':fid} for fid in ('F1','F2','F3','F4')]
+        app._runs[self.run_id]=original
+        passed={'status':'ok','fact_check_complete':True,'checks':[
+            {'status':'pass','path':'edited.0','fact_ids':['F1']},
+            {'status':'pass','path':'edited.1','fact_ids':['F2','F3','F999']}]}
+        with patch('engine.verify_edited_text',return_value=passed),patch('engine._render_markdown',return_value='编辑稿'):
+            result=app.revise(app.ReviseRequest(run_id=self.run_id,title='产品标题',text='只介绍屏幕与系统。'))
+        try:
+            self.assertEqual(result['article']['sections'][0]['fact_ids'],['F2','F3'])
+            self.assertEqual(result['edit_verification']['title_fact_ids'],['F1'])
+            self.assertEqual([fact['id'] for fact in result['facts']],['F1','F2','F3','F4'])
+            self.assertEqual(original['article'],self.result['article'])
+        finally:app._runs.pop(result.get('run_id'),None)
+
+    def test_legacy_edit_exports_review_sources_without_invented_inline_citations(self):
+        legacy=copy.deepcopy(self.result)
+        legacy['mode']='verified_edit'
+        legacy['strategy']={'audience':'顾客','scene':'门店到访','goal':'介绍','platform':'门店朋友圈','angle':'屏幕'}
+        legacy['facts']=[{'id':fid,'text':label,'quote':label,'source_title':'产品原文',
+                          'source_url':'https://consumer.huawei.com/'} for fid,label in [('F1','屏幕原文'),('F2','未被正文采用的重量资料')]]
+        legacy['article']['sections'][0]['fact_ids']=['F1','F2']
+        legacy['checks']=[{'status':'pass','path':'edited.1','claim':'已核验正文','evidence':'原文'}]
+        app.save_run(legacy)
+        persisted=(self.runtime/'runs'/f'{self.run_id}.json').read_bytes()
+        restored=app.restore_run(self.run_id)
+        self.assertEqual(restored['article']['sections'][0]['fact_ids'],[])
+        markdown=app.export_run(self.run_id,format='md').body.decode()
+        self.assertIn('核验使用的资料',markdown)
+        self.assertIn('未被正文采用的重量资料',markdown)
+        self.assertNotIn('事实引用：',markdown)
+        self.assertEqual(persisted,(self.runtime/'runs'/f'{self.run_id}.json').read_bytes())
 
     def test_successful_edit_keeps_original_timing_and_measures_this_check(self):
         original=copy.deepcopy(self.result)

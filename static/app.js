@@ -420,7 +420,7 @@
     return chinese[value] || Number(value) || null;
   }
 
-  function renderArticle(article, images, input) {
+  function renderArticle(article, images, input, showReferences = true) {
     const target = $("article-content");
     target.replaceChildren();
     $("article-platform").textContent = input.platform || "";
@@ -445,7 +445,7 @@
       else {
         if (section.heading) group.append(element("h4", "", section.heading));
         if (section.text) group.append(element("p", "article-paragraph", section.text));
-        if (Array.isArray(section.fact_ids) && section.fact_ids.length) {
+        if (showReferences && Array.isArray(section.fact_ids) && section.fact_ids.length) {
           const references = element("div", "fact-references");
           references.append(element("span", "", "依据"));
           section.fact_ids.forEach((id) => {
@@ -499,7 +499,7 @@
     return textOf(value).replace(/\\[nr]/g, " ").replace(/\s+/g, " ").replace(/(^|\s)#{1,6}\s*/g, "$1").trim();
   }
 
-  function renderFacts(facts) {
+  function renderFacts(facts, edited = false) {
     const target = $("facts-content");
     if (!facts.length) return empty(target, "本次响应没有返回可引用的产品事实。");
     const rows = facts.map((fact, index) => {
@@ -515,7 +515,7 @@
       }
       return { id: `fact-${id}`, cells: [element("span", "fact-id", id), inlineText(fact.text || fact.claim), source] };
     });
-    target.replaceChildren(makeTable(["依据", "采用的产品事实", "原文与来源"], rows));
+    target.replaceChildren(makeTable(["依据", edited ? "核验使用的资料" : "采用的产品事实", "原文与来源"], rows));
   }
 
   function renderImages(images) {
@@ -607,8 +607,8 @@
     $("review-context").textContent = result.run_id ? "将对照本次方案采用的产品资料。" : "生成后可自动对照本次产品资料。";
     renderStrategy(result.strategy || {}, input);
     renderGrowth(result.growth_plan);
-    renderArticle(result.article, images, input);
-    renderFacts(facts);
+    renderArticle(result.article, images, input, result.mode !== "verified_edit" || result.edit_verification?.citation_binding_version === 1);
+    renderFacts(facts, result.mode === "verified_edit");
     renderImages(images);
     renderChecks(checks, $("checks-content"));
     $("copy-button").disabled = !result.article || ["blocked", "error", "needs_clarification"].includes(result.status);

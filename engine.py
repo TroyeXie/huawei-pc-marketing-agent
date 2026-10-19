@@ -728,8 +728,10 @@ def verify_edited_text(text: str, facts: list[dict[str, Any]], product: str = ""
         issues = _validated_review_issues(review,paths)
     except EngineError as exc:
         return {"status":"unverified","checks":[],"fact_check_complete":False,"message":str(exc)}
+    known_ids={str(fact['id']) for fact in facts if fact.get('id')}
     checks=[{"type":"编辑稿语义核验","status":"blocked" if str(item.get('status','')).lower() not in {'pass','supported','ok'} else 'pass',
              "claim":str(item.get('claim') or paths[str(item['path'])]),"evidence":str(item.get('evidence') or ''),
+             "fact_ids":list(dict.fromkeys(str(fid) for fid in item.get('fact_ids',[]) if str(fid) in known_ids)),
              "action":"保留" if str(item.get('status','')).lower() in {'pass','supported','ok'} else '修改或删除缺乏依据的声明',"path":str(item['path'])} for item in review['checks']]
     for issue in issues:
         if not any(item['status']=='blocked' and item['path']==str(issue['path']) for item in checks):
@@ -846,19 +848,47 @@ def _remove_paths(article: dict[str, Any], images: list[dict[str, Any]], paths: 
     return article, images
 
 
+def edited_citation_ids(result: dict[str, Any]) -> dict[str, Any]:
+    """Use actual edit-review mappings; legacy all-fact annotations are ignored."""
+    facts=result.get('facts',[])
+    known=[str(fact['id']) for fact in facts if fact.get('id')]
+    article=result.get('article',{})
+    sections=article.get('sections',[])
+    title_count=len([part for part in re.split(r'\n+',str(article.get('title',''))) if part.strip()])
+    body_count=len([part for part in re.split(r'\n+',str(sections[0].get('text',''))) if part.strip()]) if len(sections)==1 else 0
+    title_ids,body_ids=set(),set()
+    mapped=False
+    for check in result.get('checks',[]):
+        if str(check.get('status','')).lower() not in {'pass','supported','ok'} or not isinstance(check.get('fact_ids'),list):continue
+        match=re.fullmatch(r'edited\.(\d+)',str(check.get('path','')))
+        if not match:continue
+        index=int(match[1])
+        if index>=title_count+body_count:continue
+        mapped=True
+        ids={str(fid) for fid in check['fact_ids'] if str(fid) in known}
+        (title_ids if index<title_count else body_ids).update(ids)
+    return {'title':[fid for fid in known if fid in title_ids],
+            'body':[fid for fid in known if fid in body_ids],'mapped':mapped}
+
+
 def _render_markdown(result: dict[str, Any]) -> str:
     strategy, article = result["strategy"], result["article"]
-    lines = ["# " + article["title"], "", "## 一、场景判断", "", f"- 目标人群：{strategy['audience']}", f"- 使用场景：{strategy['scene']}", f"- 内容目标：{strategy['goal']}", f"- 发布平台：{strategy['platform']}", f"- 内容切入：{strategy['angle']}", "", "## 二、知识库依据", ""]
+    edited=result.get('mode')=='verified_edit'
+    edit_citations=edited_citation_ids(result) if edited else {}
+    sources_heading='## 二、核验使用的资料' if edited else '## 二、知识库依据'
+    lines = ["# " + article["title"], "", "## 一、场景判断", "", f"- 目标人群：{strategy['audience']}", f"- 使用场景：{strategy['scene']}", f"- 内容目标：{strategy['goal']}", f"- 发布平台：{strategy['platform']}", f"- 内容切入：{strategy['angle']}", "", sources_heading, ""]
     used_ids = {fid for section in article["sections"] for fid in section.get("fact_ids", [])}
     for fact in result["facts"]:
-        if fact["id"] not in used_ids: continue
+        if not edited and fact["id"] not in used_ids: continue
         source = fact["source_title"]
         if fact["source_url"]: source = "[" + source + "](" + fact["source_url"] + ")"
         lines.extend([f"- **{fact['id']}** {fact['text']}（资料：{source}）", f"  - 原文依据：{fact['quote']}"])
     lines.extend(["", "## 三、图文软文", "", "### " + article["title"], "", article.get("lead", ""), ""])
     for section in article["sections"]:
         if section["heading"]: lines.extend(["#### " + section["heading"], ""])
-        lines.extend([section["text"], "", "事实引用：" + "、".join(section.get("fact_ids", [])), ""])
+        lines.extend([section["text"], ""])
+        references=edit_citations['body'] if edited else section.get('fact_ids',[])
+        if references:lines.extend(["事实引用："+"、".join(references),""])
     lines.extend([article.get("cta", ""), "", " ".join("#" + t for t in article.get("tags", [])), "", "### 配图方案", ""])
     for image in result["images"]:
         lines.extend([f"**{image['id']} · {image['title']}**", "", f"插入位置：{image['position']}", "", f"图片说明：{image['caption']}", "", f"型号：{image['model']}；来源资料：{image['source_title']}", ""])

@@ -129,11 +129,23 @@ def client():
 def current_time():
  return datetime.now(timezone.utc).isoformat(timespec='seconds')
 
+def normalize_edit_sources(result):
+ """Keep review material separate from the facts actually cited in edited copy."""
+ if result.get('mode')!='verified_edit':return result
+ from engine import edited_citation_ids,_render_markdown
+ citations=edited_citation_ids(result)
+ sections=result.get('article',{}).get('sections',[])
+ for section in sections:section['fact_ids']=citations['body'] if len(sections)==1 else []
+ result.setdefault('edit_verification',{}).update(citation_binding_version=1,
+   citation_mapping_available=citations['mapped'],title_fact_ids=citations['title'],body_fact_ids=citations['body'])
+ result['markdown']=_render_markdown(result)
+ return result
+
 def restore_run(run_id):
  """Recover an existing run and only its own selected images after restart."""
  if not re.fullmatch(r'[A-Za-z0-9_-]{8,64}',str(run_id)):return None
  with _lock:
-  if run_id in _runs:return _runs[run_id]
+  if run_id in _runs:return normalize_edit_sources(_runs[run_id])
  path=RUNTIME/'runs'/f'{run_id}.json'
  try:
   if not path.is_file() or path.stat().st_size>3_000_000:return None
@@ -147,7 +159,7 @@ def restore_run(run_id):
    if not re.fullmatch(r'[a-f0-9]{64}\.(?:png|jpe?g|webp)',str(filename)):continue
    selected=RUNTIME/'ima-selected'/filename
    if selected.is_file() and not selected.is_symlink():_media[(run_id,image_id)]=selected
-  result=scrub(result)
+  result=normalize_edit_sources(scrub(result))
   with _lock:_runs[run_id]=result
   return result
  except (OSError,ValueError,TypeError):return None
@@ -350,7 +362,7 @@ def examples():
  if not path.exists():return {'examples':[]}
  data=json.loads(path.read_text(encoding='utf-8'))
  for entry in data.get('examples',[]):
-  result=entry.get('publication_result') or entry.get('result',{})
+  result=normalize_edit_sources(entry.get('publication_result') or entry.get('result',{}))
   run_id=result.get('run_id')
   if run_id:
    with _lock:_runs.setdefault(run_id,result)
@@ -399,7 +411,7 @@ def revise(body:ReviseRequest):
                 status='success',mode='verified_edit',message='修改稿已对照原始产品资料核对并另存。')
  # Body is the exact text the user reviewed. Original CTA and tags are not
  # silently appended or exported again after the edit.
- updated['article']={'title':title,'lead':'','sections':[{'heading':'','text':text,'fact_ids':[fact['id'] for fact in original.get('facts',[])]}],'cta':'','tags':[]}
+ updated['article']={'title':title,'lead':'','sections':[{'heading':'','text':text,'fact_ids':[]}],'cta':'','tags':[]}
  updated['checks']=verification['checks']
  updated['trace']=[{'step':'用户修改','status':'completed','detail':'对照原运行的事实逐项重新核对，保留原稿并另存此版本。','ms':0}]
  updated['edit_verification']={'fact_check_complete':True,'parent_run_id':body.run_id,'checked_at':stamp}
@@ -416,7 +428,7 @@ def revise(body:ReviseRequest):
     img['url']=f'/api/media/{run_id}/{new_id}'
   img['position']='正文之后'
  updated['novelty']=novelty_report(updated['article'],recent_runs(product,original.get('input',{}).get('platform','')))
- updated['markdown']=_render_markdown(updated)
+ normalize_edit_sources(updated)
  updated['elapsed_ms']=int((time.monotonic()-started)*1000)
  updated=scrub(updated)
  with _lock:_runs[run_id]=updated
@@ -463,7 +475,8 @@ def render_html_export(data,embedded=True):
    blocks.append('<figure><img src="'+esc(src)+'" alt="'+esc(img.get('caption'))+'"><figcaption>'+esc(img.get('caption'))+'</figcaption></figure>')
   elif img.get('source_url'):
    blocks.append('<p><a href="'+esc(img['source_url'])+'">打开第'+str(index)+'张配图的来源</a></p>')
- blocks.append('</section><details><summary>产品事实与出处</summary><ul>')
+ sources_label='核验使用的资料' if data.get('mode')=='verified_edit' else '产品事实与出处'
+ blocks.append('</section><details><summary>'+sources_label+'</summary><ul>')
  for fact in data.get('facts',[]):
   source=str(fact.get('source_url',''))
   link='<a href="'+esc(source)+'">'+esc(fact.get('source_title','来源'))+'</a>' if source.startswith('https://') else esc(fact.get('source_title',''))
