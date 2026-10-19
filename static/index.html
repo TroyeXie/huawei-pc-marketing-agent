@@ -4,10 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f6f5f0">
-  <meta name="description" content="知华·有据，华为 PC 门店增长智能体。理解任务、检索产品事实、组织图文，并逐项核验内容。">
-  <title>知华·有据——华为 PC 门店增长智能体</title>
-  <link rel="stylesheet" href="/static/styles.css?v=99cfe61b0b">
-  <script src="/static/app.js?v=41026cd691" defer></script>
+  <meta name="description" content="知华·有据，华为门店内容工作台。理解任务、检索产品事实、组织图文，并逐项核验内容。">
+  <title>知华·有据——华为门店内容工作台</title>
+  <link rel="stylesheet" href="/static/styles.css?v=20261019-r2">
+  <link rel="stylesheet" href="/static/workbench.css?v=20261019-r2">
+  <script src="/static/app.js?v=20261019-r2" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳至营销任务</a>
@@ -18,8 +19,8 @@
         <span>知华<span class="brand-dot">·</span>有据</span>
       </a>
       <nav class="site-nav" aria-label="主导航">
-        <a href="#workbench" data-view="workbench" class="active" aria-current="page">营销智能体</a>
-        <a href="#examples" data-view="examples">运行案例</a>
+        <a href="#workbench" data-view="workbench" class="active" aria-current="page">内容工作台</a>
+        <a href="#examples" data-view="examples">运行案例</a><a href="#knowledge" data-view="knowledge">产品与生态</a>
         <a href="#guide" data-view="guide">使用说明</a>
         <a id="github-link" class="external-nav" href="https://github.com/TroyeXie/huawei-pc-marketing-agent" target="_blank" rel="noopener noreferrer" title="查看项目源代码">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
@@ -30,9 +31,9 @@
     <section id="view-workbench" class="view" aria-labelledby="workbench-heading">
       <div class="hero">
         <div>
-          <p class="eyebrow">HUAWEI PC · SCENARIO MARKETING</p>
-          <h1 id="workbench-heading">让每一句卖点，<br class="mobile-break">都有依据。</h1>
-          <p class="hero-description">场景图文、报价演示与客户跟进。把产品事实，转化为贴合客户的行动方案。</p>
+          <p class="eyebrow">HUAWEI · EVERY STORE HAS A STORY</p>
+          <h1 id="workbench-heading">把店里的好问题，<br class="mobile-break">写成顾客想看的内容。</h1>
+          <p class="hero-description">说一句需求，带上本店的客群与故事。让每家门店都有自己的表达，每一句卖点都有依据。</p>
         </div>
         <div class="hero-art" aria-hidden="true"><div class="art-orbit"></div><div class="art-card art-card-back"><span>SCENARIO</span><b>读懂客户</b><i></i><i></i></div><div class="art-card art-card-front"><span>EVERY CLAIM, A SOURCE</span><b>有据，才有说服力。</b><div class="art-chip"><i>✓</i> 产品事实</div><div class="art-chip"><i>✓</i> 场景表达</div><div class="art-chip"><i>✓</i> 行动方案</div></div><span class="art-dot"></span></div>
       </div>
@@ -44,21 +45,22 @@
         <button id="refresh-status" class="text-button" type="button">刷新状态 <span aria-hidden="true">↻</span></button>
       </div>
 
-      <form id="task-form" class="task-sheet">
+      <form id="task-form" class="task-sheet" novalidate>
         <div class="section-heading">
-          <div><p class="section-number">01 / 营销任务</p><h2>这一次，想和谁说什么？</h2></div>
-          <span class="subtle-note">任务越具体，表达越有针对性</span>
+          <div><p class="section-number">01 / 今日内容</p><h2>说说今天想写什么</h2></div>
+          <button id="open-store" type="button" class="store-summary"><span class="store-icon" aria-hidden="true">⌂</span><span id="store-summary-label">我的门店</span><span aria-hidden="true">⌄</span></button>
         </div>
-        <div class="preset-row" aria-label="载入预设任务">
-          <span class="preset-label">试一个场景</span>
-          <button type="button" class="preset-button" data-preset="campus">开学季 · 小红书 <span aria-hidden="true">↗</span></button>
-          <button type="button" class="preset-button" data-preset="business">移动办公 · 公众号 <span aria-hidden="true">↗</span></button>
-          <button type="button" class="preset-button" data-preset="store">门店导购 · 朋友圈 <span aria-hidden="true">↗</span></button>
-        </div>
+        <label class="quick-label" for="quick-brief">顾客的问题、想推广的产品，或者一个具体场景</label>
+        <textarea id="quick-brief" class="quick-brief" maxlength="3000" rows="3" placeholder="比如：同学问我，上课做笔记和小组汇报怎么选电脑？给 MateBook 14 酷睿 Ultra 写一篇小红书，语气自然一点。"></textarea>
+        <div class="quick-controls"><label class="quick-product"><span>推广产品</span><select id="quick-product" aria-label="快速选择产品"><option value="auto">从这句话里识别</option></select></label><div class="channel-chips" role="group" aria-label="发布平台快捷选择"><button type="button" data-channel="小红书" class="selected" aria-pressed="true">小红书</button><button type="button" data-channel="公众号" aria-pressed="false">公众号</button><button type="button" data-channel="门店朋友圈" aria-pressed="false">朋友圈</button><button type="button" data-channel="门店海报" aria-pressed="false">海报</button></div><button type="button" id="quick-generate" class="primary-button"><span>帮我准备图文</span><span aria-hidden="true">↗</span></button></div>
+        <div class="preset-row" aria-label="示例任务"><span class="preset-label">试一句</span><button type="button" class="preset-button" data-quick-preset="campus">学生选电脑</button><button type="button" class="preset-button" data-quick-preset="business">通勤与办公</button><button type="button" class="preset-button" data-quick-preset="community">家里换新机</button><button type="button" class="preset-button" data-quick-preset="ecosystem">手机接着电脑用</button></div>
+        <section id="intake-panel" class="intake-panel" hidden aria-live="polite"><div id="intake-summary"></div><div id="intake-questions" class="intake-questions"></div><button type="button" id="intake-continue" class="primary-button" hidden><span>就这样写</span><span aria-hidden="true">↗</span></button></section>
+        <details id="store-panel" class="optional-panel store-panel"><summary><span>本店的表达</span><span class="summary-hint">客群、顾客原话和本地场景</span><span class="summary-plus" aria-hidden="true">＋</span></summary><div class="store-grid"><label class="field"><span>门店称呼</span><input id="store-name" maxlength="80" placeholder="填写门店对外称呼"></label><label class="field"><span>门店类型</span><select id="store-type"><option>综合门店</option><option>校园店</option><option>商务区店</option><option>社区店</option><option>商场店</option></select></label><label class="field"><span>表达语气</span><select id="store-voice"><option>自然亲切</option><option>干练直接</option><option>耐心讲解</option><option>轻松随和</option></select></label><label class="field"><span>周边客群与场景</span><input id="store-context" maxlength="300" placeholder="例如：大学城附近，小组作业和通勤学习多"></label><label class="field wide"><span>顾客常问的一句话</span><input id="store-question" maxlength="400" placeholder="例如：这台和鸿蒙版有什么区别？我需要用的应用能装吗？"></label><label class="field wide"><span>自己的观察或今天的素材</span><textarea id="store-notes" rows="2" maxlength="700" placeholder="填入实际观察、导购用语或门店拍摄计划；留空也可以生成。"></textarea></label></div><div class="store-save-row"><span>只在当前浏览器保存门店设置</span><button type="button" id="save-store" class="secondary-button">保存门店设置</button></div></details>
+        <details id="advanced-task" class="optional-panel advanced-task"><summary><span>调整任务与客户方案</span><span class="summary-hint">产品、人群、场景，以及价格与权益</span><span class="summary-plus" aria-hidden="true">＋</span></summary><div class="advanced-body">
         <div class="field-grid">
           <label class="field"><span>产品型号</span><select name="product" id="product"><option value="auto">请选择完整产品型号</option></select></label>
           <div class="field"><label for="audience">目标人群 <span class="required" aria-label="必填">*</span></label><select name="audience" id="audience" required><option value="">请选择人群</option><option>大学生</option><option>职场人士</option><option>内容创作者</option><option>家庭用户</option><option>企业采购</option><option>到店顾客</option><option value="custom">自定义</option></select><input id="audience-custom" class="custom-input" hidden maxlength="160" placeholder="描述你的目标人群" aria-label="自定义目标人群"></div>
-          <div class="field"><label for="scene">使用场景 <span class="required" aria-label="必填">*</span></label><select name="scene" id="scene" required><option value="">请选择场景</option><option>开学季</option><option>职场办公</option><option>内容创作</option><option>家庭换新</option><option>企业采购</option><option>门店到访</option><option>新品首发</option><option>节日营销</option><option value="custom">自定义</option></select><input id="scene-custom" class="custom-input" hidden maxlength="100" placeholder="描述这次使用场景" aria-label="自定义使用场景"></div>
+          <div class="field"><label for="scene">使用场景 <span class="required" aria-label="必填">*</span></label><select name="scene" id="scene" required><option value="">请选择场景</option><option>开学季</option><option>职场办公</option><option>内容创作</option><option>家庭换新</option><option>企业采购</option><option>门店到访</option><option>新品首发</option><option>节日营销</option><option>生态体验</option><option value="custom">自定义</option></select><input id="scene-custom" class="custom-input" hidden maxlength="100" placeholder="描述这次使用场景" aria-label="自定义使用场景"></div>
           <label class="field"><span>发布平台</span><select name="platform" id="platform"><option value="小红书">小红书</option><option value="公众号">公众号</option><option value="门店朋友圈">门店朋友圈</option><option value="门店海报">门店海报</option></select></label>
         </div>
         <details class="optional-panel customer-panel"><summary><span>客户画像</span><span class="summary-hint">补充预算、设备与顾虑，让建议更具体</span><span class="summary-plus" aria-hidden="true">＋</span></summary><div class="context-grid"><label class="field"><span>职业 / 身份</span><input id="customer-occupation" maxlength="120" placeholder="例如：设计专业大二学生"></label><label class="field"><span>预算</span><input id="customer-budget" maxlength="100" placeholder="例如：6000–8000 元"></label><label class="field"><span>已有设备</span><input id="customer-devices" maxlength="240" placeholder="例如：手机、平板和旧电脑"></label><label class="field"><span>主要顾虑</span><input id="customer-concerns" maxlength="400" placeholder="例如：携带重量、软件兼容、换机成本"></label><label class="field"><span>购买阶段</span><input id="customer-purchase_stage" maxlength="100" placeholder="例如：观望、比较中、近期购买"></label></div></details>
@@ -67,27 +69,34 @@
         <label class="field brief-field"><span>补充要求 <span class="optional">选填</span></span><textarea name="brief" id="brief" rows="3" maxlength="3000" placeholder="补充你想强调的卖点、读者的顾虑、篇幅或图片要求。也可以直接粘贴一段完整任务。"></textarea></label>
         <div class="form-footer">
           <p class="form-note"><span aria-hidden="true">↳</span> 一并生成客户洞察、图文内容、180 秒演示与跟进建议</p>
-          <button type="submit" id="generate-button" class="primary-button"><span>生成营销方案</span><span class="button-arrow" aria-hidden="true">↗</span></button>
+          <button type="submit" id="generate-button" class="primary-button"><span>按详细设置生成</span><span class="button-arrow" aria-hidden="true">↗</span></button>
         </div>
+        </div></details>
       </form>
 
       <section id="run-progress" class="run-progress" hidden aria-live="polite" aria-label="任务运行进度">
-        <div class="progress-title"><span class="progress-spinner" id="progress-spinner" aria-hidden="true"></span><div><h3 id="progress-heading">正在处理营销任务</h3><p id="progress-description">正在匹配资料、组织图文与行动方案。</p></div><span id="elapsed" class="elapsed" hidden>0 秒</span></div>
+        <div class="progress-title"><span class="progress-spinner" id="progress-spinner" aria-hidden="true"></span><div><h3 id="progress-heading">正在处理营销任务</h3><p id="progress-description">正在匹配资料、组织图文与行动方案。</p></div><span id="elapsed" class="elapsed">0 秒</span></div>
         <div class="workflow-rail" aria-label="处理流程"><span>理解需求</span><i aria-hidden="true">→</i><span>查找资料</span><i aria-hidden="true">→</i><span>选择图片</span><i aria-hidden="true">→</i><span>组织内容</span><i aria-hidden="true">→</i><span>逐项核验</span></div>
         
       </section>
       <div id="notice" class="notice" role="status" hidden></div>
 
       <section id="result" class="result" hidden aria-labelledby="result-heading">
-        <div class="result-heading"><div><p class="section-number">02 / 运行结果</p><h2 id="result-heading">为这次任务准备的营销方案</h2><p id="result-meta" class="result-meta"></p></div><div class="result-actions"><button type="button" id="copy-button" class="secondary-button">复制成稿</button><button type="button" id="export-button" class="secondary-button">导出 Markdown <span aria-hidden="true">↓</span></button><button type="button" id="regenerate-button" class="text-button">重新生成 <span aria-hidden="true">↻</span></button></div></div>
-        <div id="result-status" class="result-status" hidden></div>
-        <nav class="result-nav" aria-label="结果板块"><a href="#strategy-panel">场景策略</a><a href="#growth-panel" id="growth-nav" hidden>门店行动</a><a href="#article-panel">图文成稿</a><a href="#sources-panel">资料依据</a><a href="#checks-panel">逐项核验</a></nav>
+        <div class="result-heading"><div><p class="section-number">02 / 运行结果</p><h2 id="result-heading">为这次任务准备的营销方案</h2><p id="result-meta" class="result-meta"></p></div><div class="result-actions"><button type="button" id="copy-button" class="secondary-button">复制成稿</button><button type="button" id="export-button" class="secondary-button">下载图文包 <span aria-hidden="true">↓</span></button><button type="button" id="edit-button" class="secondary-button">微调文案</button><button type="button" id="regenerate-button" class="text-button">重新生成 <span aria-hidden="true">↻</span></button></div></div>
+        <div id="result-status" class="result-status" hidden></div><div id="personalization-summary" class="personalization-summary" hidden></div>
+        <nav class="result-nav" aria-label="结果板块"><a href="#article-panel">图文成稿</a><a href="#strategy-panel">表达思路</a><a href="#sources-panel">资料依据</a><a href="#checks-panel">逐项核验</a><a href="#growth-panel" id="growth-nav" hidden>客户方案</a></nav>
 
-        <section id="strategy-panel" class="output-section" aria-labelledby="strategy-heading"><div class="output-title"><span class="small-number">01</span><h3 id="strategy-heading">场景策略</h3><span class="output-subtitle">从需求到表达</span></div><div id="strategy-content"></div></section>
-        <section id="growth-panel" class="output-section" aria-labelledby="growth-heading" hidden><div class="output-title"><span class="small-number">＋</span><h3 id="growth-heading">门店行动方案</h3><span class="output-subtitle">从了解客户，到体验与跟进</span></div><div id="growth-content"></div></section>
-        <section id="article-panel" class="output-section" aria-labelledby="article-heading"><div class="output-title"><span class="small-number">02</span><h3 id="article-heading">图文成稿</h3><span id="article-platform" class="output-subtitle"></span></div><div id="article-content" class="article-content"></div></section>
-        <section id="sources-panel" class="output-section" aria-labelledby="sources-heading"><div class="output-title"><span class="small-number">03</span><h3 id="sources-heading">资料依据</h3><span class="output-subtitle">事实与图片均可回查</span></div><h4 class="table-heading">产品事实.md</h4><div id="facts-content" class="table-wrap"></div><h4 class="table-heading image-table-heading">配图出处</h4><div id="images-content" class="table-wrap"></div></section>
+        <section id="article-panel" class="output-section" aria-labelledby="article-heading"><div class="output-title"><span class="small-number">01</span><h3 id="article-heading">图文成稿</h3><span id="article-platform" class="output-subtitle"></span></div><div id="article-content" class="article-content"></div></section>
+        <section id="editor-panel" class="editor-panel" hidden aria-labelledby="editor-heading"><div class="output-title"><h3 id="editor-heading">改成自己的话，再核一遍</h3><button type="button" id="cancel-edit" class="text-button">收起</button></div><label class="field"><span>标题</span><input id="edit-title" maxlength="200"></label><label class="field"><span>正文</span><textarea id="edit-text" rows="8" maxlength="14000"></textarea></label><div class="editor-actions"><span>对照本次采用的产品事实核查</span><button type="button" id="apply-edit" class="primary-button">核验并采用</button></div><div id="edit-checks" aria-live="polite"></div></section>
+        <section id="strategy-panel" class="output-section" aria-labelledby="strategy-heading"><div class="output-title"><span class="small-number">02</span><h3 id="strategy-heading">这家店为什么这样写</h3><span class="output-subtitle">从需求到表达</span></div><div id="strategy-content"></div></section>
+        <section id="sources-panel" class="output-section" aria-labelledby="sources-heading"><div class="output-title"><span class="small-number">03</span><h3 id="sources-heading">资料依据</h3><span class="output-subtitle">事实与图片均可回查</span></div><h4 class="table-heading">产品事实与适用条件</h4><div id="facts-content" class="table-wrap"></div><h4 class="table-heading image-table-heading">配图出处</h4><div id="images-content" class="table-wrap"></div></section>
         <section id="checks-panel" class="output-section" aria-labelledby="checks-heading"><div class="output-title"><span class="small-number">04</span><h3 id="checks-heading">逐项核验</h3><span class="output-subtitle">查看每一项结论与处理建议</span></div><div id="checks-content"></div></section>
+        <section id="growth-panel" class="output-section" aria-labelledby="growth-heading" hidden><div class="output-title"><span class="small-number">＋</span><h3 id="growth-heading">门店行动方案</h3><span class="output-subtitle">从了解客户，到体验与跟进</span></div><div id="growth-content"></div></section>
+        <section id="variants-panel" class="variants-panel"><div class="section-heading"><div><p class="section-number">同款产品 多店表达</p><h3>换一家门店，换一种说法</h3><p class="variants-intro">围绕校园、商务区与社区的不同顾客问题，分别组织内容。</p></div><button id="generate-variants" type="button" class="secondary-button">生成三种门店版本 ↗</button></div><p id="variants-status" class="variants-status" aria-live="polite"></p><div id="variants-content" class="variants-grid"></div></section>
+
+
+
+
       </section>
 
       <section class="review-section" aria-labelledby="review-heading"><div><p class="section-number">独立校对</p><h2 id="review-heading">已有一段文案？再核一遍。</h2><p>检查产品事实、机型归属与营销措辞，查看需要修改的位置。</p></div><details id="review-details"><summary>展开文案核验 <span aria-hidden="true">＋</span></summary><form id="review-form"><label class="field"><span>待核验文案</span><textarea id="review-text" required maxlength="15000" rows="5" placeholder="粘贴需要核验的标题、正文或导购话术；已有运行结果时，将一并对照本次资料依据。" aria-describedby="review-context"></textarea></label><p id="review-context" class="review-context">生成后可自动对照本次产品资料。</p><button type="submit" id="review-button" class="secondary-button">核验这段文案 <span aria-hidden="true">↗</span></button></form><div id="review-result" class="review-result" aria-live="polite"></div></details></section>
@@ -95,10 +104,13 @@
 
     <section id="view-examples" class="view" hidden aria-labelledby="examples-heading"><div class="page-intro"><p class="eyebrow">REAL RUNS · DIFFERENT CONTEXTS</p><h1 id="examples-heading">同一份资料，<br>不同场景的表达。</h1><p>查看已保存的实际运行案例，比较受众、平台、内容结构和配图方式如何变化。</p></div><div id="examples-content" class="examples-content"><p class="empty-state">正在加载运行案例…</p></div></section>
 
-    <section id="view-guide" class="view" hidden aria-labelledby="guide-heading"><div class="page-intro"><p class="eyebrow">A SHORT GUIDE</p><h1 id="guide-heading">从任务出发，<br>带着依据交付。</h1><p>知华·有据 · 华为 PC 门店增长智能体</p></div><div class="guide-layout"><aside class="guide-aside">理解需求<br>查找资料<br>选择图片<br>组织内容<br>核验结果</aside><div class="guide-body"><section><h2>01　把营销任务说清楚</h2><p>选择产品型号、人群、使用场景与发布平台。内容目标可以是帮助选购、解释某个功能或引导到店体验。补充预算、疑问、篇幅和图片要求，可以让内容更贴合实际需求。</p><p>预设任务会填入输入框，你可以修改后再开始生成。</p></section><section><h2>02　查看内容与行动方案</h2><p><strong>场景策略</strong>说明为什么这样写；<strong>门店行动</strong>提供客户洞察、四档报价、180 秒演示与后续跟进；<strong>图文成稿</strong>展示正文和可用图片；<strong>资料依据</strong>记录事实来源与图片出处；<strong>逐项核验</strong>列出事实、型号、图片与合规检查的结论。</p><p>如果资料不足，任务会要求补充信息或给出待核验提示。需要补充的条件会在对应板块中列出。</p></section><section><h2>03　确认内容，再复制或导出</h2><p>查看核验中需要处理的项目，确认价格、优惠和门店活动等时效信息。成稿可以复制，完整结果可以导出为 Markdown。已有文案也可以放入独立校对区进行核验。</p></section><section><h2>资料来源与生成分工</h2><p>ima 知识库提供华为产品事实，配图取自上传知识库档案及华为官网并核对官方文件。自研 Agent 负责理解业务场景、匹配平台表达、组织图文，并完成事实核验与合规检查。</p><p>本作品为赛事参赛项目，产品名称与图片版权归各自权利人所有；不代表华为官方发布。</p></section></div></div></section>
+    <section id="view-knowledge" class="view" hidden aria-labelledby="knowledge-heading"><div class="page-intro"><p class="eyebrow">PRODUCT FACTS · CONNECTED EXPERIENCES</p><h1 id="knowledge-heading">产品有版本，<br>协同也有条件。</h1><p>按完整型号核对资料，查看 PC、手机与平板的生态体验。</p></div><div id="knowledge-status" class="knowledge-status"></div><h2 class="knowledge-section-title">电脑产品资料</h2><div id="knowledge-products" class="knowledge-products"></div><h2 class="knowledge-section-title">带着手机和平板，到店试什么？</h2><div id="ecosystem-content" class="ecosystem-grid"></div></section>
+
+    <section id="view-guide" class="view" hidden aria-labelledby="guide-heading"><div class="page-intro"><p class="eyebrow">A SHORT GUIDE</p><h1 id="guide-heading">从任务出发，<br>带着依据交付。</h1><p>知华·有据 · 华为门店内容工作台</p></div><div class="guide-layout"><aside class="guide-aside">理解需求<br>查找资料<br>选择图片<br>组织内容<br>核验结果</aside><div class="guide-body"><section><h2>01　把营销任务说清楚</h2><p>先用一句话描述产品、顾客问题与发布平台。能够识别的信息会自动带入；缺少型号等关键信息时，点选问题中的答案即可继续。也可以展开详细设置，调整已经识别的任务。</p><p>在“本店的表达”中保存门店客群、语气和准备回答的顾客问题。换店生成时，切入点、场景与行动引导也会随之变化。</p></section><section><h2>02　查看内容与行动方案</h2><p><strong>场景策略</strong>说明为什么这样写；<strong>门店行动</strong>提供客户洞察、四档报价、180 秒演示与后续跟进；<strong>图文成稿</strong>展示正文和可用图片；<strong>资料依据</strong>记录事实来源与图片出处；<strong>逐项核验</strong>列出事实、型号、图片与合规检查的结论。</p><p>如果资料不足，任务会要求补充信息或给出待核验提示。需要补充的条件会在对应板块中列出。</p></section><section><h2>03　确认内容，再复制或导出</h2><p>查看核验中需要处理的项目，确认价格、优惠和门店活动等时效信息。成稿可直接复制；图文包包含正文、配图和来源，也可离线打开。微调标题与正文后，点击“核验并采用”生成新的版本。已有文案也可放入独立校对区检查。</p></section><section><h2>资料来源与生成分工</h2><p>ima 知识库提供华为产品事实，生态功能另结合对应型号的华为官方支持原文。配图取自上传知识库档案及华为官网并核对官方文件。自研 Agent 负责理解业务场景、匹配平台表达、组织图文，并完成事实核验与合规检查。</p><p>本作品为赛事参赛项目，产品名称与图片版权归各自权利人所有；不代表华为官方发布。</p></section></div></div></section>
   </main>
 
-  <footer class="site-footer"><span>知华·有据</span><span>华为 PC 门店增长智能体</span><span>AI+X 破界黑客松 · 2026</span><a href="/static/zhihua-work-description.pdf" target="_blank" rel="noopener">作品说明书 PDF ↗</a></footer>
+  <footer class="site-footer"><span>知华·有据</span><span>华为门店内容工作台</span><span>AI+X 破界黑客松 · 2026</span><a href="/static/zhihua-work-description.pdf" target="_blank" rel="noopener">作品说明书 PDF ↗</a></footer>
   <div id="toast" class="toast" role="status" hidden></div>
 </body>
 </html>
+

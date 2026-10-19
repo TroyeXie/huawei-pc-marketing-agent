@@ -138,6 +138,8 @@
         });
         if ([...$("product").options].some((option) => option.value === selection)) $("product").value = selection;
       }
+      $("quick-product").replaceChildren(new Option("从这句话里识别", "auto"));
+      [...$("product").options].filter(o=>o.value!=="auto").forEach(o=>{const option=new Option(o.textContent,o.value);option.disabled=o.disabled;$("quick-product").add(option);});
       if (Array.isArray(catalog.platforms) && catalog.platforms.length) {
         const selection = $("platform").value;
         $("platform").replaceChildren();
@@ -148,7 +150,7 @@
         if ([...$("platform").options].some((option) => option.value === selection)) $("platform").value = selection;
       }
       // Keep all eight contest scenes available; custom input is independent.
-      const requiredScenes = ["开学季", "职场办公", "内容创作", "家庭换新", "企业采购", "门店到访", "新品首发", "节日营销"];
+      const requiredScenes = ["开学季", "职场办公", "内容创作", "家庭换新", "企业采购", "门店到访", "新品首发", "节日营销", "生态体验"];
       const selection = $("scene").value;
       $("scene").replaceChildren(new Option("请选择场景", ""));
       requiredScenes.forEach((name) => $("scene").add(new Option(name, name)));
@@ -185,6 +187,8 @@
       quote.benefits.push({ id: "benefit" + index, label: value("label") || ["门店优惠", "平台权益", "换新权益"][index], kind: value("kind"), amount: value("amount"), source_url: value("source"), verified_at: value("date"), valid_until: value("expires"), conditions: value("conditions"), stackable: $("benefit-" + index + "-stackable").checked, exclusive_group: value("exclusive") });
     }
     if (quote.base_price || quote.sku || quote.source_url || quote.benefits.length) data.quote_inputs = quote;
+    data.store_profile = readStoreProfile();
+    data.content_nonce = String(Date.now());
     return data;
   }
 
@@ -218,7 +222,12 @@
     state.running = running;
     $("generate-button").disabled = running;
     $("regenerate-button").disabled = running;
-    $("generate-button").firstElementChild.textContent = running ? "正在生成与核验" : "生成营销方案";
+    $("generate-button").firstElementChild.textContent = running ? "正在生成与核验" : "按详细设置生成";
+    $("quick-generate").disabled = running;
+    $("quick-generate").firstElementChild.textContent = running ? "正在生成与核验" : "帮我准备图文";
+    $("generate-variants").disabled = running || !["ok","success"].includes(state.result?.status);
+    $("edit-button").disabled = running || !state.result?.run_id || !["ok","success"].includes(state.result?.status);
+    document.querySelectorAll("[data-quick-preset], [data-channel]").forEach(b => {b.disabled=running;});
     document.querySelectorAll(".preset-button").forEach((button) => { button.disabled = running; });
     if (running) {
       $("run-progress").hidden = false;
@@ -235,7 +244,10 @@
   async function generate(event) {
     event.preventDefault();
     if (state.running) return;
-    const input = readInput();
+    return performGeneration(readInput());
+  }
+
+  async function performGeneration(input) {
     state.input = { ...input };
     $("notice").hidden = true;
     $("result").hidden = true;
@@ -576,10 +588,12 @@
   function renderResult(result, input = {}, reviewNote = "") {
     state.result = result;
     state.input = input;
+    $("editor-panel").hidden = true;
+    renderPersonalization(result,input);
     $("result").hidden = false;
-    $("result-heading").textContent = result.status === "blocked" ? "本次内容需要修订" : result.status === "needs_clarification" ? "补充信息后继续任务" : result.status === "error" ? "本次运行未成功完成" : "为这次任务准备的营销方案";
-    $("article-heading").textContent = result.status === "blocked" ? "待修订内容" : result.publication_revision ? "图文成稿 · 发布整理版" : "图文成稿";
-    $("result-meta").textContent = [input.scene, input.platform].filter(Boolean).join(" · ");
+    $("result-heading").textContent = result.status === "blocked" ? "本次内容需要修订" : result.status === "needs_clarification" ? "补充信息后继续任务" : result.status === "error" ? "本次运行未成功完成" : "本店的这一篇，准备好了";
+    $("article-heading").textContent = result.status === "blocked" ? "待修订内容" : result.mode === "verified_edit" ? "图文成稿 · 编辑后已核验" : result.publication_revision ? "图文成稿 · 发布整理版" : "图文成稿";
+    $("result-meta").textContent = [input.scene, input.platform, result.elapsed_ms ? `${result.mode === "verified_edit" ? "编辑核验 " : "生成 "}${(result.elapsed_ms/1000).toFixed(1)} 秒` : "", formatDate(result.generated_at)].filter(Boolean).join(" · ");
     const banner = $("result-status");
     const fallbackMessages = { blocked: "本次内容未通过核验，请根据逐项核验结果修订后再使用。", needs_clarification: "当前信息不足，请补充任务要求后重新生成。", error: "本次任务未成功完成，请稍后重试。" };
     if (fallbackMessages[result.status]) {
@@ -599,7 +613,9 @@
     renderChecks(checks, $("checks-content"));
     $("copy-button").disabled = !result.article || ["blocked", "error", "needs_clarification"].includes(result.status);
     $("copy-button").textContent = result.status === "blocked" ? "成稿未通过核验" : "复制成稿";
-    $("export-button").textContent = ["blocked", "error", "needs_clarification"].includes(result.status) ? "导出核验记录 ↓" : "导出 Markdown ↓";
+    $("export-button").textContent = ["blocked", "error", "needs_clarification"].includes(result.status) ? "导出核验记录 ↓" : "下载图文包 ↓";
+    $("edit-button").disabled = !result.run_id || ["blocked","error","needs_clarification"].includes(result.status);
+    $("generate-variants").disabled = state.running || !["ok","success"].includes(result.status);
   }
 
   function articleText(result, includeImageMarkdown = false) {
@@ -714,7 +730,7 @@
         view.disabled = !result;
         view.addEventListener("click", () => {
           if (state.running) return toast("当前任务正在运行，请等待结果后再打开案例。");
-          fillInput(input);
+          fillInput(input);fillStoreProfile(input.store_profile||{});$("quick-brief").value=input.brief||"";$("quick-product").value=$("product").value;setChannel(input.platform||"门店朋友圈");
           showView("workbench");
           $("notice").hidden = true;
           $("run-progress").hidden = true;
@@ -725,7 +741,7 @@
         load.type = "button";
         load.addEventListener("click", () => {
           if (state.running) return toast("当前任务正在运行，请等待结果后再载入新任务。");
-          fillInput(input);
+          fillInput(input);fillStoreProfile(input.store_profile||{});$("quick-brief").value=input.brief||"";$("quick-product").value=$("product").value;setChannel(input.platform||"门店朋友圈");
           showView("workbench");
           $("task-form").scrollIntoView({ behavior: "smooth", block: "start" });
           toast("已载入案例任务，可以修改后点击生成。");
@@ -737,8 +753,221 @@
     } catch (error) { empty(target, `暂时无法读取案例：${error.message}`); }
   }
 
+  const storeFields = {store_name:"store-name",store_type:"store-type",local_context:"store-context",voice:"store-voice",customer_question:"store-question",experience_notes:"store-notes"};
+  const storeScenarios = {
+    campus:{store_name:"校园门店",store_type:"校园店",local_context:"大学周边，课堂笔记、图书馆学习、小组汇报",voice:"轻松随和",customer_question:"上课、图书馆来回背，选电脑先看什么？",experience_notes:""},
+    business:{store_name:"商务区门店",store_type:"商务区店",local_context:"写字楼周边，通勤、会议、移动办公",voice:"干练直接",customer_question:"白天开会和下班路上，怎么把工作接起来？",experience_notes:""},
+    community:{store_name:"社区门店",store_type:"社区店",local_context:"住宅社区周边，家庭换机、设备共享、资料整理",voice:"耐心讲解",customer_question:"家里旧电脑想换掉，先把哪些问题问清楚？",experience_notes:""}
+  };
+  const quickPresets = {
+    campus:{product:"matebook14-ultra",platform:"小红书",profile:"campus",brief:"给准备选电脑的大学生写一篇 MateBook 14 酷睿 Ultra 小红书。从这个选购问题写起：上课、图书馆来回背，选电脑先看什么？从小组汇报的一天切入，语气轻松自然。"},
+    business:{product:"matebook14-ultra",platform:"公众号",profile:"business",brief:"给通勤的上班族写一篇 MateBook 14 酷睿 Ultra 公众号文章。顾客关心会议、来回通勤和日常文档。从出门到回办公室的具体任务写起，表达干练。"},
+    community:{product:"matebook-d16",platform:"门店朋友圈",profile:"community",brief:"给想换旧电脑的家庭用户写一条 MateBook D 16 2024 朋友圈。从这个换机问题写起：旧文件和常用应用怎么办？从换机前需要理清的三件事切入，邀请带上常用任务到店试试。"},
+    ecosystem:{product:"matebook-pro",platform:"门店朋友圈",profile:"business",brief:"为 MateBook Pro 写一条面向职场人士的生态体验朋友圈：在手机备忘录里记下想法，回到电脑继续整理。根据官方支持资料说明接续所需的系统、账号和应用条件，邀请带上自己的设备到店体验。"}
+  };
+
+  function readStoreProfile(){
+    const result={};
+    Object.entries(storeFields).forEach(([key,id])=>{const value=$(id).value.trim();if(value)result[key]=value;});
+    return result;
+  }
+  function fillStoreProfile(profile={}){
+    Object.entries(storeFields).forEach(([key,id])=>{const node=$(id),value=profile[key]||({store_type:"综合门店",voice:"自然亲切"}[key]||"");node.value=value;});
+    updateStoreSummary();
+  }
+  function updateStoreSummary(){const p=readStoreProfile();$("store-summary-label").textContent=p.store_name||p.store_type||"我的门店";}
+  function setChannel(value,touched=true){
+    state.quickChannel=value;if(touched)state.channelTouched=true;
+    document.querySelectorAll("[data-channel]").forEach(b=>{const selected=b.dataset.channel===value;b.classList.toggle("selected",selected);b.setAttribute("aria-pressed",String(selected));});
+    if([...$("platform").options].some(o=>o.value===value))$("platform").value=value;
+  }
+  function chooseQuickPreset(key){
+    const item=quickPresets[key];if(!item)return;
+    $("quick-brief").value=item.brief;
+    if([...$("quick-product").options].some(o=>o.value===item.product))$("quick-product").value=item.product;
+    else $("quick-product").value="auto";
+    $("product").value=$("quick-product").value;
+    setChannel(item.platform);fillStoreProfile(storeScenarios[item.profile]);
+    state.pendingIntake=null;$("intake-panel").hidden=true;
+    document.querySelectorAll("[data-quick-preset]").forEach(b=>b.classList.toggle("selected",b.dataset.quickPreset===key));
+    $("quick-brief").focus();
+  }
+  function renderIntake(response){
+    state.pendingIntake=response.payload;
+    $("intake-panel").hidden=false;
+    const summary=$("intake-summary");summary.replaceChildren(element("h3","",response.status==="ready"?"这次就这样写":"再点一下，把需求补齐"));
+    const line=element("div","intake-summary-line");
+    const input=response.payload||{};
+    [input.audience,input.scene,input.platform].filter(Boolean).forEach(t=>line.append(element("span","",t)));
+    if(line.children.length)summary.append(line);
+    const questions=$("intake-questions");questions.replaceChildren();
+    const fields=new Set();
+    (response.questions||[]).forEach(question=>{
+      fields.add(question.field);
+      const box=element("div","intake-question"),options=element("div","intake-options");
+      box.append(element("h4","",question.label||"请选择"));
+      (question.options||[]).forEach(option=>{
+        const value=typeof option==="string"?option:option.value,label=typeof option==="string"?option:option.label;
+        const b=element("button","",label);b.type="button";
+        b.addEventListener("click",()=>{state.pendingIntake[question.field]=value;options.querySelectorAll("button").forEach(n=>n.classList.toggle("selected",n===b));fields.delete(question.field);$("intake-continue").disabled=fields.size>0;});
+        options.append(b);
+      });box.append(options);questions.append(box);
+    });
+    $("intake-continue").hidden=response.status==="ready";
+    $("intake-continue").disabled=fields.size>0;
+  }
+  async function startQuick(usePending=false){
+    if(state.running||state.intaking)return;
+    const brief=$("quick-brief").value.trim();
+    if(!brief){$("quick-brief").focus();return toast("先写一句需求，也可以点选示例任务。");}
+    state.intaking=true;$("quick-generate").disabled=true;$("quick-generate").firstElementChild.textContent="正在理解需求";$("notice").hidden=true;
+    try{
+      const payload=usePending&&state.pendingIntake?{...state.pendingIntake,store_profile:readStoreProfile()}:{brief,product:$("quick-product").value||"auto",platform:state.channelTouched?state.quickChannel:"",store_profile:readStoreProfile()};
+      const response=await request("/api/intake",{method:"POST",body:JSON.stringify(payload)},45000);
+      renderIntake(response);
+      if(response.status==="ready"){
+        fillInput(response.payload);fillStoreProfile(response.payload.store_profile||readStoreProfile());setChannel(response.payload.platform,false);
+        $("quick-product").value=$("product").value;
+        state.intaking=false;
+        await performGeneration({...response.payload,customer_context:readInput().customer_context});
+      }else $("intake-panel").scrollIntoView({behavior:"smooth",block:"nearest"});
+    }catch(error){showNotice("暂时未能准备任务",error.message,[],true);}
+    finally{state.intaking=false;$("quick-generate").disabled=state.running;$("quick-generate").firstElementChild.textContent=state.running?"正在生成与核验":"帮我准备图文";}
+  }
+  function renderPersonalization(result,input){
+    const box=$("personalization-summary"),p=result.personalization||{},profile=p.store_profile||input.store_profile||{};
+    box.replaceChildren();
+    if(!profile.store_name&&!profile.store_type&&!p.creative_brief){box.hidden=true;return;}
+    box.hidden=false;
+    box.append(element("strong","",[profile.store_name||profile.store_type,profile.voice,input.platform].filter(Boolean).join(" · ")));
+    const material=[profile.customer_question?`从顾客的问题写起：${profile.customer_question}`:"",profile.local_context?`场景：${profile.local_context}`:""].filter(Boolean).join("　");
+    if(material)box.append(element("p","",material));
+    const novelty=result.novelty;
+    if(novelty&&novelty.message)box.append(element("p","",novelty.message));
+    if(p.variant_id)box.append(element("p","variant-meta",`本店版本 ${p.variant_id}`));
+  }
+  function openEditor(){
+    if(!state.result?.article)return;
+    $("editor-panel").hidden=false;
+    $("edit-title").value=state.result.article.title||"";
+    const body={...state.result,article:{...state.result.article,title:""}};
+    $("edit-text").value=articleText(body);
+    $("edit-checks").replaceChildren();
+    $("editor-panel").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  async function applyEdit(){
+    if(!state.result?.run_id)return toast("请先生成一份当前运行的成稿。");
+    const title=$("edit-title").value.trim(),text=$("edit-text").value.trim();
+    if(!title||!text)return toast("请保留标题和正文。");
+    const button=$("apply-edit");button.disabled=true;button.textContent="正在对照资料核验";
+    const target=$("edit-checks");target.replaceChildren(element("p","review-message","正在检查修改后的产品事实与营销表述。"));
+    try{
+      const result=await request("/api/revise",{method:"POST",body:JSON.stringify({run_id:state.result.run_id,title,text})},180000);
+      if(["ok","success"].includes(result.status)&&result.article&&result.run_id){
+        renderResult(result,state.input);$("editor-panel").hidden=true;toast("修改已通过本次资料核验，复制与下载均使用新版本。");
+        $("article-panel").scrollIntoView({behavior:"smooth",block:"start"});
+      }else{
+        target.replaceChildren(element("p","review-warning",result.message||"这次修改仍有需要处理的内容，原稿已保留。"));
+        const details=element("div");renderChecks(result.checks||[],details);target.append(details);
+      }
+    }catch(error){target.replaceChildren(element("p","review-warning",error.message));}
+    finally{button.disabled=false;button.textContent="核验并采用";}
+  }
+  function renderVariantCard(result,input,index){
+    const card=element("article","variant-card"),p=input.store_profile||{};
+    card.append(element("span","variant-store",`${String(index+1).padStart(2,"0")}　${p.store_name||p.store_type}`));
+    if(!["ok","success"].includes(result.status)){
+      card.append(element("h4","","这个版本需要调整"),element("p","variant-excerpt",result.message||"未形成完整成稿"));return card;
+    }
+    card.append(element("h4","",result.article?.title||"本店内容"));
+    const body=articleText({...result,article:{...result.article,title:""}});
+    card.append(element("p","variant-excerpt",body));
+    card.append(element("p","variant-angle",`顾客问题：${p.customer_question||""}`));
+    const view=element("button","","查看完整图文 ↗");view.type="button";
+    view.addEventListener("click",()=>{renderResult(result,input);fillInput(input);fillStoreProfile(p);$("result").scrollIntoView({behavior:"smooth",block:"start"});});
+    card.append(view);
+    if(result.elapsed_ms)card.append(element("p","variant-time",`${result.mode === "verified_edit" ? "编辑核验" : "本次生成"} ${(result.elapsed_ms/1000).toFixed(1)} 秒`));
+    return card;
+  }
+  async function generateVariants(){
+    if(state.running||state.batching)return;
+    const base=state.input||readInput();
+    if(!base.product||base.product==="auto")return toast("先确定产品并生成一篇图文，再比较门店版本。");
+    state.batching=true;state.variants=[];setRunning(true);$("variants-content").replaceChildren();$("variants-status").textContent="正在为三家门店分别组织内容…";
+    const definitions=[{key:"campus",audience:"大学生",scene:"开学季",goal:"帮助学生理清选购要点，引导带着课堂任务到店体验"},{key:"business",audience:"职场人士",scene:"职场办公",goal:"围绕通勤与会议中的实际任务，引导到店体验"},{key:"community",audience:"家庭用户",scene:"家庭换新",goal:"围绕家庭换机的问题，邀请带着常用任务到店试用"}];
+    let successes=0;
+    try{
+      for(let i=0;i<definitions.length;i++){
+        const item=definitions[i],profile={...storeScenarios[item.key]};
+        $("variants-status").textContent=`${i+1} / 3　正在生成${profile.store_name}版本，产品与发布平台保持一致。`;
+        const input={product:base.product,audience:item.audience,scene:item.scene,platform:base.platform||"门店朋友圈",goal:item.goal,brief:`围绕同一产品，为${profile.store_type}写一篇自然的${base.platform||"门店朋友圈"}内容。从顾客的问题“${profile.customer_question}”切入，使用${profile.voice}的语气，以适合本地客群的体验行动结尾。`,store_profile:profile,content_angle:profile.customer_question,content_nonce:`${Date.now()}-${i}`};
+        try{
+          const result=await request("/api/generate",{method:"POST",body:JSON.stringify(input)},300000);
+          state.variants=state.variants||[];state.variants.push({input,result});
+          if(["ok","success"].includes(result.status))successes++;
+          $("variants-content").append(renderVariantCard(result,input,i));
+        }catch(error){$("variants-content").append(renderVariantCard({status:"error",message:error.message},input,i));}
+      }
+      $("variants-status").textContent=`已形成 ${successes} / 3 份门店图文。比较开头、顾客问题、场景和行动引导。`;
+    }finally{state.batching=false;setRunning(false);$("run-progress").hidden=true;}
+  }
+  async function downloadPackage(){
+    const r=state.result;if(!r)return;
+    if(!r.run_id||!["ok","success"].includes(r.status))return exportResult();
+    const button=$("export-button");button.disabled=true;
+    try{
+      const response=await fetch(`/api/runs/${encodeURIComponent(r.run_id)}/export?format=zip`);
+      if(!response.ok){let message="图文包暂时未能生成。";try{const data=await response.json();message=data.detail||data.message||message;}catch(_){}throw new Error(message);}
+      const url=URL.createObjectURL(await response.blob()),a=element("a");a.href=url;a.download=`知华有据_${r.run_id}_图文包.zip`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);toast("图文包已准备，包含正文、图片与来源。");
+    }catch(error){toast(error.message+" 可重新生成后再下载。");}
+    finally{button.disabled=false;}
+  }
+  async function loadKnowledge(){
+    try{
+      const data=await request('/static/knowledge.json');
+      $("knowledge-status").textContent=`${data.products.length} 款完整机型 · 资料按型号分开核对 · 生态功能以对应系统与设备条件为准`;
+      const list=$("knowledge-products");list.replaceChildren();
+      data.products.forEach(p=>{
+        const card=element("article","knowledge-product");card.append(element("h3","",p.name),element("p","",`官方资料核对：${formatDate(p.verified_at)}　·　${p.images} 张已匹配图片`),link("查看华为官方规格 ↗",p.url));list.append(card);
+      });
+      const eco=$("ecosystem-content");eco.replaceChildren();
+      (data.ecosystem||[]).forEach(item=>{
+        const card=element("article","ecosystem-card");card.append(element("h3","",item.title),element("p","ecosystem-why",item.description),element("p","ecosystem-condition",item.conditions));
+        card.append(link("查看华为官方支持说明 ↗",item.url));
+        const button=element("button","secondary-button","用这个场景创作 ↗");button.type="button";
+        button.addEventListener("click",()=>{
+          showView("workbench");fillStoreProfile(storeScenarios.business);setChannel("门店朋友圈");
+          const option=[...$("quick-product").options].find(o=>o.textContent.includes(item.product.replace(/^HUAWEI /,'')));
+          $("quick-product").value=option?option.value:"auto";
+          $("quick-brief").value=`为${item.product}写一条面向职场人士的朋友圈，重点介绍${item.title}的生态体验。请根据华为官方资料保留设备与系统条件，从顾客的具体任务出发，邀请带着自己的手机或平板到店体验。`;
+          $("intake-panel").hidden=true;$("task-form").scrollIntoView({behavior:"smooth",block:"start"});
+        });card.append(button);eco.append(card);
+      });
+    }catch(error){$("knowledge-status").textContent=`资料目录暂时不可用：${error.message}`;}
+  }
+
+  function initQuickWorkbench(){
+    state.quickChannel="小红书";state.channelTouched=false;
+    try{const saved=localStorage.getItem('zhihua-store-profile-v2');if(saved)fillStoreProfile(JSON.parse(saved));}catch(_){}
+    updateStoreSummary();
+    $("open-store").addEventListener("click",()=>{$("store-panel").open=!$("store-panel").open;if($("store-panel").open)$("store-panel").scrollIntoView({behavior:"smooth",block:"nearest"});});
+    $("save-store").addEventListener("click",()=>{try{localStorage.setItem('zhihua-store-profile-v2',JSON.stringify(readStoreProfile()));updateStoreSummary();toast("本店设置已保存，下次打开会自动带入。");}catch(_){toast("当前浏览器不允许保存，设置仍可用于本次任务。");}});
+    Object.values(storeFields).forEach(id=>$(id).addEventListener('change',updateStoreSummary));
+    document.querySelectorAll("[data-channel]").forEach(b=>b.addEventListener("click",()=>setChannel(b.dataset.channel)));
+    document.querySelectorAll("[data-quick-preset]").forEach(b=>b.addEventListener("click",()=>chooseQuickPreset(b.dataset.quickPreset)));
+    $("quick-generate").addEventListener("click",()=>startQuick(false));$("intake-continue").addEventListener("click",()=>startQuick(true));
+    $("quick-brief").addEventListener("input",()=>{state.pendingIntake=null;$("intake-panel").hidden=true;});
+    $("quick-brief").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();startQuick(false);}});
+    $("quick-product").addEventListener("change",()=>{$("product").value=$("quick-product").value;state.pendingIntake=null;});
+    $("product").addEventListener("change",()=>{$("quick-product").value=$("product").value;});
+    $("edit-button").addEventListener("click",openEditor);$("cancel-edit").addEventListener("click",()=>{$("editor-panel").hidden=true;});$("apply-edit").addEventListener("click",applyEdit);
+    $("generate-variants").addEventListener("click",generateVariants);
+    loadKnowledge();
+  }
+
+
   function showView(view, updateHash = true) {
-    if (!["workbench", "examples", "guide"].includes(view)) return;
+    if (!["workbench", "examples", "guide", "knowledge"].includes(view)) return;
     document.querySelectorAll(".view").forEach((node) => { node.hidden = node.id !== `view-${view}`; });
     document.querySelectorAll("[data-view]").forEach((node) => {
       const active = node.dataset.view === view;
@@ -748,6 +977,7 @@
     });
     if (updateHash) history.replaceState(null, "", `#${view}`);
     if (view === "examples") loadExamples();
+    if (view === "knowledge") loadKnowledge();
   }
 
   document.querySelectorAll("[data-view]").forEach((node) => node.addEventListener("click", (event) => { event.preventDefault(); showView(node.dataset.view); window.scrollTo({ top: 0, behavior: "smooth" }); }));
@@ -760,12 +990,13 @@
   initBenefits();
   ["audience", "scene"].forEach((key) => $(key).addEventListener("change", () => syncCustom(key)));
   $("task-form").addEventListener("submit", generate);
-  $("regenerate-button").addEventListener("click", () => $("task-form").requestSubmit());
+  $("regenerate-button").addEventListener("click", () => { if(state.input&&!state.running)performGeneration({...state.input,content_nonce:String(Date.now()),store_profile:readStoreProfile()}); });
   $("copy-button").addEventListener("click", copyArticle);
-  $("export-button").addEventListener("click", exportResult);
+  $("export-button").addEventListener("click", downloadPackage);
   $("refresh-status").addEventListener("click", loadStatus);
   $("review-form").addEventListener("submit", checkCopy);
   window.addEventListener("hashchange", () => showView(location.hash.slice(1), false));
-  showView(["examples", "guide"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "workbench", false);
+  initQuickWorkbench();
+  showView(["examples", "guide", "knowledge"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "workbench", false);
   Promise.allSettled([loadStatus(), loadCatalog()]);
 })();

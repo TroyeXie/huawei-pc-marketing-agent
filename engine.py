@@ -68,7 +68,7 @@ _QUANTITY = re.compile(r"\d+(?:\.\d+)?\s*(?:kg|千克|公斤|mm|毫米|cm|英寸
 _RESOLUTION = re.compile(r"\d{3,5}\s*[×x*]\s*\d{3,5}", re.I)
 _CPU = re.compile(r"(?:i[3579]-?\d{4,5}[a-z]{0,3}|Ultra\s*[3579]\s*\d{3}[a-z]|麒麟\s*[a-z]{0,2}\d{2,3}(?:\s*Plus)?)", re.I)
 _CURRENCY = re.compile(r"[¥￥]\s*\d+(?:\.\d+)?")
-_CONFIG_VALUE = re.compile(r"Windows\s*\d+(?:\.\d+)?|Linux\s*V?\d+(?:\.\d+)?|(?:蓝牙|Bluetooth)\s*\d+(?:\.\d+)?|(?:\d+|[一二三四五六七八九十]{1,3})\s*点触控", re.I)
+_CONFIG_VALUE = re.compile(r"Windows\s*\d+(?:\.\d+)?|Linux\s*V?\d+(?:\.\d+)?|(?:HarmonyOS|鸿蒙)\s*\d+(?:\.\d+){0,3}|(?:蓝牙|Bluetooth)\s*\d+(?:\.\d+)?|(?:\d+|[一二三四五六七八九十]{1,3})\s*点触控", re.I)
 
 
 def _quantities(text: str) -> set[str]:
@@ -199,6 +199,25 @@ def _screen_findings(text: str, facts: list[dict[str, Any]]) -> list[dict[str, s
             for _, _, sentence in _screen_inference_spans(text, facts)]
 
 
+def check_store_history(text: str, store_profile: dict[str, Any] | None = None) -> list[dict[str, str]]:
+    """A requested customer question is not evidence that a visit occurred."""
+    notes = str((store_profile or {}).get('experience_notes') or '')
+    patterns = (r"(?:常被问到|经常被问|常遇到.{0,8}问题|常有.{0,8}(?:顾客|客户)|(?:不少|很多|多位|好几位).{0,8}(?:顾客|客户|同学).{0,8}(?:问|说|反映|表示))",
+                r"(?:今天|昨天|最近|上周|这几天).{0,15}(?:顾客|客户|同学|被问|有人问)",
+                r"(?:顾客|客户|用户)(?:们|都|一致|纷纷).{0,8}(?:表示|觉得|说|反馈|好评)")
+    findings = []
+    for pattern in patterns:
+        for match in re.finditer(pattern,str(text or '')):
+            sentence,_,_ = _sentence_at(text,match.start(),match.end())
+            if _is_denial(text,match.start(),match.end()):continue
+            if notes and _norm(sentence) in _norm(notes):continue
+            if not any(item['claim']==sentence for item in findings):
+                findings.append({'type':'门店场景依据','status':'blocked','claim':sentence,
+                                 'evidence':'输入未提供这段顾客经历；待回答的问题不能证明对话发生过。',
+                                 'action':'删除虚构顾客历史，直接提出需要回答的问题。'})
+    return findings
+
+
 def check_text(text: str, facts: list[dict[str, Any]] | None = None) -> list[dict[str, str]]:
     """Return independent rule findings; negative limitation statements are safe.
 
@@ -211,7 +230,7 @@ def check_text(text: str, facts: list[dict[str, Any]] | None = None) -> list[dic
     seen: set[tuple[str, str]] = set()
     patterns = [
         ("合规·绝对化", r"(?:全网|行业|全球|同价位|同级)(?:第一|第1|最低|最强|最好|最快|最轻|最薄|唯一)|(?:最强|最佳|顶级|零风险|100%安全|百分之百安全)|(?:永久|终身)(?:免费|有效|保修)|绝对(?:不会|保证|安全)", "移除无依据的绝对化宣传"),
-        ("合规·全面兼容", r"(?:所有|任何|任意|全部).{0,8}(?:软件|应用|系统|外设|插件|驱动).{0,8}(?:兼容|支持|能用|畅玩|运行)|(?:全面|完全|百分之百|100%).{0,4}兼容", "改为按具体软件、版本和外设核验"),
+        ("合规·全面兼容", r"(?:所有|任何|任意|全部).{0,8}(?:软件|应用|系统|外设|插件|驱动|手机|平板|设备).{0,8}(?:兼容|支持|能用|畅玩|运行|互联|接续|共享)|(?:全面|完全|百分之百|100%).{0,4}兼容", "改为按具体软件、版本和设备核验"),
         ("合规·虚构体验", r"(?:我|我们)(?:亲测|实测|入手了|用了|使用了|体验了)|亲测(?:好用|流畅|有效|续航)|用户(?:一致好评|都说好|公认)|好评率\s*\d", "删除没有实际体验或评价资料支持的表述"),
         ("合规·医疗功效", r"(?:治愈|治疗|预防|杜绝|根治).{0,6}(?:近视|眼病|干眼|视疲劳)", "删除产品资料未证明的医疗效果"),
         ("合规·虚假承诺", r"(?:保证|确保|承诺).{0,12}(?:不卡|不掉帧|不发热|不伤眼|永不|一定|全天|一整天)|(?:吊打|碾压|垃圾品牌|智商税)", "删除无依据的保证或贬低，保留任务与事实"),
@@ -287,7 +306,9 @@ class MarketingEngine:
         self.system_prompt = Path(__file__).with_name("prompts").joinpath("system_prompt.md").read_text(encoding="utf-8")
 
     def _chat(self, instruction: str, data: dict[str, Any], max_tokens: int = 4500) -> dict[str, Any]:
-        body = {"model": self.model, "messages": [{"role": "system", "content": self.system_prompt + "\n\n## 本轮模块\n" + instruction}, {"role": "user", "content": json.dumps(data, ensure_ascii=False)}], "temperature": 0.25, "max_tokens": max_tokens, "response_format": {"type": "json_object"}}
+        creative = "writing_context" in data and "content_paths" not in data
+        temperature = 0.68 if creative else 0.12
+        body = {"model": self.model, "messages": [{"role": "system", "content": self.system_prompt + "\n\n## 本轮模块\n" + instruction}, {"role": "user", "content": json.dumps(data, ensure_ascii=False)}], "temperature": temperature, "max_tokens": max_tokens, "response_format": {"type": "json_object"}}
         if "deepseek" in self.model.lower():
             thinking = os.environ.get("MODEL_THINKING", "disabled").strip().lower()
             body["thinking"] = {"type": thinking if thinking in {"enabled", "disabled"} else "disabled"}
@@ -324,6 +345,8 @@ class MarketingEngine:
             # local; neither is forwarded to the product-writing model.
             growth_inputs = {key: payload.get(key) for key in ("customer_context", "quote_inputs")
                              if isinstance((payload or {}).get(key), dict)}
+            from personalization import build_personalization, creative_context
+            personalization = build_personalization(payload)
             payload = {str(k): str(v or "").strip() for k, v in (payload or {}).items() if k in {"product", "audience", "scene", "platform", "goal", "brief"}}
             materials = materials or {}
             questions = []
@@ -350,6 +373,9 @@ class MarketingEngine:
             if platform == "门店朋友圈": angle = "从本次场景选出一个核心卖点，给出清楚的咨询或到店理由"
             strategy = {"audience": payload["audience"], "scene": payload["scene"], "platform": platform, "goal": payload.get("goal") or "帮助目标人群理解产品并完成下一步咨询或体验", "angle": angle, "structure": rule["structure"], "tone": rule["tone"], "cta": rule["cta"], "image_count": rule["preferred"]}
             result["strategy"] = strategy
+            result["personalization"] = personalization
+            strategy["store_focus"] = personalization["creative_brief"]["store_focus"]
+            strategy["voice"] = personalization["creative_brief"]["voice"]
             record(current_step, started, "完整任务已解析；场景与渠道策略已分别确定")
             if not (self.url and self.key and self.model):
                 result.update(status="error", mode="unconfigured", message="尚未配置大模型服务。请设置MODEL_API_URL、MODEL_API_KEY和MODEL_NAME；本系统不会把样例或模板作为AI运行结果。")
@@ -374,8 +400,22 @@ class MarketingEngine:
             result["public_evidence"] = proof
             result["checks"].append({"type": "公开来源核对", "status": "pass", "claim": "模型输入资料", "evidence": "仅使用本次ima原文中与已核对华为公开资料对应的必要摘录和通过字节匹配的图片元数据", "action": "库内整理稿和未确认公开的内容不进入模型上下文"})
             record(current_step, started, "已匹配公开证据并缩减模型输入；保留ima实际来源与获取时间")
+            from ecosystem import select_documents
+            ecosystem_documents, ecosystem_manifest = select_documents(product,{**payload,"store_profile":personalization['store_profile']})
+            result['ecosystem_evidence'] = ecosystem_manifest
+            if ecosystem_manifest['requested'] and (not ecosystem_documents or ecosystem_manifest.get('missing_topics')):
+                available=ecosystem_manifest.get('supported_topics',[])
+                question=ecosystem_manifest['message']+('当前有依据的功能为：'+'、'.join(available)+'。请先选择其中一项，或调整型号与功能。' if available else '请调整型号或补充本次功能的原文资料。')
+                result.update(status='needs_clarification',mode='evidence_gate',questions=[question],message='当前资料不足以确认本次请求的全部跨设备能力，尚未生成相关断言。')
+                return result
+            if ecosystem_documents:
+                materials['documents'] = list(materials.get('documents',[])) + ecosystem_documents
+                result['checks'].append({'type':'生态资料来源','status':'pass','claim':'本次跨设备功能材料',
+                                         'evidence':'按完整型号与功能选择 '+str(len(ecosystem_documents))+' 份受控华为支持原文；独立标为 official_huawei。',
+                                         'action':'与ima产品规格分别保留来源，功能条件随原文进入事实提取。'})
+                record('生态资料选取',time.monotonic(),'选择华为官方支持原文：'+ '、'.join(ecosystem_manifest['topics']))
 
-            current_step = "接收ima资料"
+            current_step = "接收来源原文"
             started = time.monotonic()
             documents = []
             total_chars = 0
@@ -398,7 +438,7 @@ class MarketingEngine:
                 title = str(raw.get("title") or source_dict.get("title") or "ima资料")
                 locator = str(raw.get("locator") or source_dict.get("locator") or title)
                 if source_dict.get("page") is not None: locator += " · 第" + str(source_dict["page"]) + "页"
-                documents.append({"id": "D" + str(len(documents) + 1), "title": title, "text": text, "source_url": _source_url(raw.get("source_url") or source_dict.get("public_source_url") or source_dict.get("url") or source), "locator": locator, "retrieved_at": str(source_dict.get("retrieved_at") or raw.get("retrieved_at") or "")})
+                documents.append({"id": "D" + str(len(documents) + 1), "title": title, "text": text, "source_url": _source_url(raw.get("source_url") or source_dict.get("public_source_url") or source_dict.get("url") or source), "locator": locator, "provider":str(source_dict.get('provider') or 'ima'), "retrieved_at": str(source_dict.get("retrieved_at") or raw.get("retrieved_at") or "")})
             if not documents:
                 raise EngineError("本次ima资料没有可读取的产品原文，无法生成有依据的内容")
             image_candidates = []
@@ -422,11 +462,11 @@ class MarketingEngine:
                 image_candidates.append({"id": "I" + str(len(image_candidates) + 1), "url": url, "title": str(raw.get("title") or raw.get("name") or source_dict.get("title") or raw.get("caption") or "产品资料图片"), "source_title": str(raw.get("source_title") or source_dict.get("title") or materials.get("kb_name") or "ima共享知识库"), "source_url": source_url, "position": "", "caption": "", "model": material_product, "status": "matched", "description": str(raw.get("description") or raw.get("caption") or ""), "visual_review": visual_review, "verification_basis": "ima产品目录、文件元数据及制作阶段图像预览核查" if visual_review else "ima产品目录与文件元数据；尚未执行视觉核查"})
             if len(image_candidates) < rule["min"]:
                 result.update(status="needs_clarification", mode="clarification", questions=[f"{platform}需要{rule['min']}—{rule['max']}张同型号ima图片，本次只有{len(image_candidates)}张。请补充该型号资料，或选择适合当前图片数量的渠道。"], message="图片素材不足，尚未生成待发布文稿。")
-                record(current_step, started, f"接收{len(documents)}份原文、{len(image_candidates)}张同型号图片；配图不足", "warning")
+                record(current_step, started, f"接收{len(documents)}份来源原文、{len(image_candidates)}张同型号图片；配图不足", "warning")
                 return result
             image_count = min(rule["preferred"], len(image_candidates))
             strategy["image_count"] = image_count
-            record(current_step, started, f"接收{len(documents)}份ima原文及{len(image_candidates)}张候选图片，来源随结果保留")
+            record(current_step, started, f"接收{len(documents)}份来源原文及{len(image_candidates)}张候选图片；ima与华为官方支持文档分别保留来源")
 
             current_step = "原文事实提取"
             started = time.monotonic()
@@ -461,7 +501,7 @@ class MarketingEngine:
                     removed_quotes += 1
                     continue
                 if any(_norm(fact_text) == _norm(f["text"]) for f in facts): continue
-                facts.append({"id": "F" + str(len(facts) + 1), "text": fact_text, "quote": quote, "source_title": doc["title"], "locator": doc["locator"], "source_url": doc["source_url"], "category": str(item.get("category") or "产品事实"), "retrieved_at": doc["retrieved_at"]})
+                facts.append({"id": "F" + str(len(facts) + 1), "text": fact_text, "quote": quote, "source_title": doc["title"], "locator": doc["locator"], "source_url": doc["source_url"], "provider":doc['provider'], "category": str(item.get("category") or "产品事实"), "retrieved_at": doc["retrieved_at"]})
             result["facts"] = facts
             if not facts:
                 raise EngineError("没有事实通过原文引用与数字校验，已停止生成；请补充明确的产品资料")
@@ -479,8 +519,15 @@ class MarketingEngine:
 
             current_step = "场景图文生成"
             started = time.monotonic()
+            writing_context = creative_context(personalization, facts)
+            if ecosystem_documents:
+                writing_context['essential_conditions'] = {
+                    'instruction':'正文必须把一个跨设备功能和全部直接适用条件放在一起；这些条件不受每段1—2条事实或关键卖点数量限制。只写功能、不写条件的文稿会被删除。',
+                    'topics':ecosystem_manifest['topics'],
+                    'fact_ids':[fact['id'] for fact in facts if fact.get('provider')=='official_huawei' and re.search(r'条件|范围|版本',fact.get('category','')) and '台式机' not in fact.get('text','')],
+                    'writing_form':'先回答给定场景中的一项任务，再用自然的一句话交代系统、账号、无线开关、功能开关及支持应用或排除机型；不要把条件只写在核验表、图注或CTA里。'}
             generation = self._chat(
-                "你负责第二阶段：基于已经核对的facts原创生成当前任务图文，落实strategy并避免rejected_requests。只使用facts中的事实，不自行发掘文档，不把用户要求当产品依据。返回JSON {strategy:{angle,cta},article:{title,lead,sections:[{heading,text,fact_ids:[]}],cta,tags:[]},images:[{id,position,caption}]}。每个正文段落列其事实id，标题/导语也只能用这些事实。公众号3—5段，小红书3—5短段，朋友圈1段一个核心卖点，海报1—3段每段一个卖点。总字数优先服从task.brief；每段只用1—2项贴合任务的事实，不罗列所有CPU/无线/特色应用参数，整篇只突出2—4个关键卖点。除小红书外默认tags为空数组。图片选image_count张不同id，position说明具体位置，caption用15—35字简洁描述已知画面，不复述文件名，不推断看不见的功能。USB3.2 Gen1名称不能证明USB-A形态，不写原文没有的接口形态或雷电协议。触控硬件不直接证明每个应用支持缩放或批注；介绍具体应用动作时保留应用支持条件，未介绍应用动作时只写触控规格。硬件规格不能推导使用效果；原文未明确支持时，标题、导语和正文均不得写更顺手、更直接、更快、更高效、提升效率等体验结论。独立数字键盘与1.5 mm键程只能作为有据规格介绍；可联系客户的表格任务提出选购关注点，不得把任务适配写成已证实的体验优势。每段至少保留一句独立成立的有据产品事实，避免只有体验结论。整篇只保留一次预约体验、咨询配置或收藏邀请，不在每段重复到店核对。内容不要含未证实价格、个人亲测或历史体验。", {"task": payload, "strategy": strategy, "length_guidance": rule["length"], "facts": facts, "images": image_candidates[:16], "image_count": image_count, "rejected_requests": input_issues}, 5000)
+                "你负责第二阶段：基于已经核对的facts原创生成当前任务图文，落实strategy和writing_context并避免rejected_requests。writing_context中的门店信息仅是场景，不是产品依据；严禁把店员说的续航、性能、兼容、价格或顾客评价升级为产品事实。把这家门店的具体任务或顾客原问写进开头，按它重新选择核心事实、段落顺序、句式与行动引导；不能只换店名。若提供了实际体验笔记，只沿用其中明确的观察条件与安排，不虚构亲测身份、人数、时间及对话。声音自然具体，避免整齐排比、套话和反复到店核对。只使用facts中的产品事实，不自行发掘文档，不把用户要求当产品依据。返回JSON {strategy:{angle,cta},article:{title,lead,sections:[{heading,text,fact_ids:[]}],cta,tags:[]},images:[{id,position,caption}]}。每个正文段落列其事实id，标题/导语也只能用这些事实。公众号3—5段，小红书3—5短段，朋友圈1段一个核心卖点，海报1—3段每段一个卖点。总字数优先服从task.brief；每段只用1—2项贴合任务的事实，不罗列所有CPU/无线/特色应用参数，整篇只突出2—4个关键卖点。除小红书外默认tags为空数组。图片选image_count张不同id，position说明具体位置，caption用15—35字简洁描述已知画面，不复述文件名，不推断看不见的功能。USB3.2 Gen1名称不能证明USB-A形态，不写原文没有的接口形态或雷电协议。触控硬件不直接证明每个应用支持缩放或批注；介绍具体应用动作时保留应用支持条件，未介绍应用动作时只写触控规格。硬件规格不能推导使用效果；原文未明确支持时，标题、导语和正文均不得写更顺手、更直接、更快、更高效、提升效率等体验结论。独立数字键盘与1.5 mm键程只能作为有据规格介绍；可联系客户的表格任务提出选购关注点，不得把任务适配写成已证实的体验优势。每段至少保留一句独立成立的有据产品事实，避免只有体验结论。整篇只保留一次预约体验、咨询配置或收藏邀请，不在每段重复到店核对。内容不要含未证实价格、个人亲测或历史体验。", {"task": payload, "strategy": strategy, "writing_context": writing_context, "length_guidance": rule["length"], "facts": facts, "images": image_candidates[:16], "image_count": image_count, "rejected_requests": input_issues}, 5000)
             article = generation.get("article") or {}
             article = {"title": str(article.get("title") or "").strip(), "lead": str(article.get("lead") or "").strip(), "sections": article.get("sections") or [], "cta": str(article.get("cta") or "").strip(), "tags": [str(t).lstrip("#") for t in article.get("tags", []) if str(t).strip()]}
             if platform != "小红书": article["tags"] = []
@@ -520,29 +567,37 @@ class MarketingEngine:
             current_step = "独立语义核验"
             started = time.monotonic()
             paths = _content_paths(article, used_images)
+            paths.update({"facts." + fact["id"]: fact["text"] for fact in facts})
             verification = self._chat(
-                "你是独立核验模块，不负责润色。审查所有content_paths的产品声明是否被facts的原文quote充分支持，检查型号/数字/单位/功能/适用版本/限制/图片描述/营销合规。纯操作邀请与CTA无需产品证据；但“更顺手、更直接、更快、提升效率”等主观体验或比较同样属于产品使用效果声明，必须有原文quote直接支持，不能以主观措辞、场景建议或CTA为由豁免。仅独立数字键盘等硬件规格不能证明输入更顺手或更直接；明确询问“请现场试是否顺手”属于待验证建议。明确否定的限制不是违规。不要仅凭同数字判支持。返回JSON {reviewed_paths:[所有传入路径],checks:[{path,claim,fact_ids:[],status:'pass'或'unsupported',evidence}],issues:[{path,claim,reason}]}。每条无依据事实/遗漏关键限定/违规或图注推断都必须列issues，path必须是传入路径。已核对事实本身的text也必须与quote关系一致；如发现事实text误读quote，列issues到使用该事实的全部内容路径。不要返回改写后的稿件。", {"product": material_product, "task": payload, "facts": facts, "image_metadata": image_candidates, "article": article, "content_paths": paths}, 5000)
-            reviewed = {str(p) for p in verification.get("reviewed_paths", [])}
-            if set(paths) - reviewed:
-                raise EngineError("语义核验未覆盖全部文稿与图注，未交付未经完整核验的结果")
-            if not isinstance(verification.get("checks"), list) or not verification["checks"]:
-                raise EngineError("语义核验没有提供逐项判断，未交付未经有效核验的结果")
-            issues = [i for i in verification.get("issues", []) if isinstance(i, dict)]
-            # A verifier may record an unsupported check but omit issues: do not ignore it.
-            for entry in verification.get("checks", []):
-                if isinstance(entry, dict) and str(entry.get("status", "")).lower() not in {"pass", "supported", "ok"}:
-                    if not any((str(i.get("path")), str(i.get("claim"))) == (str(entry.get("path")), str(entry.get("claim"))) for i in issues):
-                        issues.append({"path": entry.get("path"), "claim": entry.get("claim"), "reason": entry.get("evidence") or "独立核验未确认该声明"})
+                "你是独立核验模块，不负责润色。审查所有content_paths的产品声明是否被facts的原文quote充分支持，检查型号/数字/单位/功能/适用版本/限制/图片描述/营销合规。facts.F1等路径是待复核的事实摘要本身，每条也必须有独立check；不能仅因它已列入facts就视为正确。用户的store_context只证明提供了这些场景或问题，不能证明产品性能、兼容、价格、销量与权益。纯操作邀请与CTA无需产品证据；但更顺手、更直接、更快、提升效率等体验或比较都必须有quote直接支持，不能以主观措辞或场景建议豁免。硬件规格不能证明体验效果，明确询问现场体验是否合适属于待验证建议。否定的限制不是违规，不要仅凭同数字判支持。返回JSON {reviewed_paths:[所有传入路径],checks:[{path,claim,fact_ids:[],status:'pass'或'unsupported',evidence}],issues:[{path,claim,reason}]}。每一个传入路径至少返回一条check，多个独立产品声明分别判断。每条无依据事实、遗漏关键限定或图注推断必须列issues，path必须是传入路径。发现事实text误读quote时，将该事实路径以及使用它的全部内容路径列入issues。不改写稿件。", {"product": material_product, "task": payload, "store_context": personalization["store_profile"], "facts": facts, "image_metadata": image_candidates, "article": article, "content_paths": paths}, 7000)
+            issues = _validated_review_issues(verification, paths)
+            unsupported_ids = {str(issue["path"]).split(".",1)[1] for issue in issues if str(issue.get("path","")).startswith("facts.")}
+            if unsupported_ids:
+                for index, section in enumerate(article["sections"]):
+                    if unsupported_ids.intersection(section.get("fact_ids",[])):
+                        issues.append({"path": f"sections.{index}", "claim": section["text"], "reason": "该段使用的事实摘要未获原文支持"})
+                for entry in verification["checks"]:
+                    path = str(entry.get("path", ""))
+                    if not path.startswith("facts.") and unsupported_ids.intersection(entry.get("fact_ids", [])):
+                        issues.append({"path": path, "claim": paths[path], "reason": "所引用的事实摘要未获原文支持"})
+                facts = [fact for fact in facts if fact["id"] not in unsupported_ids]
+                result["facts"] = facts
+                for old_check in result["checks"]:
+                    if old_check.get("type") == "原文引用" and any(old_check.get("claim","").startswith(fid+" · ") for fid in unsupported_ids):
+                        old_check.update(status="warning",action="引用文字存在，但事实关系未通过语义核对，已从事实表与成稿移除")
             bad_paths = set()
             for issue in issues:
                 path = str(issue.get("path") or "")
                 if path not in paths:
                     raise EngineError("语义核验发现无法定位的问题，已停止交付")
+                if path.startswith("facts."):
+                    result["checks"].append({"type":"事实语义核验","status":"warning","claim":str(issue.get("claim") or paths[path]),"evidence":str(issue.get("reason") or "原文不支持事实摘要"),"action":"已从可用事实中移除，并移除引用它的内容"})
+                    continue
                 bad_paths.add(path)
                 result["checks"].append({"type": "语义核验", "status": "warning", "claim": str(issue.get("claim") or paths[path]), "evidence": str(issue.get("reason") or "本轮原文未支持该声明"), "action": "精确定位时删除完整问题句；否则移除对应段落或改为中性信息"})
             article, used_images = _remove_paths(article, used_images, bad_paths, material_product, payload["scene"], rule["cta"], issues)
             for entry in verification.get("checks", []):
-                if isinstance(entry, dict) and str(entry.get("status", "")).lower() in {"pass", "supported", "ok"} and str(entry.get("path")) not in bad_paths:
+                if isinstance(entry, dict) and str(entry.get("status", "")).lower() in {"pass", "supported", "ok"} and str(entry.get("path")) not in bad_paths and str(entry.get("path")) not in {"facts."+fid for fid in unsupported_ids}:
                     result["checks"].append({"type": "语义核验", "status": "pass", "claim": str(entry.get("claim") or "已审查内容"), "evidence": str(entry.get("evidence") or "与本轮引用事实一致"), "action": "保留"})
             record(current_step, started, f"覆盖{len(paths)}个内容位置；发现并处理{len(bad_paths)}处问题")
 
@@ -563,7 +618,7 @@ class MarketingEngine:
             rule_paths = _content_paths(article, used_images)
             remove_paths = set()
             for path, text in rule_paths.items():
-                findings = check_text(text, facts)
+                findings = check_text(text, facts) + check_store_history(text, personalization['store_profile'])
                 if findings:
                     remove_paths.add(path)
                     for finding in findings:
@@ -576,7 +631,7 @@ class MarketingEngine:
                 result.update(status="blocked", article=article, images=used_images, message="正文未通过事实或合规核验，已阻止交付。请调整任务或补充产品资料后重试。")
                 record(current_step, started, "所有正文段落均被移除", "blocked")
                 return result
-            remaining = [finding for text in _content_paths(article, used_images).values() for finding in check_text(text, facts)]
+            remaining = [finding for text in _content_paths(article, used_images).values() for finding in check_text(text, facts)+check_store_history(text, personalization['store_profile'])]
             if remaining:
                 result["checks"].extend(remaining)
                 result.update(status="blocked", article=article, images=used_images, message="文稿仍存在未通过核验的声明，已阻止导出。")
@@ -600,7 +655,8 @@ class MarketingEngine:
             if missing_preview:
                 result["checks"].append({"type": "图片预览", "status": "warning", "claim": f"{missing_preview}张图片暂无浏览器预览URL", "evidence": "资料引用可追溯，但适配器未提供可展示地址", "action": "请打开来源确认画面后发布"})
             result["article"], result["images"] = article, used_images
-            result.update(status="success", mode="live_llm", message="已基于本轮ima资料完成原创生成、独立语义核验和规则检查。" + (" 部分无依据内容已自动移除，详见核验结果。" if bad_paths or remove_paths or screen_checks or input_issues else ""))
+            source_label="知识库与华为官方支持原文" if ecosystem_documents else "本轮ima资料"
+            result.update(status="success", mode="live_llm", message="已基于"+source_label+"完成原创生成、独立语义核验和规则检查。" + (" 部分无依据内容已自动移除，详见核验结果。" if bad_paths or remove_paths or screen_checks or input_issues else ""))
             record(current_step, started, "最终内容通过规则检查，来源与限制随稿保留")
             current_step = "客户洞察与门店执行"
             started = time.monotonic()
@@ -620,6 +676,66 @@ class MarketingEngine:
             result.update(status="error", message="本轮处理未完成，请检查输入材料或稍后重试；未交付未经核验的结果。", markdown="")
             trace.append({"step": current_step, "status": "error", "detail": "处理异常，未在公开输出中暴露接口或材料细节", "ms": 0})
             return result
+
+
+def _validated_review_issues(review: dict[str, Any], paths: dict[str, str]) -> list[dict[str, Any]]:
+    """A claimed coverage list is insufficient; every path needs a judgment."""
+    if not isinstance(review, dict):
+        raise EngineError("语义核验结果结构不完整，本轮未通过核对")
+    reviewed = review.get("reviewed_paths")
+    checks = review.get("checks")
+    if not isinstance(reviewed, list) or set(paths) - {str(path) for path in reviewed}:
+        raise EngineError("语义核验未覆盖全部文稿、图注与事实摘要，本轮未通过核对")
+    if not isinstance(checks, list) or not checks or any(not isinstance(item,dict) for item in checks):
+        raise EngineError("语义核验没有逐项判断，本轮未通过核对")
+    checked_paths = {str(item.get("path", "")) for item in checks}
+    if set(paths) - checked_paths or checked_paths - set(paths):
+        raise EngineError("语义核验缺少对应内容位置的实际判断，本轮未通过核对")
+    issues = review.get("issues", [])
+    if not isinstance(issues, list) or any(not isinstance(item,dict) for item in issues):
+        raise EngineError("语义核验问题清单格式不完整，本轮未通过核对")
+    issues = [dict(item) for item in issues]
+    for entry in checks:
+        if not isinstance(entry.get("fact_ids", []), list):
+            raise EngineError("语义核验事实编号格式不完整，本轮未通过核对")
+        if str(entry.get("status", "")).lower() not in {"pass", "supported", "ok"}:
+            if not any((str(item.get("path")),str(item.get("claim"))) == (str(entry.get("path")),str(entry.get("claim"))) for item in issues):
+                issues.append({"path":entry.get("path"),"claim":entry.get("claim"),"reason":entry.get("evidence") or "独立核验未确认该声明"})
+    if any(str(item.get("path", "")) not in paths for item in issues):
+        raise EngineError("语义核验问题无法定位到文稿，本轮未通过核对")
+    return issues
+
+
+def verify_edited_text(text: str, facts: list[dict[str, Any]], product: str = "", store_profile: dict[str,Any] | None = None) -> dict[str, Any]:
+    """Recheck edited copy against the original evidence, never a prior pass."""
+    findings = check_text(text, facts)+check_store_history(text,store_profile)
+    if not facts:
+        return {"status": "blocked" if findings else "unverified", "checks": findings,
+                "fact_check_complete": False, "message": "尚未绑定已核对的产品资料；已做文字规则检查，产品事实仍未核对。"}
+    if findings:
+        return {"status": "blocked", "checks": findings, "fact_check_complete": False,
+                "message": "修改稿中有缺少依据的数值或承诺，请先处理标出的内容。"}
+    model = MarketingEngine()
+    if not (model.url and model.key and model.model):
+        return {"status": "unverified", "checks": [], "fact_check_complete": False,
+                "message": "文字规则未发现问题，语义核对服务尚未连接；修改稿的产品事实未完成核对。"}
+    paragraphs = [part.strip() for part in re.split(r"\n+",text) if part.strip()]
+    paths = {f"edited.{index}": part for index,part in enumerate(paragraphs)}
+    if not paths:
+        return {"status":"unverified","checks":[],"fact_check_complete":False,"message":"请先填写需要核对的文案。"}
+    try:
+        review = model._chat("你负责编辑稿独立事实核验。逐项审查content_paths内的全部产品声明，只能根据facts原文quote确认型号、规格关系、单位、限制和适用版本。store_context是用户提供的店名、场景和原问题，按输入使用这些场景不需要由产品规格证明，不把它判为缺少产品事实依据；但顾客问题不证明某次对话或多次顾客经历已经发生。不存在的新品、普遍兼容、动态价格与过度承诺不可通过。每一个路径至少一条check，多个独立声明分别判断。返回JSON {reviewed_paths:[],checks:[{path,claim,fact_ids:[],status:'pass'或'unsupported',evidence}],issues:[{path,claim,reason}]}。不要改写稿件。", {"product":product,"facts":facts,"store_context":store_profile or {},"content_paths":paths}, 6000)
+        issues = _validated_review_issues(review,paths)
+    except EngineError as exc:
+        return {"status":"unverified","checks":[],"fact_check_complete":False,"message":str(exc)}
+    checks=[{"type":"编辑稿语义核验","status":"blocked" if str(item.get('status','')).lower() not in {'pass','supported','ok'} else 'pass',
+             "claim":str(item.get('claim') or paths[str(item['path'])]),"evidence":str(item.get('evidence') or ''),
+             "action":"保留" if str(item.get('status','')).lower() in {'pass','supported','ok'} else '修改或删除缺乏依据的声明',"path":str(item['path'])} for item in review['checks']]
+    for issue in issues:
+        if not any(item['status']=='blocked' and item['path']==str(issue['path']) for item in checks):
+            checks.append({"type":"编辑稿语义核验","status":"blocked","claim":str(issue.get('claim') or paths[str(issue['path'])]),"evidence":str(issue.get('reason') or ''),"action":"修改或删除缺乏依据的声明","path":str(issue['path'])})
+    return {"status":"blocked" if issues else "ok","checks":checks,"fact_check_complete":True,
+            "message":"修改稿已对照本次产品资料完成规则与语义核对。" if not issues else "修改稿仍有原文未支持的声明，请处理后重新核对。"}
 
 
 def _content_paths(article: dict[str, Any], images: list[dict[str, Any]]) -> dict[str, str]:
@@ -769,3 +885,4 @@ def _render_markdown(result: dict[str, Any]) -> str:
 def generate(payload: dict[str, Any], materials: dict[str, Any]) -> dict[str, Any]:
     """Convenience entry point used by the web app."""
     return MarketingEngine().generate(payload, materials)
+

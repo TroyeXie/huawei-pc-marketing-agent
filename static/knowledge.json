@@ -1,0 +1,88 @@
+{
+  "products": [
+    {
+      "name": "HUAWEI MateBook 14（鸿蒙版）",
+      "verified_at": "2026-10-18T07:51:17+00:00",
+      "url": "https://consumer.huawei.com/cn/harmonyos-computer/matebook-14-harmonyos-version/specs/",
+      "images": 3
+    },
+    {
+      "name": "HUAWEI MateBook Fold 非凡大师",
+      "verified_at": "2026-10-18T07:51:17+00:00",
+      "url": "https://consumer.huawei.com/cn/harmonyos-computer/matebook-fold-ultimate-design/specs/",
+      "images": 3
+    },
+    {
+      "name": "HUAWEI MateBook Pro",
+      "verified_at": "2026-10-18T07:51:17+00:00",
+      "url": "https://consumer.huawei.com/cn/harmonyos-computer/matebook-pro/specs/",
+      "images": 3
+    },
+    {
+      "name": "HUAWEI MateBook Pro S",
+      "verified_at": "2026-10-18T07:51:17+00:00",
+      "url": "https://consumer.huawei.com/cn/harmonyos-computer/matebook-pro-s/specs/",
+      "images": 3
+    },
+    {
+      "name": "MateBook 14 酷睿 Ultra",
+      "verified_at": "2026-10-18T07:51:17+00:00",
+      "url": "https://consumer.huawei.com/cn/laptops/matebook-14-2024/specs/",
+      "images": 3
+    },
+    {
+      "name": "HUAWEI MateBook D 14 2024",
+      "verified_at": "2026-10-18T07:51:17+00:00",
+      "url": "https://consumer.huawei.com/cn/laptops/matebook-d-14-2024-13th-gen-core/specs/",
+      "images": 3
+    },
+    {
+      "name": "HUAWEI MateBook D 16 2024",
+      "verified_at": "2026-10-18T07:51:17+00:00",
+      "url": "https://consumer.huawei.com/cn/laptops/matebook-d-16-2024/specs/",
+      "images": 3
+    },
+    {
+      "name": "HUAWEI MateBook D 16 SE 版 2024",
+      "verified_at": "2026-10-18T07:51:17+00:00",
+      "url": "https://consumer.huawei.com/cn/laptops/matebook-d-16-se-2024/specs/",
+      "images": 3
+    },
+    {
+      "name": "HUAWEI MateBook GT 14",
+      "verified_at": "2026-10-18T07:51:17+00:00",
+      "url": "https://consumer.huawei.com/cn/laptops/matebook-gt-14/specs/",
+      "images": 3
+    },
+    {
+      "name": "HUAWEI MateBook X Pro 酷睿 Ultra 微绒典藏版",
+      "verified_at": "2026-10-18T07:51:17+00:00",
+      "url": "https://consumer.huawei.com/cn/laptops/matebook-x-pro-ultra-premium-edition/specs/",
+      "images": 3
+    }
+  ],
+  "ecosystem": [
+    {
+      "title": "手机记录备忘，回到电脑继续整理",
+      "product": "HUAWEI MateBook Pro",
+      "description": "手机或平板中正在编辑的备忘可接到附近的鸿蒙电脑上继续编辑。",
+      "conditions": "参与设备均为HarmonyOS 5及以上；参加接续的设备使用同一华为账号；参加接续的设备开启WLAN和蓝牙；参加接续的设备开启接续功能；限定到所列应用及对应页面或场景；华为浏览器的信息流页面不在支持场景内",
+      "url": "https://consumer.huawei.com/cn/support/content/zh-cn16051202/"
+    },
+    {
+      "title": "一套电脑键鼠，接着操作旁边的手机或平板",
+      "product": "HUAWEI MateBook 14（鸿蒙版）",
+      "description": "这些型号可与符合条件的鸿蒙手机或平板共享电脑键盘和鼠标，并在设备间拖拽文本、图片或文档。",
+      "conditions": "参加共享的设备使用同一华为账号；电脑和手机或平板均开启键鼠共享；所有参加共享设备的HarmonyOS版本至少为5.0.0.125；当前官方说明明确不适用于畅享70X系列、畅享90系列；电脑作为主发起设备；限定为官方列出的两设备或三设备组合",
+      "url": "https://consumer.huawei.com/cn/support/content/zh-cn16051201/"
+    },
+    {
+      "title": "平板成为第二块屏幕",
+      "product": "HUAWEI MateBook Pro",
+      "description": "这些鸿蒙电脑通过无线投屏连接符合条件的平板，平板可以作为扩展显示器或镜像显示器；扩展模式可在两块屏幕上打开不同应用窗口。",
+      "conditions": "电脑和平板均至少为HarmonyOS 6.1；电脑与平板登录同一华为账号；电脑与平板开启WLAN以及星闪/蓝牙或蓝牙开关；通过电脑的无线投屏功能选择可投屏平板；MateBook 14（鸿蒙版）现有资料显示HarmonyOS 6，营销稿必须保留升级到6.1及以上的条件；通常的平板副屏功能要求电脑与平板均至少HarmonyOS 6.1；MateBook Fold折叠态或竖屏展开态无线投屏到平板，电脑系统须至少HarmonyOS 7.0",
+      "url": "https://consumer.huawei.com/cn/support/content/zh-cn16093701/"
+    }
+  ],
+  "updated_at": "2026-10-19"
+}

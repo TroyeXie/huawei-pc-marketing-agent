@@ -3,7 +3,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PORT=7860 ZHIHUA_RUNTIME_DIR=/t
 WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-COPY app.py engine.py growth.py ima_client.py public_evidence.py ./
+COPY app.py engine.py growth.py ima_client.py public_evidence.py personalization.py ecosystem.py ./
 COPY data ./data
 COPY static ./static
 COPY prompts ./prompts
@@ -12,3 +12,4 @@ RUN useradd --uid 1000 --create-home appuser
 USER appuser
 EXPOSE 7860
 CMD ["python", "app.py"]
+

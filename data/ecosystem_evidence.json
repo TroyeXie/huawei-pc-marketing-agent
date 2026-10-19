@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-10-19T15:09:52+00:00",
+  "provider": "official_huawei",
+  "scope": "供现有精确型号导入的华为生态功能证据；所有事实摘要为据官方资料改写，quote字段为短原句。不是用户设备现场互联实测。",
+  "sources": [
+    {
+      "source_id": "HW-ECO-KEYBOARD-OPERATION",
+      "title": "鸿蒙电脑如何进行跨设备键鼠共享",
+      "url": "https://consumer.huawei.com/cn/support/content/zh-cn16051201/",
+      "quote": "在手机/平板、电脑上，登录同一华为账号。",
+      "verified_pc_models": [
+        "HUAWEI MateBook 14（鸿蒙版）",
+        "HUAWEI MateBook Pro",
+        "HUAWEI MateBook Pro S"
+      ],
+      "summary": "这些型号可与符合条件的鸿蒙手机或平板共享电脑键盘和鼠标，并在设备间拖拽文本、图片或文档。",
+      "conditions": [
+        "参加共享的设备使用同一华为账号",
+        "电脑和手机或平板均开启键鼠共享",
+        "设备系统版本下限及排除机型须同时使用HW-ECO-KEYBOARD-DEVICES的条件"
+      ],
+      "do_not_infer": [
+        "不得套用于同名Windows或Linux机型",
+        "键鼠共享不等同于平板作电脑副屏",
+        "不能由键鼠共享推导所有第三方应用或所有文件均可拖拽"
+      ],
+      "source_excerpt": "使用键鼠共享，使电脑鼠标在设备间自由穿越，体验跨设备键盘鼠标共享和文件拖拽。例如，在电脑上将光标移至屏幕边缘并穿越至手机/平板后，可使用电脑的鼠标操作手机/平板应用、使用电脑的键盘在手机/平板的备忘编辑界面输入文本。\n配图仅供参考，请以产品实际为准。\n此功能目前仅支持在 HarmonyOS 5 及以上版本的设备间使用。\n开启键鼠共享\n请前往官网了解支持连接设备的说明。\n在手机/平板、电脑上，登录同一华为账号。\n在手机/平板、电脑上，开启键鼠共享的开关。\n手机/平板：进入设置 > 多设备协同 > 键鼠共享，单击开启键鼠共享的开关。\n电脑：单击桌面底部快捷栏中的打开设置，单击多设备协同 > 键鼠共享，然后单击开启键鼠共享、允许鼠标移动至附近设备屏幕内以连接设备的开关。您也可以单击桌面右下角或点按鸿蒙键+ C 组合键，打开控制中心，单击开启键鼠共享。",
+      "source_excerpt_start_char": 0,
+      "source_excerpt_end_char": 377,
+      "source_excerpt_is_contiguous": true,
+      "source_excerpt_extraction": "Official jd-content body; remove HTML tags; retain text in source order; normalize indentation and block paragraph line breaks; no added wording.",
+      "source_verified_at": "2026-10-19T15:09:45+00:00",
+      "source_http_status": 200,
+      "source_final_url": "https://consumer.huawei.com/cn/support/content/zh-cn16051201/",
+      "source_last_modified": null,
+      "source_html_sha256": "f05cb1de084a977974b6528e158e173e70535cbe1bda7f2a71b4b1b3f7522187",
+      "source_text_sha256": "fa8739657c24bb4d5aa5fd6d762ea1b492e5a979477f8c141476eab364ad123f"
+    },
+    {
+      "source_id": "HW-ECO-KEYBOARD-DEVICES",
+      "title": "华为鸿蒙电脑键鼠共享支持连接设备说明",
+      "url": "https://consumer.huawei.com/cn/support/content/zh-cn16050145/",
+      "quote": "键鼠共享要求手机/平板/鸿蒙电脑的系统是5.0.0.125及以上的版本。",
+      "verified_pc_models": [
+        "HUAWEI MateBook 14（鸿蒙版）",
+        "HUAWEI MateBook Pro",
+        "HUAWEI MateBook Pro S"
+      ],
+      "summary": "一台电脑发起键鼠共享，可组成电脑与手机、电脑与平板等两设备组合，也可组成电脑、手机、平板等三设备组合。",
+      "conditions": [
+        "所有参加共享设备的HarmonyOS版本至少为5.0.0.125",
+        "当前官方说明明确不适用于畅享70X系列、畅享90系列",
+        "电脑作为主发起设备；限定为官方列出的两设备或三设备组合",
+        "同时满足HW-ECO-KEYBOARD-OPERATION的账号与功能开关条件"
+      ],
+      "do_not_infer": [
+        "不能承诺任意数量设备同时共享",
+        "不能将笼统的HarmonyOS 5写成全部版本均满足",
+        "不能概括为所有华为手机、平板均支持"
+      ],
+      "source_excerpt": "本内容不适用于畅享70X系列、畅享90系列。\n键鼠共享要求手机/平板/鸿蒙电脑的系统是5.0.0.125及以上的版本。\n您好，当前键鼠共享支持一台电脑作为主发起设备和其他手机、平板、电脑之间发起两设备或者三设备的共享，具体组合如下：\n两台设备：电脑+手机、电脑+平板、电脑+电脑。\n三台设备：电脑+手机+平板、电脑+手机+手机、电脑+平板+平板、电脑+电脑+手机、电脑+电脑+平板、电脑+电脑+电脑。",
+      "source_excerpt_start_char": 0,
+      "source_excerpt_end_char": 200,
+      "source_excerpt_is_contiguous": true,
+      "source_excerpt_extraction": "Official jd-content body; remove HTML tags; retain text in source order; normalize indentation and block paragraph line breaks; no added wording.",
+      "source_verified_at": "2026-10-19T15:09:52+00:00",
+      "source_http_status": 200,
+      "source_final_url": "https://consumer.huawei.com/cn/support/content/zh-cn16050145/",
+      "source_last_modified": null,
+      "source_html_sha256": "213caf0df7305f5188746ae72b9c9531e503bd87abd0215c9c05a01d27368c00",
+      "source_text_sha256": "e76540594a01c4a048e07c36b4ee86edfb3eb275e86e3921239ecd7064128851"
+    },
+    {
+      "source_id": "HW-ECO-CONTINUITY",
+      "title": "鸿蒙电脑如何进行跨设备任务无缝接续",
+      "url": "https://consumer.huawei.com/cn/support/content/zh-cn16051202/",
+      "quote": "此功能目前仅支持在 HarmonyOS 5 及以上版本的设备间使用。",
+      "verified_pc_models": [
+        "HUAWEI MateBook 14（鸿蒙版）",
+        "HUAWEI MateBook Pro",
+        "HUAWEI MateBook Pro S",
+        "HUAWEI MateBook Fold 非凡大师"
+      ],
+      "summary": "手机或平板中正在编辑的备忘可接到附近的鸿蒙电脑上继续编辑。",
+      "conditions": [
+        "参与设备均为HarmonyOS 5及以上",
+        "参加接续的设备使用同一华为账号",
+        "参加接续的设备开启WLAN和蓝牙",
+        "参加接续的设备开启接续功能",
+        "仅在支持的应用和对应场景内使用，须结合HW-ECO-CONTINUITY-APPS"
+      ],
+      "do_not_infer": [
+        "不能写成任意手机应用都能接到电脑",
+        "不能由接续功能推导Windows软件兼容",
+        "备忘录接续不等同于无条件跨设备同步所有本地文档"
+      ],
+      "source_excerpt": "使用接续，可以在附近设备上无缝衔接当前设备上的任务，体验不间断。例如，在户外用手机备忘录记录的一些有趣见闻，回家后可将备忘平滑切换到电脑上继续编辑。\n台式机电脑：仅部分机型支持此功能，请以实际情况为准。\n配图仅供参考，请以产品实际为准。\n此功能目前仅支持在 HarmonyOS 5 及以上版本的设备间使用。\n仅部分应用支持接续，具体应用请前往官网了解。\n以备忘录为例：\n在手机/平板、电脑上，开启 WLAN、蓝牙，并登录同一华为账号。\n在手机/平板、电脑上，开启接续的开关。\n手机/平板：进入设置 > 多设备协同 > 接续，单击开启接续的开关。\n电脑：单击桌面底部快捷栏中的打开设置，单击多设备协同 > 接续，然后单击开启接续的开关。\n在手机/平板/其他电脑上，打开需要接续的备忘。\n在电脑上，桌面底部快捷栏中会显示备忘录的接续图标，单击该图标后即可在电脑上继续手机/平板/其他电脑上未完成的备忘。若电脑本地已有打开正在编辑的备忘，则需单击接续图标后，再单击接续备忘缩略图即可。",
+      "source_excerpt_start_char": 0,
+      "source_excerpt_end_char": 439,
+      "source_excerpt_is_contiguous": true,
+      "source_excerpt_extraction": "Official jd-content body; remove HTML tags; retain text in source order; normalize indentation and block paragraph line breaks; no added wording.",
+      "source_verified_at": "2026-10-19T15:09:43+00:00",
+      "source_http_status": 200,
+      "source_final_url": "https://consumer.huawei.com/cn/support/content/zh-cn16051202/",
+      "source_last_modified": null,
+      "source_html_sha256": "5a23a7aaedcb2eb4ca4a47a66b25d1475a31c7534b3b9985f240732da38d6866",
+      "source_text_sha256": "f4e635819309181b9c844d93127331d5a82ae9cf7e421ca482a2a9e936957240"
+    },
+    {
+      "source_id": "HW-ECO-CONTINUITY-APPS",
+      "title": "华为鸿蒙电脑上支持接续功能的应用清单",
+      "url": "https://consumer.huawei.com/cn/support/content/zh-cn16050156/",
+      "quote": "如果手机打开华为浏览器展示的是信息流（例如新闻广告推送等），无法触发接续功能。",
+      "verified_pc_models": [
+        "HUAWEI MateBook 14（鸿蒙版）",
+        "HUAWEI MateBook Pro",
+        "HUAWEI MateBook Pro S",
+        "HUAWEI MateBook Fold 非凡大师"
+      ],
+      "summary": "官方列出的适配场景包括备忘录的新建或修改、华为浏览器的搜索网页、WPS的云文档编辑页、小红书的笔记发布页。",
+      "conditions": [
+        "限定到所列应用及对应页面或场景",
+        "华为浏览器的信息流页面不在支持场景内",
+        "同时满足HW-ECO-CONTINUITY的设备系统、账号和开关条件"
+      ],
+      "do_not_infer": [
+        "不能概括为WPS全部文件或全部编辑场景",
+        "不能把小红书接续功能说成项目已经打通账号或自动发布",
+        "不能把应用接续误写为所列应用在全部设备上的所有功能互通"
+      ],
+      "source_excerpt": "使用接续功能，可在附近设备上无缝衔接当前设备上的任务，体验不间断。如手机上正在浏览的新闻、观看的视频等，可平滑切换到华为鸿蒙电脑上继续当前任务，获得更佳使用体验。\n如果手机打开华为浏览器展示的是信息流（例如新闻广告推送等），无法触发接续功能。\n使用此功能前，请先了解目前支持接续的应用及接续场景。以下为常用适配较好的应用，其他可支持接续的应用陆续上线中。\n序号\n接续应用\n接续场景\n1\n华为浏览器\n搜索网页\n2\n备忘录\n新建/修改备忘\n3\n日历\n任意页面\n4\n华为阅读\n在线书籍阅读\n5\n华为视频\n在线视频播放页面\n6\n华为音乐\n音乐播放界面\n7\n地图\n选择路线或导航页面\n8\n电子邮件\n新建邮件编辑页面\n9\n360浏览器\n任意页面\n10\n大众新闻\n文字和图片类新闻阅读界面\n11\n酷狗音乐\n任意页面\n12\n央视影音\n视频播放界面\n13\n宝宝巴士\n任意页面\n14\n宝宝巴士世界\n任意页面\n15\n小红书\n笔记发布页面\n16\n咪咕视频\n任意页面\n17\n起点读书\n在线书籍阅读\n18\n下厨房\n笔记详情页\n19\n便单\n任意页面\n20\n懂车帝\n在线视频播放页面\n21\n简讯\n新闻节目、半角巷\n22\n新浪新闻\n文字和图片类新闻阅读界面\n23\n贝壳找房\n任意页面\n24\n封面新闻\n新闻阅读页、视频播放页\n25\n汽车之家\n直播页面\n26\n财经杂志\n任意页面\n27\n冀时\n新闻阅读页、视频播放页\n28\n链家\n练习报告页、错题解析页面\n29\n粉笔\n考试报告页\n30\n番茄小说\n任意页面\n31\n糖豆\n在线视频播放页面\n32\n印象笔记\n笔记页面\n33\n贝乐虎儿歌\n儿歌播放页面\n34\n中国联通\n首页\n35\n哔哩哔哩\n在线视频播放页面\n36\n红果免费短剧\n任意页面\n37\n喜马拉雅\n书籍首页、听书详情页\n38\n华为云会议\n会议页面\n39\nqq阅读\n在线书籍阅读页面\n40\n溏心音乐\n任意页面\n41\nqq 音乐\n音乐播放界面\n42\n优酷视频\n任意页面\n43\n爱奇艺\n视频播放页面\n44\nWPS\n云文档编辑页\n45\n苍翼：混沌效应\n游戏页面\n46\n飞书\n会议页面\n47\n七猫免费小说\n任意页面\n48\n同花顺\n股票详情页\n49\n中国银河证券\n任意页面\n50\n国泰海通君弘\n股票详情页\n51\n下厨房\n视频、图片详情页\n52\n西瓜视频\n短视频播放页\n53\n央广网\n任意页面\n54\n学习通\n笔记编辑页面\n55\n直播吧\n任意页面\n56\n中望CAD\n任意页面",
+      "source_excerpt_start_char": 0,
+      "source_excerpt_end_char": 1008,
+      "source_excerpt_is_contiguous": true,
+      "source_excerpt_extraction": "Official jd-content body; remove HTML tags; retain text in source order; normalize indentation and block paragraph line breaks; no added wording.",
+      "source_verified_at": "2026-10-19T15:09:52+00:00",
+      "source_http_status": 200,
+      "source_final_url": "https://consumer.huawei.com/cn/support/content/zh-cn16050156/",
+      "source_last_modified": null,
+      "source_html_sha256": "e1906de675bef47aaf567cb70c9a0fbad501ba1d1827a18a183ded7173b54f81",
+      "source_text_sha256": "3311d408b5ae60b06e71c3671c2f6ab70f6893f41a88008049f4a4a1607b0f36"
+    },
+    {
+      "source_id": "HW-ECO-TABLET-DISPLAY",
+      "title": "鸿蒙电脑如何通过无线投屏连接平板",
+      "url": "https://consumer.huawei.com/cn/support/content/zh-cn16093701/",
+      "quote": "此功能要求电脑、平板系统版本为 HarmonyOS 6.1 及以上。",
+      "verified_pc_models": [
+        "HUAWEI MateBook 14（鸿蒙版）",
+        "HUAWEI MateBook Pro",
+        "HUAWEI MateBook Pro S"
+      ],
+      "summary": "这些鸿蒙电脑通过无线投屏连接符合条件的平板，平板可以作为扩展显示器或镜像显示器；扩展模式可在两块屏幕上打开不同应用窗口。",
+      "conditions": [
+        "电脑和平板均至少为HarmonyOS 6.1",
+        "电脑与平板登录同一华为账号",
+        "电脑与平板开启WLAN以及星闪/蓝牙或蓝牙开关",
+        "通过电脑的无线投屏功能选择可投屏平板",
+        "MateBook 14（鸿蒙版）现有资料显示HarmonyOS 6，营销稿必须保留升级到6.1及以上的条件"
+      ],
+      "do_not_infer": [
+        "不能套用于当前未升级的HarmonyOS 6机型",
+        "不能套用于Windows版MateBook 14的操作路径",
+        "不能使用本条支持Fold的所有姿态"
+      ],
+      "source_excerpt": "无需连线，将电脑屏幕快速投送至平板，让办公、娱乐更畅快。\n此功能要求电脑、平板系统版本为 HarmonyOS 6.1 及以上。\n台式机电脑：仅部分机型支持此功能，请以实际情况为准。\n电脑形态不同，开启、切换投屏等方式不同，请以实际支持情况为准。\n配图仅供参考，请以产品实际为准。\n开启投屏\n电脑、平板端开启 WLAN 、星闪 | 蓝牙（或蓝牙）开关，并登录同一华为账号。\n在电脑端通过以下任一方式，启动并搜索可投屏的平板：\n单击桌面右下角或点按鸿蒙键+ C 组合键，打开控制中心，单击。\nFn 键指示灯熄灭时，点按键。\n搜索完成后，在设备列表中单击待投屏的平板名称，即可将电脑屏幕内容投送至平板：\n首次接入时，平板默认作为电脑的扩展屏幕。\n再次接入时，平板将按照断开前的显示方式恢复投屏，如断开前平板作为电脑的镜像屏幕，重新连接后平板将显示与电脑屏幕相同的内容。\n切换屏幕显示方式\n平板可作为电脑的扩展显示器，也可作为电脑的镜像显示器，您可以按如下方式切换平板的屏幕显示方式：",
+      "source_excerpt_start_char": 0,
+      "source_excerpt_end_char": 438,
+      "source_excerpt_is_contiguous": true,
+      "source_excerpt_extraction": "Official jd-content body; remove HTML tags; retain text in source order; normalize indentation and block paragraph line breaks; no added wording.",
+      "source_verified_at": "2026-10-19T15:09:44+00:00",
+      "source_http_status": 200,
+      "source_final_url": "https://consumer.huawei.com/cn/support/content/zh-cn16093701/",
+      "source_last_modified": null,
+      "source_html_sha256": "ceed828bc05db1bf27d4c7041083f4368d259691f7d92e5df4addbb034654daf",
+      "source_text_sha256": "0d17216a3f627ab3bae55a1f1c772c8cf2f71e8c9df5d2aad4e10fc736ae43e3"
+    },
+    {
+      "source_id": "HW-ECO-TABLET-DISPLAY-BOUNDARY",
+      "title": "华为鸿蒙电脑是否支持将平板作为副屏使用",
+      "url": "https://consumer.huawei.com/cn/support/content/zh-cn16049994/",
+      "quote": "鸿蒙电脑无法通过超级终端连接平板建立多屏协同",
+      "verified_pc_models": [
+        "HUAWEI MateBook 14（鸿蒙版）",
+        "HUAWEI MateBook Pro",
+        "HUAWEI MateBook Pro S",
+        "HUAWEI MateBook Fold 非凡大师"
+      ],
+      "summary": "鸿蒙电脑将平板用作副屏，应采用无线投屏。Fold的折叠态或竖屏展开态投到平板另有更高版本要求。",
+      "conditions": [
+        "通常的平板副屏功能要求电脑与平板均至少HarmonyOS 6.1",
+        "MateBook Fold折叠态或竖屏展开态无线投屏到平板，电脑系统须至少HarmonyOS 7.0"
+      ],
+      "do_not_infer": [
+        "不能沿用Windows电脑管家中‘我的平板’与多屏协同的路径描述鸿蒙电脑",
+        "不能把Fold的HarmonyOS 6.1当作所有形态均可投屏的依据"
+      ],
+      "source_excerpt": "您好，鸿蒙电脑支持无线投屏到平板（平板作为副屏使用，支持扩展和镜像两种模式），需要电脑和平板系统均升级到HarmonyOS 6.1及以上版本，请您提前做好重要数据备份，单击设置>设备名称>检查更新，按照界面提示将鸿蒙电脑升级到HarmonyOS 6.1及以上版本，感谢您的理解与支持。\nHUAWEI MateBook Fold 系统需升级至HarmonyOS 7.0及以上版本时支持折叠态/竖屏展开态无线投屏到平板。\n鸿蒙电脑无法通过超级终端连接平板建立多屏协同，只能通过无线投屏的方式将平板作为电脑的第二块屏幕使用。",
+      "source_excerpt_start_char": 0,
+      "source_excerpt_end_char": 259,
+      "source_excerpt_is_contiguous": true,
+      "source_excerpt_extraction": "Official jd-content body; remove HTML tags; retain text in source order; normalize indentation and block paragraph line breaks; no added wording.",
+      "source_verified_at": "2026-10-19T15:09:45+00:00",
+      "source_http_status": 200,
+      "source_final_url": "https://consumer.huawei.com/cn/support/content/zh-cn16049994/",
+      "source_last_modified": null,
+      "source_html_sha256": "2b650632aafb24333a5def4ffbbe7ae30faee4ccfcd79378ffc7b30b05148721",
+      "source_text_sha256": "94c94f7dcff9206d566c441e26e8056acdeb7176cf8ab7039e9d2e2723c325bc"
+    }
+  ],
+  "recommended_examples": [
+    {
+      "pc_model": "HUAWEI MateBook Pro",
+      "scenario": "生态体验",
+      "focus": "手机记录备忘，回到电脑继续整理",
+      "source_ids": [
+        "HW-ECO-CONTINUITY",
+        "HW-ECO-CONTINUITY-APPS"
+      ],
+      "suggested_text": "出门用手机记下想法，回到电脑继续整理。设备均使用HarmonyOS 5及以上、登录同一华为账号并开启WLAN、蓝牙和接续后，可将正在编辑的备忘接到MateBook Pro继续编辑。",
+      "note": "建议在文章中自然保留条件；这段是有来源的创作建议，不是已生成运行结果。"
+    },
+    {
+      "pc_model": "HUAWEI MateBook 14（鸿蒙版）",
+      "scenario": "生态体验",
+      "focus": "一套电脑键鼠，接着操作旁边的手机或平板",
+      "source_ids": [
+        "HW-ECO-KEYBOARD-OPERATION",
+        "HW-ECO-KEYBOARD-DEVICES"
+      ],
+      "suggested_text": "手机和平板就在旁边，不必反复换一套输入方式。使用符合机型要求、HarmonyOS 5.0.0.125及以上的设备，登录同一华为账号并开启键鼠共享后，可用MateBook 14鸿蒙版的键盘和鼠标操作手机或平板，也可拖拽支持的文字、图片和文档。",
+      "note": "必须同时保留官方排除机型，不称所有华为设备兼容。"
+    },
+    {
+      "pc_model": "HUAWEI MateBook Pro",
+      "scenario": "生态体验",
+      "focus": "平板成为第二块屏幕",
+      "source_ids": [
+        "HW-ECO-TABLET-DISPLAY",
+        "HW-ECO-TABLET-DISPLAY-BOUNDARY"
+      ],
+      "suggested_text": "一边查看资料，一边整理正文。电脑与支持投屏的平板均使用HarmonyOS 6.1及以上、登录同一华为账号并开启WLAN和蓝牙后，可通过无线投屏让平板成为MateBook Pro的扩展屏幕。",
+      "note": "这是官方功能支持的使用场景，非本项目已在实体设备进行的测试。"
+    }
+  ]
+}
