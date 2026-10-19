@@ -128,7 +128,7 @@ python -m unittest discover -s tests -v
 
 魔搭选择 Docker，应用端口 7860，健康检查 `/healthz`。凭证只放私密环境变量。应用供评委直接打开，生成接口不回传模型或 ima 凭证。
 
-魔搭从固定的 GitHub 提交构建应用，完整源码以本 GitHub 仓库为准。[部署模板](deploy/modelscope.Dockerfile)可复制到创空间作为 `Dockerfile`；`SOURCE_REVISION` 默认固定为已公开的提交 `9985ff6b923eb3e247a66db9ddeedf6dbf6e7b85`，镜像标签同时记录该版本。构建时下载该提交的公开源码压缩包，安装声明的依赖，并以普通应用用户启动。更新时先提交源码，再将魔搭 Dockerfile 的 `SOURCE_REVISION` 改为目标提交的完整 SHA，重新构建部署；GitHub 后续提交不会自动改变这一固定版本。
+魔搭从固定的 GitHub 提交构建应用，完整源码以本 GitHub 仓库为准。[部署模板](deploy/modelscope.Dockerfile)可复制到创空间作为 `Dockerfile`；`SOURCE_REVISION` 默认固定为已公开的提交 `d4212b9c2026a6de6e0bd36fdd36bbd77ef5d0b3`，镜像标签同时记录该版本。构建时下载该提交的公开源码压缩包，安装声明的依赖，并以普通应用用户启动。更新时先提交源码，再将魔搭 Dockerfile 的 `SOURCE_REVISION` 改为目标提交的完整 SHA，重新构建部署；GitHub 后续提交不会自动改变这一固定版本。
 
 ## 验证方法
 

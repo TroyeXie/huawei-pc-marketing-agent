@@ -2,7 +2,7 @@
 # Update SOURCE_REVISION to a published GitHub commit before rebuilding.
 FROM python:3.12-slim
 
-ARG SOURCE_REVISION=9985ff6b923eb3e247a66db9ddeedf6dbf6e7b85
+ARG SOURCE_REVISION=d4212b9c2026a6de6e0bd36fdd36bbd77ef5d0b3
 LABEL org.opencontainers.image.source="https://github.com/TroyeXie/huawei-pc-marketing-agent" \
       org.opencontainers.image.revision="${SOURCE_REVISION}" \
       org.opencontainers.image.version="${SOURCE_REVISION}"
