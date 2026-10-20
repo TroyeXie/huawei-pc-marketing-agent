@@ -442,6 +442,25 @@ def _export_image_bytes(image):
   path=BASE/'static'/'example-assets'/static_match.group(1)
   if path.is_file() and not path.is_symlink():return (path.read_bytes(),mimetypes.guess_type(path.name)[0] or 'image/jpeg',path.suffix)
   return None
+ # Historical results retain their original public URLs. Resolve only exact
+ # model/source matches to verified local bytes; never fetch arbitrary URLs.
+ if value.startswith('https://'):
+  model=image.get('model','')
+  if not model or image.get('source_url')!=value:return None
+  matches=[item for item in cache_index().get(model,{}).get('images',[])
+           if item.get('public_verified') is True and item.get('model')==model
+           and item.get('source_url')==value and item.get('public_source_url')==value]
+  if len(matches)!=1:return None
+  cached=matches[0]
+  filename=str(cached.get('asset_filename',''))
+  if not re.fullmatch(r'[a-f0-9]{64}\.(?:png|jpe?g|webp)',filename):return None
+  expected=cached.get('sha256')
+  if filename.rsplit('.',1)[0]!=expected or image.get('sha256',expected)!=expected:return None
+  path=BASE/'data'/'ima_assets'/filename
+  if not path.is_file() or path.is_symlink():return None
+  content=path.read_bytes()
+  if hashlib.sha256(content).hexdigest()!=expected:return None
+  return (content,mimetypes.guess_type(path.name)[0] or 'image/jpeg',path.suffix)
  match=re.fullmatch(r'/api/media/([A-Za-z0-9_-]+)/([a-f0-9]{18})',value)
  if not match:return None
  run_id,image_id=match.groups()
